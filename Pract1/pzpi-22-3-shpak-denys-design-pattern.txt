@@ -32,9 +32,10 @@
 ІСТОРІЯ ЗМІН
  
 №	Дата	Версія звіту	Опис змін та виправлень
-1	03.03.2025	0.1	Створено структуру звіту
-2	05.03.2025	0.1	Описано пункт «Завдання»
+1	03.03.2025	0.1	Створено структуру звіту.
+2	05.03.2025	0.1	Описано пункт «Завдання».
 3	06.03.2025	0.1	Описано принципи роботи патерну Фасад, його переваги, практичні приклади та недоліки.
+4	07.03.2025	0.1	Заповнено додаток В. Надано приклади коду.
 
 1 ЗАВДАННЯ
 
@@ -47,7 +48,7 @@
 Паттерн Фасад допомагає вирішити ці проблеми, створюючи уніфікований інтерфейс для набору інтерфейсів підсистеми, що спрощує її використання. Згідно з класичним визначенням, Фасад є структурним паттерном проектування, який забезпечує простий інтерфейс для взаємодії зі складною системою класів, бібліотек або фреймворків.
 Основні риси паттерну Фасад включають спрощення інтерфейсу, приховання складності підсистеми та централізацію логіки взаємодії. Завдяки цьому Фасад знижує зв'язаність між клієнтським кодом і підсистемами, оскільки клієнт взаємодіє лише з Фасадом, не потребуючи доступу до внутрішньої реалізації. Крім того, Фасад дозволяє зберегти інкапсуляцію, приховуючи внутрішню структуру підсистеми і таким чином забезпечуючи гнучкість і захищеність від змін. Водночас, Фасад встановлює стандартизований спосіб взаємодії з підсистемами, що сприяє уніфікації процесів.
 Застосування паттерну Фасад доцільне у кількох випадках, зокрема для складних систем з великою кількістю компонентів та взаємодіючих класів. Фасад також є корисним у шаруватих архітектурах, де його можна застосовувати для організації взаємодії між різними рівнями архітектури. Застосування цього паттерну є ефективним при інтеграції з зовнішніми API та бібліотеками, оскільки він дозволяє створити спрощений інтерфейс для взаємодії з іншими системами. Крім того, Фасад може бути використаний під час рефакторингу застарілих систем, оскільки він дає змогу інкапсулювати складну логіку без переписування коду. Використання Фасаду також полегшує інтеграцію різних підсистем у складних системах.
-В якості практичних прикладів застосування паттерну Фасад можна розглянути кілька випадків. Перший приклад стосується відправлення сповіщень через різні канали, кожен з яких має свою специфічну логіку та вимоги до форматування даних. У цьому випадку клас NotificationFacade надає простий інтерфейс для відправлення сповіщень через різні канали, приховуючи складність взаємодії з кожною підсистемою. Другий приклад ілюструє застосування Фасаду в контексті платіжних систем, таких як Stripe, PayPal та ApplePay, де клас PaymentFacade об'єднує інтерфейси різних платіжних систем в єдиний інтерфейс, спрощуючи інтеграцію. Третій приклад стосується роботи з різними типами сховищ даних. Клас StorageFacade надає уніфікований інтерфейс для взаємодії з різними типами сховищ, абстрагуючи клієнтський код від деталей реалізації.
+В якості практичних прикладів застосування паттерну Фасад можна розглянути кілька випадків. Перший приклад стосується відправлення сповіщень через різні канали, кожен з яких має свою специфічну логіку та вимоги до форматування даних. У цьому випадку клас NotificationFacade надає простий інтерфейс для відправлення сповіщень через різні канали, приховуючи складність взаємодії з кожною підсистемою. Другий приклад ілюструє застосування Фасаду в контексті платіжних систем, таких як Stripe, PayPal та ApplePay, де клас PaymentFacade об'єднує інтерфейси різних платіжних систем в єдиний інтерфейс, спрощуючи інтеграцію. Третій приклад стосується роботи з різними типами сховищ даних. Клас StorageFacade надає уніфікований інтерфейс для взаємодії з різними типами сховищ, абстрагуючи клієнтський код від деталей реалізації. Ці приклади наведено у додатку В.
 Переваги паттерну Фасад включають зниження складності, зменшення зв'язаності між компонентами, поліпшення інкапсуляції та стандартизацію інтерфейсів. Використання Фасаду дозволяє підвищити читабельність коду, полегшує тестування та рефакторинг. Крім того, зміни в підсистемах не впливають на клієнтський код, якщо інтерфейс Фасаду залишається незмінним.
 Однак існують також недоліки застосування паттерну Фасад. Введення додаткового рівня абстракції може бути надмірним для простих систем. Існує також ризик утворення "божественного об'єкта", коли Фасад стає надмірно складним і порушує принцип єдиної відповідальності. Використання Фасаду може обмежити гнучкість системи, оскільки клієнтський код буде обмежений лише тими функціями, які надаються через Фасад. Крім того, з часом Фасад може стати надмірно громіздким, що ускладнює його використання.
 Застосування паттерну Фасад є недоцільним у простих системах з обмеженою кількістю компонентів і прямолінійною логікою взаємодії, а також коли клієнтам потрібен прямий доступ до функціональності підсистеми для забезпечення гнучкості. Якщо підсистема використовується лише в одному місці, застосування Фасаду може бути надмірним. У випадках, коли Фасад створює непотрібні об'єкти або викликає методи, що не використовуються, це може вплинути на ефективність системи.
@@ -64,4 +65,375 @@
 
 ДОДАТОК В
 Приклади програмного коду
+
+Оформлення сервісів надсилання повідомлень за шаблоном «Фасад».
+
+  1 type EmailSender struct {
+  2 	smtpServer string
+  3 	smtpPort   string
+  4 	username   string
+  5 	password   string
+  6 }
+  7 
+  8 func (e *EmailSender) Connect() (*smtp.Client, error) {
+  9 	conn, err := tls.Dial("tcp", e.smtpServer+":"+e.smtpPort, nil)
+ 10 	if err != nil {
+ 11 		return nil, err
+ 12 	}
+ 13 	client, err := smtp.NewClient(conn, e.smtpServer)
+ 14 	if err != nil {
+ 15 		return nil, err
+ 16 	}
+ 17 	return client, nil
+ 18 }
+ 19 
+ 20 func (e *EmailSender) Authenticate(client *smtp.Client) error {
+ 21 	auth := smtp.PlainAuth("", e.username, e.password, e.smtpServer)
+ 22 	if err := client.Auth(auth); err != nil {
+ 23 		return err
+ 24 	}
+ 25 	return nil
+ 26 }
+ 27 
+ 28 func (e *EmailSender) Send(to, subject, body string) error {
+ 29 	client, err := e.Connect()
+ 30 	if err != nil {
+ 31 		return err
+ 32 	}
+ 33 	defer client.Quit()
+ 34 
+ 35 	if err := e.Authenticate(client); err != nil {
+ 36 		return err
+ 37 	}
+ 38 
+ 39 	msg := []byte("To: " + to + "\r\n" +
+ 40 		"Subject: " + subject + "\r\n" +
+ 41 		"\r\n" +
+ 42 		body + "\r\n")
+ 43 
+ 44 	if err := client.Mail(e.username); err != nil {
+ 45 		return err
+ 46 	}
+ 47 	if err := client.Rcpt(to); err != nil {
+ 48 		return err
+ 49 	}
+ 50 
+ 51 	writer, err := client.Data()
+ 52 	if err != nil {
+ 53 		return err
+ 54 	}
+ 55 	_, err = writer.Write(msg)
+ 56 	if err != nil {
+ 57 		return err
+ 58 	}
+ 59 	return writer.Close()
+ 60 }
+ 61 
+ 62 type SMSSender struct {
+ 63 	apiEndpoint string
+ 64 	apiKey      string
+ 65 }
+ 66 
+ 67 func (s *SMSSender) SendMessage(phoneNumber, message string) error {
+ 68 	if phoneNumber == "" {
+ 69 		return errors.New("phone number is not provided")
+ 70 	}
+ 71 
+ 72 	payload := map[string]string{
+ 73 		"phone":   phoneNumber,
+ 74 		"message": message,
+ 75 		"apiKey":  s.apiKey,
+ 76 	}
+ 77 	jsonData, _ := json.Marshal(payload)
+ 78 
+ 79 	req, err := http.NewRequest("POST", s.apiEndpoint, bytes.NewBuffer(jsonData))
+ 80 	if err != nil {
+ 81 		return err
+ 82 	}
+ 83 	req.Header.Set("Content-Type", "application/json")
+ 84 	client := &http.Client{}
+ 85 	resp, err := client.Do(req)
+ 86 	if err != nil {
+ 87 		return err
+ 88 	}
+ 89 	defer resp.Body.Close()
+ 90 
+ 91 	if resp.StatusCode != http.StatusOK {
+ 92 		body, _ := ioutil.ReadAll(resp.Body)
+ 93 		return fmt.Errorf("SMS API error: %s", string(body))
+ 94 	}
+ 95 
+ 96 	return nil
+ 97 }
+ 98 
+ 99 type PushNotifier struct {
+100 	apiEndpoint string
+101 	apiKey      string
+102 }
+103 
+104 func (p *PushNotifier) SendPush(deviceToken, title, message string) error {
+105 	if deviceToken == "" {
+106 		return errors.New("device token is not provided")
+107 	}
+108 
+109 	payload := map[string]string{
+110 		"deviceToken": deviceToken,
+111 		"title":       title,
+112 		"message":     message,
+113 		"apiKey":      p.apiKey,
+114 	}
+115 	jsonData, _ := json.Marshal(payload)
+116 
+117 	req, err := http.NewRequest("POST", p.apiEndpoint, bytes.NewBuffer(jsonData))
+118 	if err != nil {
+119 		return err
+120 	}
+121 	req.Header.Set("Content-Type", "application/json")
+122 	client := &http.Client{}
+123 	resp, err := client.Do(req)
+124 	if err != nil {
+125 		return err
+126 	}
+127 	defer resp.Body.Close()
+128 
+129 	if resp.StatusCode != http.StatusOK {
+130 		body, _ := ioutil.ReadAll(resp.Body)
+131 		return fmt.Errorf("Push API error: %s", string(body))
+132 	}
+133 
+134 	return nil
+135 }
+136 
+137 type NotificationFacade struct {
+138 	emailSender  *EmailSender
+139 	smsSender    *SMSSender
+140 	pushNotifier *PushNotifier
+141 }
+142 
+143 func NewNotificationFacade() *NotificationFacade {
+144 	return &NotificationFacade{
+145 		emailSender:  &EmailSender{smtpServer: "smtp.example.com", smtpPort: "465", username: "user@example.com", password: "password"},
+146 		smsSender:    &SMSSender{apiEndpoint: "https:
+147 		pushNotifier: &PushNotifier{apiEndpoint: "https:
+148 	}
+149 }
+150 
+151 func (n *NotificationFacade) SendNotification(user User, message string) error {
+152 	if user.Email != "" {
+153 		if err := n.emailSender.Send(user.Email, "Message", message); err != nil {
+154 			return err
+155 		}
+156 	}
+157 
+158 	if user.Phone != "" {
+159 		if err := n.smsSender.SendMessage(user.Phone, message); err != nil {
+160 			return err
+161 		}
+162 	}
+163 
+164 	if user.DeviceToken != "" {
+165 		if err := n.pushNotifier.SendPush(user.DeviceToken, "Message", message); err != nil {
+166 			return err
+167 		}
+168 	}
+169 
+170 	return nil
+171 }
+172 
+173 func main() {
+174 	facade := NewNotificationFacade()
+175 	user := User{Email: "test@example.com", Phone: "+380501234567", DeviceToken: "device_token_123"}
+176 	err := facade.SendNotification(user, "This is test message!")
+177 	if err != nil {
+178 		fmt.Println("Error:", err)
+179 	}
+180 }
+
+Оформлення платіжних сервісів за шаблоном «Фасад».
+
+ 1 type PaymentProvider interface {
+ 2 	Connect() error
+ 3 	Process(details map[string]string, amount float64) (string, error)
+ 4 }
+ 5 
+ 6 type Payment struct {
+ 7 	apiEndpoint, apiKey string
+ 8 }
+ 9 
+10 func (p *Payment) request(method, endpoint string, payload map[string]interface{}) (string, error) {
+11 	jsonData, _ := json.Marshal(payload)
+12 	req, err := http.NewRequest(method, p.apiEndpoint+endpoint, bytes.NewBuffer(jsonData))
+13 	if err != nil {
+14 		return "", err
+15 	}
+16 	req.Header.Set("Content-Type", "application/json")
+17 	client := &http.Client{}
+18 	resp, err := client.Do(req)
+19 	if err != nil || resp.StatusCode != http.StatusOK {
+20 		return "", errors.New("payment request failed")
+21 	}
+22 	return "transaction-id", nil
+23 }
+24 
+25 type StripePayment struct{ Payment }
+26 
+27 func (s *StripePayment) Process(details map[string]string, amount float64) (string, error) {
+28 	if token, ok := details["token"]; !ok || token == "" {
+29 		return "", errors.New("missing token")
+30 	}
+31 	return s.request("POST", "/charge", map[string]interface{}{"token": details["token"], "amount": amount})
+32 }
+33 
+34 type PayPalPayment struct{ Payment }
+35 
+36 func (p *PayPalPayment) Process(details map[string]string, amount float64) (string, error) {
+37 	if accountID, ok := details["account_id"]; !ok || accountID == "" {
+38 		return "", errors.New("missing account ID")
+39 	}
+40 	return p.request("POST", "/pay", map[string]interface{}{"accountID": details["account_id"], "amount": amount})
+41 }
+42 
+43 type ApplePayPayment struct{ Payment }
+44 
+45 func (a *ApplePayPayment) Process(details map[string]string, amount float64) (string, error) {
+46 	if deviceData, ok := details["device_data"]; !ok || deviceData == "" {
+47 		return "", errors.New("missing device data")
+48 	}
+49 	return a.request("POST", "/pay", map[string]interface{}{"deviceData": details["device_data"], "amount": amount})
+50 }
+51 
+52 type PaymentFacade struct {
+53 	providers map[string]PaymentProvider
+54 }
+55 
+56 func NewPaymentFacade() *PaymentFacade {
+57 	return &PaymentFacade{
+58 		providers: map[string]PaymentProvider{
+59 			"stripe":   &StripePayment{Payment{"https://stripe.com/api", "stripe-key"}},
+60 			"paypal":   &PayPalPayment{Payment{"https://paypal.com/api", "paypal-key"}},
+61 			"applepay": &ApplePayPayment{Payment{"https://applepay.com/api", "applepay-key"}},
+62 		},
+63 	}
+64 }
+65 
+66 func (p *PaymentFacade) ProcessPayment(paymentType string, details map[string]string, amount float64) (string, error) {
+67 	provider, exists := p.providers[paymentType]
+68 	if !exists {
+69 		return "", fmt.Errorf("unsupported payment type: %s", paymentType)
+70 	}
+71 	if err := provider.Connect(); err != nil {
+72 		return "", err
+73 	}
+74 	return provider.Process(details, amount)
+75 }
+
+Оформлення сервісів запитів до сховищ даних з використанням шаблону «Фасад».
+
+  1 type DatabaseProvider interface {
+  2     Connect() error
+  3     ExecuteQuery(query string) (string, error)
+  4 }
+  5
+  6 type SQLDatabase struct {
+  7     connectionString string
+  8     db               *sql.DB
+  9 }
+ 10
+ 11 func (s *SQLDatabase) Connect() error {
+ 12     var err error
+ 13     s.db, err = sql.Open("mysql", s.connectionString)
+ 14     if err != nil {
+ 15             return fmt.Errorf("could not connect to SQL database: %v", err)
+ 16     }
+ 17     if err := s.db.Ping(); err != nil {
+ 18             return fmt.Errorf("could not ping SQL database: %v", err)
+ 19     }
+ 20     return nil
+ 21 }
+ 22
+ 23 func (s *SQLDatabase) ExecuteQuery(query string) (string, error) {
+ 24     rows, err := s.db.Query(query)
+ 25     if err != nil {
+ 26             return "", fmt.Errorf("could not execute SQL query: %v", err)
+ 27     }
+ 28     defer rows.Close()
+ 29
+ 30     var result string
+ 31     for rows.Next() {
+ 32             err := rows.Scan(&result)
+ 33             if err != nil {
+ 34                     return "", fmt.Errorf("could not scan row: %v", err)
+ 35             }
+ 36     }
+ 37     return result, nil
+ 38 }
+ 39
+ 40 type NoSQLDatabase struct {
+ 41     connectionURL string
+ 42     client        *mongo.Client
+ 43 }
+ 44
+ 45 func (n *NoSQLDatabase) Connect() error {
+ 46     clientOptions := options.Client().ApplyURI(n.connectionURL)
+ 47     client, err := mongo.Connect(nil, clientOptions)
+ 48     if err != nil {
+ 49             return fmt.Errorf("could not connect to NoSQL database: %v", err)
+ 50     }
+ 51     n.client = client
+ 52     return nil
+ 53 }
+ 54
+ 55 func (n *NoSQLDatabase) ExecuteQuery(query string) (string, error) {
+ 56     collection := n.client.Database("test").Collection("users")
+ 57
+ 58     var result bson.M
+ 59     err := collection.FindOne(nil, bson.M{"user": query}).Decode(&result)
+ 60     if err != nil {
+ 61             return "", fmt.Errorf("could not execute NoSQL query: %v", err)
+ 62     }
+ 63
+ 64     return fmt.Sprintf("%v", result), nil
+ 65 }
+ 66
+ 67 type DatabaseFacade struct {
+ 68     providers map[string]DatabaseProvider
+ 69 }
+ 70
+ 71 func NewDatabaseFacade() *DatabaseFacade {
+ 72     return &DatabaseFacade{
+ 73             providers: map[string]DatabaseProvider{
+ 74                     "sql":   &SQLDatabase{connectionString: "user:password@tcp(localhost:3306)/dbname"},
+ 75                     "nosql": &NoSQLDatabase{connectionURL: "mongodb://localhost:27017"},
+ 76             },
+ 77     }
+ 78 }
+ 79
+ 80 func (d *DatabaseFacade) ExecuteDatabaseOperation(dbType string, query string) (string, error) {
+ 81     provider, exists := d.providers[dbType]
+ 82     if !exists {
+ 83             return "", fmt.Errorf("unsupported database type: %s", dbType)
+ 84     }
+ 85     if err := provider.Connect(); err != nil {
+ 86             return "", err
+ 87     }
+ 88     return provider.ExecuteQuery(query)
+ 89 }
+ 90
+ 91 func main() {
+ 92     facade := NewDatabaseFacade()
+ 93
+ 94     sqlResult, err := facade.ExecuteDatabaseOperation("sql", "SELECT name FROM users LIMIT 1")
+ 95     if err != nil {
+ 96             fmt.Println("Error executing SQL query:", err)
+ 97     } else {
+ 98             fmt.Println("SQL result:", sqlResult)
+ 99     }
+100
+101     nosqlResult, err := facade.ExecuteDatabaseOperation("nosql", "john")
+102     if err != nil {
+103             fmt.Println("Error executing NoSQL query:", err)
+104     } else {
+105             fmt.Println("NoSQL result:", nosqlResult)
+106     }
+107 }
 
