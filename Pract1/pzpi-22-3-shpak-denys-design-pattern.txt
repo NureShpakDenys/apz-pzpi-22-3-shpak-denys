@@ -169,607 +169,607 @@
 
 Оформлення сервісів надсилання повідомлень за шаблоном «Фасад».
 
-  1 package main
-  2
-  3 import (
-  4     "bytes"
-  5     "crypto/tls"
-  6     "encoding/json"
-  7     "errors"
-  8     "fmt"
-  9     "io/ioutil"
- 10     "net/http"
- 11     "net/smtp"
- 12 )
- 13
- 14 // User представляє собою структуру для зберігання контактної інформації користувача.
- 15 // Містить поля для різних каналів комунікації: Email, Phone та DeviceToken.
- 16 type User struct {
- 17     // Email користувача для надсилання повідомлень електронною поштою
- 18     Email string
- 19     // Phone номер телефону користувача для SMS повідомлень
- 20     Phone string
- 21     // DeviceToken токен пристрою для push-повідомлень
- 22     DeviceToken string
- 23 }
- 24
- 25 // EmailSender відповідає за надсилання електронних листів через SMTP.
- 26 type EmailSender struct {
- 27     // smtpServer адреса SMTP сервера
- 28     smtpServer string
- 29     // smtpPort порт SMTP сервера
- 30     smtpPort string
- 31     // username ім'я користувача для автентифікації на SMTP сервері
- 32     username string
- 33     // password пароль для автентифікації на SMTP сервері
- 34     password string
- 35 }
- 36
- 37 // Connect встановлює з'єднання з SMTP сервером з використанням TLS.
- 38 // Повертає клієнт SMTP або помилку, якщо з'єднання не вдалося встановити.
- 39 func (e *EmailSender) Connect() (*smtp.Client, error) {
- 40     conn, err := tls.Dial("tcp", e.smtpServer+":"+e.smtpPort, nil)
- 41     if err != nil {
- 42             return nil, err
- 43     }
- 44     client, err := smtp.NewClient(conn, e.smtpServer)
- 45     if err != nil {
- 46             return nil, err
- 47     }
- 48     return client, nil
- 49 }
- 50
- 51 // Authenticate виконує автентифікацію на SMTP сервері.
- 52 // Приймає клієнт SMTP і повертає помилку, якщо автентифікація не вдалася.
- 53 func (e *EmailSender) Authenticate(client *smtp.Client) error {
- 54     auth := smtp.PlainAuth("", e.username, e.password, e.smtpServer)
- 55     if err := client.Auth(auth); err != nil {
- 56             return err
- 57     }
- 58     return nil
- 59 }
- 60
- 61 // Send надсилає електронний лист вказаному отримувачу.
- 62 // Приймає адресу отримувача, тему та тіло повідомлення.
- 63 // Повертає помилку, якщо відправлення не вдалося.
- 64 func (e *EmailSender) Send(to, subject, body string) error {
- 65     client, err := e.Connect()
- 66     if err != nil {
- 67             return err
- 68     }
- 69     defer client.Quit()
- 70     if err := e.Authenticate(client); err != nil {
- 71             return err
- 72     }
- 73     msg := []byte("To: " + to + "\r\n" +
- 74             "Subject: " + subject + "\r\n" +
- 75             "\r\n" +
- 76             body + "\r\n")
- 77     if err := client.Mail(e.username); err != nil {
- 78             return err
- 79     }
- 80     if err := client.Rcpt(to); err != nil {
- 81             return err
- 82     }
- 83     writer, err := client.Data()
- 84     if err != nil {
- 85             return err
- 86     }
- 87     _, err = writer.Write(msg)
- 88     if err != nil {
- 89             return err
- 90     }
- 91     return writer.Close()
- 92 }
- 93
- 94 // SMSSender відповідає за надсилання SMS повідомлень через API.
- 95 type SMSSender struct {
- 96     // apiEndpoint URL API сервісу для відправки SMS
- 97     apiEndpoint string
- 98     // apiKey ключ для автентифікації в API сервісі
- 99     apiKey string
-100 }
-101
-102 // SendMessage надсилає SMS повідомлення на вказаний номер телефону.
-103 // Приймає номер телефону та текст повідомлення.
-104 // Повертає помилку, якщо відправлення не вдалося.
-105 func (s *SMSSender) SendMessage(phoneNumber, message string) error {
-106     if phoneNumber == "" {
-107             return errors.New("phone number is not provided")
-108     }
-109     payload := map[string]string{
-110             "phone":   phoneNumber,
-111             "message": message,
-112             "apiKey":  s.apiKey,
-113     }
-114     jsonData, _ := json.Marshal(payload)
-115     req, err := http.NewRequest("POST", s.apiEndpoint, bytes.NewBuffer(jsonData))
-116     if err != nil {
-117             return err
-118     }
-119     req.Header.Set("Content-Type", "application/json")
-120     client := &http.Client{}
-121     resp, err := client.Do(req)
-122     if err != nil {
-123             return err
-124     }
-125     defer resp.Body.Close()
-126     if resp.StatusCode != http.StatusOK {
-127             body, _ := ioutil.ReadAll(resp.Body)
-128             return fmt.Errorf("SMS API error: %s", string(body))
-129     }
-130     return nil
-131 }
-132
-133 // PushNotifier відповідає за надсилання push-повідомлень через API.
-134 type PushNotifier struct {
-135     // apiEndpoint URL API сервісу для відправки push-повідомлень
-136     apiEndpoint string
-137     // apiKey ключ для автентифікації в API сервісі
-138     apiKey string
-139 }
-140
-141 // SendPush надсилає push-повідомлення на пристрій з вказаним токеном.
-142 // Приймає токен пристрою, заголовок та текст повідомлення.
-143 // Повертає помилку, якщо відправлення не вдалося.
-144 func (p *PushNotifier) SendPush(deviceToken, title, message string) error {
-145     if deviceToken == "" {
-146             return errors.New("device token is not provided")
-147     }
-148     payload := map[string]string{
-149             "deviceToken": deviceToken,
-150             "title":       title,
-151             "message":     message,
-152             "apiKey":      p.apiKey,
-153     }
-154     jsonData, _ := json.Marshal(payload)
-155     req, err := http.NewRequest("POST", p.apiEndpoint, bytes.NewBuffer(jsonData))
-156     if err != nil {
-157             return err
-158     }
-159     req.Header.Set("Content-Type", "application/json")
-160     client := &http.Client{}
-161     resp, err := client.Do(req)
-162     if err != nil {
-163             return err
-164     }
-165     defer resp.Body.Close()
-166     if resp.StatusCode != http.StatusOK {
-167             body, _ := ioutil.ReadAll(resp.Body)
-168             return fmt.Errorf("Push API error: %s", string(body))
-169     }
-170     return nil
-171 }
-172
-173 // NotificationFacade реалізує патерн Фасад для системи оповіщень,
-174 // об'єднуючи різні канали комунікації в єдиний інтерфейс.
-175 type NotificationFacade struct {
-176     // emailSender компонент для надсилання електронних листів
-177     emailSender *EmailSender
-178     // smsSender компонент для надсилання SMS
-179     smsSender *SMSSender
-180     // pushNotifier компонент для надсилання push-повідомлень
-181     pushNotifier *PushNotifier
-182 }
-183
-184 // NewNotificationFacade створює та налаштовує новий екземпляр NotificationFacade
-185 // з дефолтними параметрами для всіх типів оповіщень.
-186 // Повертає готовий до використання екземпляр NotificationFacade.
-187 func NewNotificationFacade() *NotificationFacade {
-188     return &NotificationFacade{
-189             emailSender:  &EmailSender{smtpServer: "smtp.example.com", smtpPort: "465", username: "user@example.com", password: "password"},
-190             smsSender:    &SMSSender{apiEndpoint: "https://api.example.com/sms", apiKey: "sms_api_key"},
-191             pushNotifier: &PushNotifier{apiEndpoint: "https://api.example.com/push", apiKey: "push_api_key"},
-192     }
-193 }
-194
-195 // SendNotification надсилає повідомлення користувачу через всі доступні канали комунікації.
-196 // Використовує наявні контактні дані користувача (email, телефон, токен пристрою).
-197 // Повертає помилку, якщо виникла проблема з надсиланням хоча б через один канал.
-198 func (n *NotificationFacade) SendNotification(user User, message string) error {
-199     if user.Email != "" {
-200             if err := n.emailSender.Send(user.Email, "Message", message); err != nil {
-201                     return err
-202             }
-203     }
-204     if user.Phone != "" {
-205             if err := n.smsSender.SendMessage(user.Phone, message); err != nil {
-206                     return err
-207             }
-208     }
-209     if user.DeviceToken != "" {
-210             if err := n.pushNotifier.SendPush(user.DeviceToken, "Message", message); err != nil {
-211                     return err
-212             }
-213     }
-214     return nil
-215 }
-216
-217 // main є точкою входу в програму, що демонструє використання системи оповіщень.
-218 func main() {
-219     facade := NewNotificationFacade()
-220     user := User{Email: "test@example.com", Phone: "+380501234567", DeviceToken: "device_token_123"}
-221     err := facade.SendNotification(user, "This is test message!")
-222     if err != nil {
-223             fmt.Println("Error:", err)
-224     }
-225 }
+  1  package main
+  2  
+  3  import (
+  4  	"bytes"
+  5  	"crypto/tls"
+  6  	"encoding/json"
+  7  	"errors"
+  8  	"fmt"
+  9  	"io/ioutil"
+ 10  	"net/http"
+ 11  	"net/smtp"
+ 12  )
+ 13  
+ 14  // User представляє собою структуру для зберігання контактної інформації користувача.
+ 15  // Містить поля для різних каналів комунікації: Email, Phone та DeviceToken.
+ 16  type User struct {
+ 17  	// Email користувача для надсилання повідомлень електронною поштою
+ 18  	Email string
+ 19  	// Phone номер телефону користувача для SMS повідомлень
+ 20  	Phone string
+ 21  	// DeviceToken токен пристрою для push-повідомлень
+ 22  	DeviceToken string
+ 23  }
+ 24  
+ 25  // EmailSender відповідає за надсилання електронних листів через SMTP.
+ 26  type EmailSender struct {
+ 27  	// smtpServer адреса SMTP сервера
+ 28  	smtpServer string
+ 29  	// smtpPort порт SMTP сервера
+ 30  	smtpPort string
+ 31  	// username ім'я користувача для автентифікації на SMTP сервері
+ 32  	username string
+ 33  	// password пароль для автентифікації на SMTP сервері
+ 34  	password string
+ 35  }
+ 36  
+ 37  // Connect встановлює з'єднання з SMTP сервером з використанням TLS.
+ 38  // Повертає клієнт SMTP або помилку, якщо з'єднання не вдалося встановити.
+ 39  func (e *EmailSender) Connect() (*smtp.Client, error) {
+ 40  	conn, err := tls.Dial("tcp", e.smtpServer+":"+e.smtpPort, nil)
+ 41  	if err != nil {
+ 42  		return nil, err
+ 43  	}
+ 44  	client, err := smtp.NewClient(conn, e.smtpServer)
+ 45  	if err != nil {
+ 46  		return nil, err
+ 47  	}
+ 48  	return client, nil
+ 49  }
+ 50  
+ 51  // Authenticate виконує автентифікацію на SMTP сервері.
+ 52  // Приймає клієнт SMTP і повертає помилку, якщо автентифікація не вдалася.
+ 53  func (e *EmailSender) Authenticate(client *smtp.Client) error {
+ 54  	auth := smtp.PlainAuth("", e.username, e.password, e.smtpServer)
+ 55  	if err := client.Auth(auth); err != nil {
+ 56  		return err
+ 57  	}
+ 58  	return nil
+ 59  }
+ 60  
+ 61  // Send надсилає електронний лист вказаному отримувачу.
+ 62  // Приймає адресу отримувача, тему та тіло повідомлення.
+ 63  // Повертає помилку, якщо відправлення не вдалося.
+ 64  func (e *EmailSender) Send(to, subject, body string) error {
+ 65  	client, err := e.Connect()
+ 66  	if err != nil {
+ 67  		return err
+ 68  	}
+ 69  	defer client.Quit()
+ 70  	if err := e.Authenticate(client); err != nil {
+ 71  		return err
+ 72  	}
+ 73  	msg := []byte("To: " + to + "\r\n" +
+ 74  		"Subject: " + subject + "\r\n" +
+ 75  		"\r\n" +
+ 76  		body + "\r\n")
+ 77  	if err := client.Mail(e.username); err != nil {
+ 78  		return err
+ 79  	}
+ 80  	if err := client.Rcpt(to); err != nil {
+ 81  		return err
+ 82  	}
+ 83  	writer, err := client.Data()
+ 84  	if err != nil {
+ 85  		return err
+ 86  	}
+ 87  	_, err = writer.Write(msg)
+ 88  	if err != nil {
+ 89  		return err
+ 90  	}
+ 91  	return writer.Close()
+ 92  }
+ 93  
+ 94  // SMSSender відповідає за надсилання SMS повідомлень через API.
+ 95  type SMSSender struct {
+ 96  	// apiEndpoint URL API сервісу для відправки SMS
+ 97  	apiEndpoint string
+ 98  	// apiKey ключ для автентифікації в API сервісі
+ 99  	apiKey string
+100  }
+101  
+102  // SendMessage надсилає SMS повідомлення на вказаний номер телефону.
+103  // Приймає номер телефону та текст повідомлення.
+104  // Повертає помилку, якщо відправлення не вдалося.
+105  func (s *SMSSender) SendMessage(phoneNumber, message string) error {
+106  	if phoneNumber == "" {
+107  		return errors.New("phone number is not provided")
+108  	}
+109  	payload := map[string]string{
+110  		"phone":   phoneNumber,
+111  		"message": message,
+112  		"apiKey":  s.apiKey,
+113  	}
+114  	jsonData, _ := json.Marshal(payload)
+115  	req, err := http.NewRequest("POST", s.apiEndpoint, bytes.NewBuffer(jsonData))
+116  	if err != nil {
+117  		return err
+118  	}
+119  	req.Header.Set("Content-Type", "application/json")
+120  	client := &http.Client{}
+121  	resp, err := client.Do(req)
+122  	if err != nil {
+123  		return err
+124  	}
+125  	defer resp.Body.Close()
+126  	if resp.StatusCode != http.StatusOK {
+127  		body, _ := ioutil.ReadAll(resp.Body)
+128  		return fmt.Errorf("SMS API error: %s", string(body))
+129  	}
+130  	return nil
+131  }
+132  
+133  // PushNotifier відповідає за надсилання push-повідомлень через API.
+134  type PushNotifier struct {
+135  	// apiEndpoint URL API сервісу для відправки push-повідомлень
+136  	apiEndpoint string
+137  	// apiKey ключ для автентифікації в API сервісі
+138  	apiKey string
+139  }
+140  
+141  // SendPush надсилає push-повідомлення на пристрій з вказаним токеном.
+142  // Приймає токен пристрою, заголовок та текст повідомлення.
+143  // Повертає помилку, якщо відправлення не вдалося.
+144  func (p *PushNotifier) SendPush(deviceToken, title, message string) error {
+145  	if deviceToken == "" {
+146  		return errors.New("device token is not provided")
+147  	}
+148  	payload := map[string]string{
+149  		"deviceToken": deviceToken,
+150  		"title":       title,
+151  		"message":     message,
+152  		"apiKey":      p.apiKey,
+153  	}
+154  	jsonData, _ := json.Marshal(payload)
+155  	req, err := http.NewRequest("POST", p.apiEndpoint, bytes.NewBuffer(jsonData))
+156  	if err != nil {
+157  		return err
+158  	}
+159  	req.Header.Set("Content-Type", "application/json")
+160  	client := &http.Client{}
+161  	resp, err := client.Do(req)
+162  	if err != nil {
+163  		return err
+164  	}
+165  	defer resp.Body.Close()
+166  	if resp.StatusCode != http.StatusOK {
+167  		body, _ := ioutil.ReadAll(resp.Body)
+168  		return fmt.Errorf("Push API error: %s", string(body))
+169  	}
+170  	return nil
+171  }
+172  
+173  // NotificationFacade реалізує патерн Фасад для системи оповіщень,
+174  // об'єднуючи різні канали комунікації в єдиний інтерфейс.
+175  type NotificationFacade struct {
+176  	// emailSender компонент для надсилання електронних листів
+177  	emailSender *EmailSender
+178  	// smsSender компонент для надсилання SMS
+179  	smsSender *SMSSender
+180  	// pushNotifier компонент для надсилання push-повідомлень
+181  	pushNotifier *PushNotifier
+182  }
+183  
+184  // NewNotificationFacade створює та налаштовує новий екземпляр NotificationFacade
+185  // з дефолтними параметрами для всіх типів оповіщень.
+186  // Повертає готовий до використання екземпляр NotificationFacade.
+187  func NewNotificationFacade() *NotificationFacade {
+188  	return &NotificationFacade{
+189  		emailSender:  &EmailSender{smtpServer: "smtp.example.com", smtpPort: "465", username: "user@example.com", password: "password"},
+190  		smsSender:    &SMSSender{apiEndpoint: "https://api.example.com/sms", apiKey: "sms_api_key"},
+191  		pushNotifier: &PushNotifier{apiEndpoint: "https://api.example.com/push", apiKey: "push_api_key"},
+192  	}
+193  }
+194  
+195  // SendNotification надсилає повідомлення користувачу через всі доступні канали комунікації.
+196  // Використовує наявні контактні дані користувача (email, телефон, токен пристрою).
+197  // Повертає помилку, якщо виникла проблема з надсиланням хоча б через один канал.
+198  func (n *NotificationFacade) SendNotification(user User, message string) error {
+199  	if user.Email != "" {
+200  		if err := n.emailSender.Send(user.Email, "Message", message); err != nil {
+201  			return err
+202  		}
+203  	}
+204  	if user.Phone != "" {
+205  		if err := n.smsSender.SendMessage(user.Phone, message); err != nil {
+206  			return err
+207  		}
+208  	}
+209  	if user.DeviceToken != "" {
+210  		if err := n.pushNotifier.SendPush(user.DeviceToken, "Message", message); err != nil {
+211  			return err
+212  		}
+213  	}
+214  	return nil
+215  }
+216  
+217  // main є точкою входу в програму, що демонструє використання системи оповіщень.
+218  func main() {
+219  	facade := NewNotificationFacade()
+220  	user := User{Email: "test@example.com", Phone: "+380501234567", DeviceToken: "device_token_123"}
+221  	err := facade.SendNotification(user, "This is test message!")
+222  	if err != nil {
+223  		fmt.Println("Error:", err)
+224  	}
+225  }
 
 Оформлення платіжних сервісів за шаблоном «Фасад».
 
-  1 package main
-  2 
-  3 import (
-  4 	"bytes"
-  5 	"encoding/json"
-  6 	"errors"
-  7 	"fmt"
-  8 	"net/http"
-  9 )
- 10 
- 11 // PaymentProvider визначає інтерфейс для всіх платіжних провайдерів.
- 12 // Кожен провайдер повинен реалізувати методи Connect та Process.
- 13 type PaymentProvider interface {
- 14 	// Connect встановлює з'єднання з платіжним шлюзом.
- 15 	// Повертає помилку, якщо з'єднання не вдалося встановити.
- 16 	Connect() error
- 17 
- 18 	// Process обробляє платіжну транзакцію з вказаними деталями та сумою.
- 19 	// Параметри:
- 20 	//   - details: карта з деталями платежу, специфічними для конкретного провайдера
- 21 	//   - amount: сума платежу
- 22 	// Повертає:
- 23 	//   - ідентифікатор транзакції у випадку успіху
- 24 	//   - помилку, якщо обробка не вдалася
- 25 	Process(details map[string]string, amount float64) (string, error)
- 26 }
- 27 
- 28 // Payment є базовою структурою для всіх конкретних реалізацій платіжних провайдерів.
- 29 // Містить спільну функціональність для взаємодії з API платіжних шлюзів.
- 30 type Payment struct {
- 31 	// apiEndpoint базовий URL API платіжного шлюзу
- 32 	apiEndpoint string
- 33 	// apiKey ключ для автентифікації в API платіжного шлюзу
- 34 	apiKey string
- 35 }
- 36 
- 37 // Connect реалізує метод інтерфейсу PaymentProvider.
- 38 // У базовій реалізації просто перевіряє наявність налаштувань.
- 39 // Конкретні провайдери можуть перевизначити цей метод для власної логіки з'єднання.
- 40 func (p *Payment) Connect() error {
- 41 	if p.apiEndpoint == "" || p.apiKey == "" {
- 42 		return errors.New("missing API endpoint or API key")
- 43 	}
- 44 	return nil
- 45 }
- 46 
- 47 // request виконує HTTP-запит до платіжного шлюзу.
- 48 // Внутрішній метод, що використовується усіма платіжними провайдерами.
- 49 // Параметри:
- 50 //   - method: HTTP метод запиту (GET, POST, тощо)
- 51 //   - endpoint: шлях до API-ендпоінту відносно базового URL
- 52 //   - payload: дані, що будуть відправлені у форматі JSON
- 53 //
- 54 // Повертає:
- 55 //   - ідентифікатор транзакції у випадку успіху
- 56 //   - помилку, якщо запит не вдався
- 57 func (p *Payment) request(method, endpoint string, payload map[string]interface{}) (string, error) {
- 58 	jsonData, _ := json.Marshal(payload)
- 59 	req, err := http.NewRequest(method, p.apiEndpoint+endpoint, bytes.NewBuffer(jsonData))
- 60 	if err != nil {
- 61 		return "", err
- 62 	}
- 63 	req.Header.Set("Content-Type", "application/json")
- 64 	client := &http.Client{}
- 65 	resp, err := client.Do(req)
- 66 	if err != nil || resp.StatusCode != http.StatusOK {
- 67 		return "", errors.New("payment request failed")
- 68 	}
- 69 	return "transaction-id", nil
- 70 }
- 71 
- 72 // StripePayment реалізує платіжний провайдер для Stripe.
- 73 // Вбудовує базову структуру Payment для використання спільної функціональності.
- 74 type StripePayment struct{ Payment }
- 75 
- 76 // Process обробляє платіж через Stripe.
- 77 // Очікує token у details для ідентифікації платіжної картки.
- 78 // Повертає ідентифікатор транзакції або помилку.
- 79 func (s *StripePayment) Process(details map[string]string, amount float64) (string, error) {
- 80 	if token, ok := details["token"]; !ok || token == "" {
- 81 		return "", errors.New("missing token")
- 82 	}
- 83 	return s.request("POST", "/charge", map[string]interface{}{"token": details["token"], "amount": amount})
- 84 }
- 85 
- 86 // PayPalPayment реалізує платіжний провайдер для PayPal.
- 87 // Вбудовує базову структуру Payment для використання спільної функціональності.
- 88 type PayPalPayment struct{ Payment }
- 89 
- 90 // Process обробляє платіж через PayPal.
- 91 // Очікує account_id у details для ідентифікації рахунку PayPal.
- 92 // Повертає ідентифікатор транзакції або помилку.
- 93 func (p *PayPalPayment) Process(details map[string]string, amount float64) (string, error) {
- 94 	if accountID, ok := details["account_id"]; !ok || accountID == "" {
- 95 		return "", errors.New("missing account ID")
- 96 	}
- 97 	return p.request("POST", "/pay", map[string]interface{}{"accountID": details["account_id"], "amount": amount})
- 98 }
- 99 
-100 // ApplePayPayment реалізує платіжний провайдер для Apple Pay.
-101 // Вбудовує базову структуру Payment для використання спільної функціональності.
-102 type ApplePayPayment struct{ Payment }
-103 
-104 // Process обробляє платіж через Apple Pay.
-105 // Очікує device_data у details для ідентифікації пристрою та платіжної інформації.
-106 // Повертає ідентифікатор транзакції або помилку.
-107 func (a *ApplePayPayment) Process(details map[string]string, amount float64) (string, error) {
-108 	if deviceData, ok := details["device_data"]; !ok || deviceData == "" {
-109 		return "", errors.New("missing device data")
-110 	}
-111 	return a.request("POST", "/pay", map[string]interface{}{"deviceData": details["device_data"], "amount": amount})
-112 }
-113 
-114 // PaymentFacade реалізує патерн Фасад для системи обробки платежів.
-115 // Спрощує взаємодію з різними платіжними провайдерами через єдиний інтерфейс.
-116 type PaymentFacade struct {
-117 	// providers карта доступних платіжних провайдерів за їх ідентифікаторами
-118 	providers map[string]PaymentProvider
-119 }
-120 
-121 // NewPaymentFacade створює та налаштовує новий екземпляр PaymentFacade
-122 // з передналаштованими платіжними провайдерами.
-123 // Повертає готовий до використання екземпляр PaymentFacade.
-124 func NewPaymentFacade() *PaymentFacade {
-125 	return &PaymentFacade{
-126 		providers: map[string]PaymentProvider{
-127 			"stripe":   &StripePayment{Payment{"https://stripe.com/api", "stripe-key"}},
-128 			"paypal":   &PayPalPayment{Payment{"https://paypal.com/api", "paypal-key"}},
-129 			"applepay": &ApplePayPayment{Payment{"https://applepay.com/api", "applepay-key"}},
-130 		},
-131 	}
-132 }
-133 
-134 // ProcessPayment обробляє платіж через вказаний тип платіжного провайдера.
-135 // Є основним методом фасаду для обробки платежів.
-136 // Параметри:
-137 //   - paymentType: ідентифікатор платіжного провайдера ("stripe", "paypal", "applepay")
-138 //   - details: деталі платежу, специфічні для обраного провайдера
-139 //   - amount: сума платежу
-140 //
-141 // Повертає:
-142 //   - ідентифікатор транзакції у випадку успіху
-143 //   - помилку, якщо обробка не вдалася або провайдер не підтримується
-144 func (p *PaymentFacade) ProcessPayment(paymentType string, details map[string]string, amount float64) (string, error) {
-145 	provider, exists := p.providers[paymentType]
-146 	if !exists {
-147 		return "", fmt.Errorf("unsupported payment type: %s", paymentType)
-148 	}
-149 	if err := provider.Connect(); err != nil {
-150 		return "", err
-151 	}
-152 	return provider.Process(details, amount)
-153 }
-154 
-155 // AddProvider додає новий платіжний провайдер до фасаду.
-156 // Дозволяє розширювати систему новими платіжними провайдерами під час виконання.
-157 // Параметри:
-158 //   - name: унікальний ідентифікатор провайдера
-159 //   - provider: реалізація інтерфейсу PaymentProvider
-160 //
-161 // Повертає:
-162 //   - помилку, якщо провайдер з таким іменем вже існує
-163 func (p *PaymentFacade) AddProvider(name string, provider PaymentProvider) error {
-164 	if _, exists := p.providers[name]; exists {
-165 		return fmt.Errorf("provider %s already exists", name)
-166 	}
-167 	p.providers[name] = provider
-168 	return nil
-169 }
+  1  package main
+  2  
+  3  import (
+  4  	"bytes"
+  5  	"encoding/json"
+  6  	"errors"
+  7  	"fmt"
+  8  	"net/http"
+  9  )
+ 10  
+ 11  // PaymentProvider визначає інтерфейс для всіх платіжних провайдерів.
+ 12  // Кожен провайдер повинен реалізувати методи Connect та Process.
+ 13  type PaymentProvider interface {
+ 14  	// Connect встановлює з'єднання з платіжним шлюзом.
+ 15  	// Повертає помилку, якщо з'єднання не вдалося встановити.
+ 16  	Connect() error
+ 17  
+ 18  	// Process обробляє платіжну транзакцію з вказаними деталями та сумою.
+ 19  	// Параметри:
+ 20  	//   - details: карта з деталями платежу, специфічними для конкретного провайдера
+ 21  	//   - amount: сума платежу
+ 22  	// Повертає:
+ 23  	//   - ідентифікатор транзакції у випадку успіху
+ 24  	//   - помилку, якщо обробка не вдалася
+ 25  	Process(details map[string]string, amount float64) (string, error)
+ 26  }
+ 27  
+ 28  // Payment є базовою структурою для всіх конкретних реалізацій платіжних провайдерів.
+ 29  // Містить спільну функціональність для взаємодії з API платіжних шлюзів.
+ 30  type Payment struct {
+ 31  	// apiEndpoint базовий URL API платіжного шлюзу
+ 32  	apiEndpoint string
+ 33  	// apiKey ключ для автентифікації в API платіжного шлюзу
+ 34  	apiKey string
+ 35  }
+ 36  
+ 37  // Connect реалізує метод інтерфейсу PaymentProvider.
+ 38  // У базовій реалізації просто перевіряє наявність налаштувань.
+ 39  // Конкретні провайдери можуть перевизначити цей метод для власної логіки з'єднання.
+ 40  func (p *Payment) Connect() error {
+ 41  	if p.apiEndpoint == "" || p.apiKey == "" {
+ 42  		return errors.New("missing API endpoint or API key")
+ 43  	}
+ 44  	return nil
+ 45  }
+ 46  
+ 47  // request виконує HTTP-запит до платіжного шлюзу.
+ 48  // Внутрішній метод, що використовується усіма платіжними провайдерами.
+ 49  // Параметри:
+ 50  //   - method: HTTP метод запиту (GET, POST, тощо)
+ 51  //   - endpoint: шлях до API-ендпоінту відносно базового URL
+ 52  //   - payload: дані, що будуть відправлені у форматі JSON
+ 53  //
+ 54  // Повертає:
+ 55  //   - ідентифікатор транзакції у випадку успіху
+ 56  //   - помилку, якщо запит не вдався
+ 57  func (p *Payment) request(method, endpoint string, payload map[string]interface{}) (string, error) {
+ 58  	jsonData, _ := json.Marshal(payload)
+ 59  	req, err := http.NewRequest(method, p.apiEndpoint+endpoint, bytes.NewBuffer(jsonData))
+ 60  	if err != nil {
+ 61  		return "", err
+ 62  	}
+ 63  	req.Header.Set("Content-Type", "application/json")
+ 64  	client := &http.Client{}
+ 65  	resp, err := client.Do(req)
+ 66  	if err != nil || resp.StatusCode != http.StatusOK {
+ 67  		return "", errors.New("payment request failed")
+ 68  	}
+ 69  	return "transaction-id", nil
+ 70  }
+ 71  
+ 72  // StripePayment реалізує платіжний провайдер для Stripe.
+ 73  // Вбудовує базову структуру Payment для використання спільної функціональності.
+ 74  type StripePayment struct{ Payment }
+ 75  
+ 76  // Process обробляє платіж через Stripe.
+ 77  // Очікує token у details для ідентифікації платіжної картки.
+ 78  // Повертає ідентифікатор транзакції або помилку.
+ 79  func (s *StripePayment) Process(details map[string]string, amount float64) (string, error) {
+ 80  	if token, ok := details["token"]; !ok || token == "" {
+ 81  		return "", errors.New("missing token")
+ 82  	}
+ 83  	return s.request("POST", "/charge", map[string]interface{}{"token": details["token"], "amount": amount})
+ 84  }
+ 85  
+ 86  // PayPalPayment реалізує платіжний провайдер для PayPal.
+ 87  // Вбудовує базову структуру Payment для використання спільної функціональності.
+ 88  type PayPalPayment struct{ Payment }
+ 89  
+ 90  // Process обробляє платіж через PayPal.
+ 91  // Очікує account_id у details для ідентифікації рахунку PayPal.
+ 92  // Повертає ідентифікатор транзакції або помилку.
+ 93  func (p *PayPalPayment) Process(details map[string]string, amount float64) (string, error) {
+ 94  	if accountID, ok := details["account_id"]; !ok || accountID == "" {
+ 95  		return "", errors.New("missing account ID")
+ 96  	}
+ 97  	return p.request("POST", "/pay", map[string]interface{}{"accountID": details["account_id"], "amount": amount})
+ 98  }
+ 99  
+100  // ApplePayPayment реалізує платіжний провайдер для Apple Pay.
+101  // Вбудовує базову структуру Payment для використання спільної функціональності.
+102  type ApplePayPayment struct{ Payment }
+103  
+104  // Process обробляє платіж через Apple Pay.
+105  // Очікує device_data у details для ідентифікації пристрою та платіжної інформації.
+106  // Повертає ідентифікатор транзакції або помилку.
+107  func (a *ApplePayPayment) Process(details map[string]string, amount float64) (string, error) {
+108  	if deviceData, ok := details["device_data"]; !ok || deviceData == "" {
+109  		return "", errors.New("missing device data")
+110  	}
+111  	return a.request("POST", "/pay", map[string]interface{}{"deviceData": details["device_data"], "amount": amount})
+112  }
+113  
+114  // PaymentFacade реалізує патерн Фасад для системи обробки платежів.
+115  // Спрощує взаємодію з різними платіжними провайдерами через єдиний інтерфейс.
+116  type PaymentFacade struct {
+117  	// providers карта доступних платіжних провайдерів за їх ідентифікаторами
+118  	providers map[string]PaymentProvider
+119  }
+120  
+121  // NewPaymentFacade створює та налаштовує новий екземпляр PaymentFacade
+122  // з передналаштованими платіжними провайдерами.
+123  // Повертає готовий до використання екземпляр PaymentFacade.
+124  func NewPaymentFacade() *PaymentFacade {
+125  	return &PaymentFacade{
+126  		providers: map[string]PaymentProvider{
+127  			"stripe":   &StripePayment{Payment{"https://stripe.com/api", "stripe-key"}},
+128  			"paypal":   &PayPalPayment{Payment{"https://paypal.com/api", "paypal-key"}},
+129  			"applepay": &ApplePayPayment{Payment{"https://applepay.com/api", "applepay-key"}},
+130  		},
+131  	}
+132  }
+133  
+134  // ProcessPayment обробляє платіж через вказаний тип платіжного провайдера.
+135  // Є основним методом фасаду для обробки платежів.
+136  // Параметри:
+137  //   - paymentType: ідентифікатор платіжного провайдера ("stripe", "paypal", "applepay")
+138  //   - details: деталі платежу, специфічні для обраного провайдера
+139  //   - amount: сума платежу
+140  //
+141  // Повертає:
+142  //   - ідентифікатор транзакції у випадку успіху
+143  //   - помилку, якщо обробка не вдалася або провайдер не підтримується
+144  func (p *PaymentFacade) ProcessPayment(paymentType string, details map[string]string, amount float64) (string, error) {
+145  	provider, exists := p.providers[paymentType]
+146  	if !exists {
+147  		return "", fmt.Errorf("unsupported payment type: %s", paymentType)
+148  	}
+149  	if err := provider.Connect(); err != nil {
+150  		return "", err
+151  	}
+152  	return provider.Process(details, amount)
+153  }
+154  
+155  // AddProvider додає новий платіжний провайдер до фасаду.
+156  // Дозволяє розширювати систему новими платіжними провайдерами під час виконання.
+157  // Параметри:
+158  //   - name: унікальний ідентифікатор провайдера
+159  //   - provider: реалізація інтерфейсу PaymentProvider
+160  //
+161  // Повертає:
+162  //   - помилку, якщо провайдер з таким іменем вже існує
+163  func (p *PaymentFacade) AddProvider(name string, provider PaymentProvider) error {
+164  	if _, exists := p.providers[name]; exists {
+165  		return fmt.Errorf("provider %s already exists", name)
+166  	}
+167  	p.providers[name] = provider
+168  	return nil
+169  }
 
 Оформлення сервісів запитів до сховищ даних з використанням шаблону «Фасад».
 
-  1 package main
-  2 
-  3 import (
-  4 	"context"
-  5 	"database/sql"
-  6 	"fmt"
-  7 
-  8 	// Драйвер для MySQL
-  9 	_ "github.com/go-sql-driver/mysql"
- 10 	"go.mongodb.org/mongo-driver/bson"
- 11 	"go.mongodb.org/mongo-driver/mongo"
- 12 	"go.mongodb.org/mongo-driver/mongo/options"
- 13 )
- 14 
- 15 // DatabaseProvider визначає загальний інтерфейс для всіх типів баз даних.
- 16 // Реалізації цього інтерфейсу можуть представляти різні технології баз даних.
- 17 type DatabaseProvider interface {
- 18 	// Connect встановлює з'єднання з базою даних.
- 19 	// Повертає помилку, якщо з'єднання не вдалося встановити.
- 20 	Connect() error
- 21 
- 22 	// ExecuteQuery виконує запит до бази даних.
- 23 	// Приймає рядок запиту, специфічний для конкретного типу бази даних.
- 24 	// Повертає результат у вигляді рядка та помилку у випадку невдачі.
- 25 	ExecuteQuery(query string) (string, error)
- 26 }
- 27 
- 28 // SQLDatabase представляє реалізацію провайдера для SQL-баз даних.
- 29 // Використовує стандартний пакет database/sql для взаємодії з SQL базами даних.
- 30 type SQLDatabase struct {
- 31 	// connectionString рядок підключення до SQL бази даних
- 32 	connectionString string
- 33 	// db об'єкт підключення до бази даних
- 34 	db *sql.DB
- 35 }
- 36 
- 37 // Connect встановлює з'єднання з SQL базою даних.
- 38 // Використовує драйвер MySQL для підключення.
- 39 // Повертає помилку, якщо з'єднання не вдалося встановити або перевірити.
- 40 func (s *SQLDatabase) Connect() error {
- 41 	var err error
- 42 	s.db, err = sql.Open("mysql", s.connectionString)
- 43 	if err != nil {
- 44 		return fmt.Errorf("could not connect to SQL database: %v", err)
- 45 	}
- 46 	if err := s.db.Ping(); err != nil {
- 47 		return fmt.Errorf("could not ping SQL database: %v", err)
- 48 	}
- 49 	return nil
- 50 }
- 51 
- 52 // ExecuteQuery виконує SQL-запит до бази даних.
- 53 // Приймає SQL-запит у вигляді рядка.
- 54 // Повертає результат першого стовпця першого рядка у вигляді рядка.
- 55 // У випадку помилки виконання запиту або читання даних повертає помилку.
- 56 func (s *SQLDatabase) ExecuteQuery(query string) (string, error) {
- 57 	rows, err := s.db.Query(query)
- 58 	if err != nil {
- 59 		return "", fmt.Errorf("could not execute SQL query: %v", err)
- 60 	}
- 61 	defer rows.Close()
- 62 	var result string
- 63 	for rows.Next() {
- 64 		err := rows.Scan(&result)
- 65 		if err != nil {
- 66 			return "", fmt.Errorf("could not scan row: %v", err)
- 67 		}
- 68 	}
- 69 	return result, nil
- 70 }
- 71 
- 72 // NoSQLDatabase представляє реалізацію провайдера для NoSQL-баз даних.
- 73 // Використовує MongoDB в якості NoSQL рішення.
- 74 type NoSQLDatabase struct {
- 75 	// connectionURL URL для підключення до MongoDB
- 76 	connectionURL string
- 77 	// client клієнт MongoDB
- 78 	client *mongo.Client
- 79 }
- 80 
- 81 // Connect встановлює з'єднання з MongoDB.
- 82 // Використовує офіційний драйвер MongoDB для Go.
- 83 // Повертає помилку, якщо з'єднання не вдалося встановити.
- 84 func (n *NoSQLDatabase) Connect() error {
- 85 	clientOptions := options.Client().ApplyURI(n.connectionURL)
- 86 	client, err := mongo.Connect(context.Background(), clientOptions)
- 87 	if err != nil {
- 88 		return fmt.Errorf("could not connect to NoSQL database: %v", err)
- 89 	}
- 90 	n.client = client
- 91 	return nil
- 92 }
- 93 
- 94 // ExecuteQuery виконує пошук документа в MongoDB за вказаним значенням.
- 95 // Для MongoDB, "запит" є просто значенням поля "user", за яким шукається документ.
- 96 // Повертає знайдений документ у вигляді рядка або помилку, якщо документ не знайдено.
- 97 func (n *NoSQLDatabase) ExecuteQuery(query string) (string, error) {
- 98 	collection := n.client.Database("test").Collection("users")
- 99 	var result bson.M
-100 	err := collection.FindOne(context.Background(), bson.M{"user": query}).Decode(&result)
-101 	if err != nil {
-102 		return "", fmt.Errorf("could not execute NoSQL query: %v", err)
-103 	}
-104 	return fmt.Sprintf("%v", result), nil
-105 }
-106 
-107 // DatabaseFacade реалізує патерн Фасад для роботи з різними базами даних.
-108 // Надає єдиний спрощений інтерфейс для взаємодії з різними типами баз даних.
-109 type DatabaseFacade struct {
-110 	// providers карта доступних провайдерів баз даних за їх типами
-111 	providers map[string]DatabaseProvider
-112 }
-113 
-114 // NewDatabaseFacade створює новий екземпляр DatabaseFacade з передналаштованими провайдерами.
-115 // Ініціалізує SQL та NoSQL провайдери з дефолтними параметрами підключення.
-116 // Повертає готовий до використання екземпляр DatabaseFacade.
-117 func NewDatabaseFacade() *DatabaseFacade {
-118 	return &DatabaseFacade{
-119 		providers: map[string]DatabaseProvider{
-120 			"sql":   &SQLDatabase{connectionString: "user:password@tcp(localhost:3306)/dbname"},
-121 			"nosql": &NoSQLDatabase{connectionURL: "mongodb://localhost:27017"},
-122 		},
-123 	}
-124 }
-125 
-126 // ExecuteDatabaseOperation виконує операцію в базі даних вказаного типу.
-127 // Є основним методом фасаду для роботи з базами даних.
-128 // Параметри:
-129 //   - dbType: тип бази даних ("sql" або "nosql")
-130 //   - query: запит до бази даних, специфічний для обраного типу
-131 //
-132 // Повертає:
-133 //   - результат запиту у вигляді рядка у випадку успіху
-134 //   - помилку, якщо тип бази даних не підтримується або виникла помилка при виконанні запиту
-135 func (d *DatabaseFacade) ExecuteDatabaseOperation(dbType string, query string) (string, error) {
-136 	provider, exists := d.providers[dbType]
-137 	if !exists {
-138 		return "", fmt.Errorf("unsupported database type: %s", dbType)
-139 	}
-140 	if err := provider.Connect(); err != nil {
-141 		return "", err
-142 	}
-143 	return provider.ExecuteQuery(query)
-144 }
-145 
-146 // AddProvider додає новий провайдер бази даних до фасаду.
-147 // Дозволяє розширювати систему новими типами баз даних під час виконання.
-148 // Параметри:
-149 //   - name: унікальний ідентифікатор типу бази даних
-150 //   - provider: реалізація інтерфейсу DatabaseProvider
-151 //
-152 // Повертає:
-153 //   - помилку, якщо провайдер з таким іменем вже існує
-154 func (d *DatabaseFacade) AddProvider(name string, provider DatabaseProvider) error {
-155 	if _, exists := d.providers[name]; exists {
-156 		return fmt.Errorf("database provider %s already exists", name)
-157 	}
-158 	d.providers[name] = provider
-159 	return nil
-160 }
-161 
-162 // Close закриває всі відкриті з'єднання з базами даних.
-163 // Рекомендується викликати цей метод перед завершенням роботи програми.
-164 // Повертає помилку, якщо виникла проблема при закритті будь-якого з з'єднань.
-165 func (d *DatabaseFacade) Close() error {
-166 	for name, provider := range d.providers {
-167 		switch p := provider.(type) {
-168 		case *SQLDatabase:
-169 			if p.db != nil {
-170 				if err := p.db.Close(); err != nil {
-171 					return fmt.Errorf("error closing SQL database %s: %v", name, err)
-172 				}
-173 			}
-174 		case *NoSQLDatabase:
-175 			if p.client != nil {
-176 				if err := p.client.Disconnect(context.Background()); err != nil {
-177 					return fmt.Errorf("error closing NoSQL database %s: %v", name, err)
-178 				}
-179 			}
-180 		}
-181 	}
-182 	return nil
-183 }
-184 
-185 // main є точкою входу в програму, що демонструє використання фасаду баз даних.
-186 func main() {
-187 	facade := NewDatabaseFacade()
-188 	defer facade.Close() // Закриваємо з'єднання після завершення
-189 
-190 	sqlResult, err := facade.ExecuteDatabaseOperation("sql", "SELECT name FROM users LIMIT 1")
-191 	if err != nil {
-192 		fmt.Println("Error executing SQL query:", err)
-193 	} else {
-194 		fmt.Println("SQL result:", sqlResult)
-195 	}
-196 
-197 	nosqlResult, err := facade.ExecuteDatabaseOperation("nosql", "john")
-198 	if err != nil {
-199 		fmt.Println("Error executing NoSQL query:", err)
-200 	} else {
-201 		fmt.Println("NoSQL result:", nosqlResult)
-202 	}
-203 }
+  1  package main
+  2  
+  3  import (
+  4  	"context"
+  5  	"database/sql"
+  6  	"fmt"
+  7  
+  8  	// Драйвер для MySQL
+  9  	_ "github.com/go-sql-driver/mysql"
+ 10  	"go.mongodb.org/mongo-driver/bson"
+ 11  	"go.mongodb.org/mongo-driver/mongo"
+ 12  	"go.mongodb.org/mongo-driver/mongo/options"
+ 13  )
+ 14  
+ 15  // DatabaseProvider визначає загальний інтерфейс для всіх типів баз даних.
+ 16  // Реалізації цього інтерфейсу можуть представляти різні технології баз даних.
+ 17  type DatabaseProvider interface {
+ 18  	// Connect встановлює з'єднання з базою даних.
+ 19  	// Повертає помилку, якщо з'єднання не вдалося встановити.
+ 20  	Connect() error
+ 21  
+ 22  	// ExecuteQuery виконує запит до бази даних.
+ 23  	// Приймає рядок запиту, специфічний для конкретного типу бази даних.
+ 24  	// Повертає результат у вигляді рядка та помилку у випадку невдачі.
+ 25  	ExecuteQuery(query string) (string, error)
+ 26  }
+ 27  
+ 28  // SQLDatabase представляє реалізацію провайдера для SQL-баз даних.
+ 29  // Використовує стандартний пакет database/sql для взаємодії з SQL базами даних.
+ 30  type SQLDatabase struct {
+ 31  	// connectionString рядок підключення до SQL бази даних
+ 32  	connectionString string
+ 33  	// db об'єкт підключення до бази даних
+ 34  	db *sql.DB
+ 35  }
+ 36  
+ 37  // Connect встановлює з'єднання з SQL базою даних.
+ 38  // Використовує драйвер MySQL для підключення.
+ 39  // Повертає помилку, якщо з'єднання не вдалося встановити або перевірити.
+ 40  func (s *SQLDatabase) Connect() error {
+ 41  	var err error
+ 42  	s.db, err = sql.Open("mysql", s.connectionString)
+ 43  	if err != nil {
+ 44  		return fmt.Errorf("could not connect to SQL database: %v", err)
+ 45  	}
+ 46  	if err := s.db.Ping(); err != nil {
+ 47  		return fmt.Errorf("could not ping SQL database: %v", err)
+ 48  	}
+ 49  	return nil
+ 50  }
+ 51  
+ 52  // ExecuteQuery виконує SQL-запит до бази даних.
+ 53  // Приймає SQL-запит у вигляді рядка.
+ 54  // Повертає результат першого стовпця першого рядка у вигляді рядка.
+ 55  // У випадку помилки виконання запиту або читання даних повертає помилку.
+ 56  func (s *SQLDatabase) ExecuteQuery(query string) (string, error) {
+ 57  	rows, err := s.db.Query(query)
+ 58  	if err != nil {
+ 59  		return "", fmt.Errorf("could not execute SQL query: %v", err)
+ 60  	}
+ 61  	defer rows.Close()
+ 62  	var result string
+ 63  	for rows.Next() {
+ 64  		err := rows.Scan(&result)
+ 65  		if err != nil {
+ 66  			return "", fmt.Errorf("could not scan row: %v", err)
+ 67  		}
+ 68  	}
+ 69  	return result, nil
+ 70  }
+ 71  
+ 72  // NoSQLDatabase представляє реалізацію провайдера для NoSQL-баз даних.
+ 73  // Використовує MongoDB в якості NoSQL рішення.
+ 74  type NoSQLDatabase struct {
+ 75  	// connectionURL URL для підключення до MongoDB
+ 76  	connectionURL string
+ 77  	// client клієнт MongoDB
+ 78  	client *mongo.Client
+ 79  }
+ 80  
+ 81  // Connect встановлює з'єднання з MongoDB.
+ 82  // Використовує офіційний драйвер MongoDB для Go.
+ 83  // Повертає помилку, якщо з'єднання не вдалося встановити.
+ 84  func (n *NoSQLDatabase) Connect() error {
+ 85  	clientOptions := options.Client().ApplyURI(n.connectionURL)
+ 86  	client, err := mongo.Connect(context.Background(), clientOptions)
+ 87  	if err != nil {
+ 88  		return fmt.Errorf("could not connect to NoSQL database: %v", err)
+ 89  	}
+ 90  	n.client = client
+ 91  	return nil
+ 92  }
+ 93  
+ 94  // ExecuteQuery виконує пошук документа в MongoDB за вказаним значенням.
+ 95  // Для MongoDB, "запит" є просто значенням поля "user", за яким шукається документ.
+ 96  // Повертає знайдений документ у вигляді рядка або помилку, якщо документ не знайдено.
+ 97  func (n *NoSQLDatabase) ExecuteQuery(query string) (string, error) {
+ 98  	collection := n.client.Database("test").Collection("users")
+ 99  	var result bson.M
+100  	err := collection.FindOne(context.Background(), bson.M{"user": query}).Decode(&result)
+101  	if err != nil {
+102  		return "", fmt.Errorf("could not execute NoSQL query: %v", err)
+103  	}
+104  	return fmt.Sprintf("%v", result), nil
+105  }
+106  
+107  // DatabaseFacade реалізує патерн Фасад для роботи з різними базами даних.
+108  // Надає єдиний спрощений інтерфейс для взаємодії з різними типами баз даних.
+109  type DatabaseFacade struct {
+110  	// providers карта доступних провайдерів баз даних за їх типами
+111  	providers map[string]DatabaseProvider
+112  }
+113  
+114  // NewDatabaseFacade створює новий екземпляр DatabaseFacade з передналаштованими провайдерами.
+115  // Ініціалізує SQL та NoSQL провайдери з дефолтними параметрами підключення.
+116  // Повертає готовий до використання екземпляр DatabaseFacade.
+117  func NewDatabaseFacade() *DatabaseFacade {
+118  	return &DatabaseFacade{
+119  		providers: map[string]DatabaseProvider{
+120  			"sql":   &SQLDatabase{connectionString: "user:password@tcp(localhost:3306)/dbname"},
+121  			"nosql": &NoSQLDatabase{connectionURL: "mongodb://localhost:27017"},
+122  		},
+123  	}
+124  }
+125  
+126  // ExecuteDatabaseOperation виконує операцію в базі даних вказаного типу.
+127  // Є основним методом фасаду для роботи з базами даних.
+128  // Параметри:
+129  //   - dbType: тип бази даних ("sql" або "nosql")
+130  //   - query: запит до бази даних, специфічний для обраного типу
+131  //
+132  // Повертає:
+133  //   - результат запиту у вигляді рядка у випадку успіху
+134  //   - помилку, якщо тип бази даних не підтримується або виникла помилка при виконанні запиту
+135  func (d *DatabaseFacade) ExecuteDatabaseOperation(dbType string, query string) (string, error) {
+136  	provider, exists := d.providers[dbType]
+137  	if !exists {
+138  		return "", fmt.Errorf("unsupported database type: %s", dbType)
+139  	}
+140  	if err := provider.Connect(); err != nil {
+141  		return "", err
+142  	}
+143  	return provider.ExecuteQuery(query)
+144  }
+145  
+146  // AddProvider додає новий провайдер бази даних до фасаду.
+147  // Дозволяє розширювати систему новими типами баз даних під час виконання.
+148  // Параметри:
+149  //   - name: унікальний ідентифікатор типу бази даних
+150  //   - provider: реалізація інтерфейсу DatabaseProvider
+151  //
+152  // Повертає:
+153  //   - помилку, якщо провайдер з таким іменем вже існує
+154  func (d *DatabaseFacade) AddProvider(name string, provider DatabaseProvider) error {
+155  	if _, exists := d.providers[name]; exists {
+156  		return fmt.Errorf("database provider %s already exists", name)
+157  	}
+158  	d.providers[name] = provider
+159  	return nil
+160  }
+161  
+162  // Close закриває всі відкриті з'єднання з базами даних.
+163  // Рекомендується викликати цей метод перед завершенням роботи програми.
+164  // Повертає помилку, якщо виникла проблема при закритті будь-якого з з'єднань.
+165  func (d *DatabaseFacade) Close() error {
+166  	for name, provider := range d.providers {
+167  		switch p := provider.(type) {
+168  		case *SQLDatabase:
+169  			if p.db != nil {
+170  				if err := p.db.Close(); err != nil {
+171  					return fmt.Errorf("error closing SQL database %s: %v", name, err)
+172  				}
+173  			}
+174  		case *NoSQLDatabase:
+175  			if p.client != nil {
+176  				if err := p.client.Disconnect(context.Background()); err != nil {
+177  					return fmt.Errorf("error closing NoSQL database %s: %v", name, err)
+178  				}
+179  			}
+180  		}
+181  	}
+182  	return nil
+183  }
+184  
+185  // main є точкою входу в програму, що демонструє використання фасаду баз даних.
+186  func main() {
+187  	facade := NewDatabaseFacade()
+188  	defer facade.Close() // Закриваємо з'єднання після завершення
+189  
+190  	sqlResult, err := facade.ExecuteDatabaseOperation("sql", "SELECT name FROM users LIMIT 1")
+191  	if err != nil {
+192  		fmt.Println("Error executing SQL query:", err)
+193  	} else {
+194  		fmt.Println("SQL result:", sqlResult)
+195  	}
+196  
+197  	nosqlResult, err := facade.ExecuteDatabaseOperation("nosql", "john")
+198  	if err != nil {
+199  		fmt.Println("Error executing NoSQL query:", err)
+200  	} else {
+201  		fmt.Println("NoSQL result:", nosqlResult)
+202  	}
+203  }
 
