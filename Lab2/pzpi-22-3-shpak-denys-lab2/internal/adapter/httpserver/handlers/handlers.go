@@ -4,6 +4,14 @@
 // You can get handler instances by calling the New*Handler functions
 // The handlers are responsible for handling the http requests and responses
 package handlers // import "wayra/internal/adapter/httpserver/handlers"
+import (
+	"errors"
+	"fmt"
+	"strconv"
+
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/gin-gonic/gin"
+)
 
 // The role of user is one of these constants
 const (
@@ -30,3 +38,49 @@ const (
 	InProgress = "in_progress"
 	Completed  = "completed"
 )
+
+// GetUserIDFromToken gets the user ID from the token in the request
+// c: The gin context
+// Returns: The user ID and an error if there was a problem
+// GetUserIDFromToken gets the user ID from the token in the request
+// c: The gin context
+// Returns: The user ID and an error if there was a problem
+func GetUserIDFromToken(c *gin.Context) (*uint, error) {
+	tokenCookie, exists := c.Get("token")
+	if !exists {
+		return nil, errors.New("token not found in context")
+	}
+
+	tokenString, ok := tokenCookie.(string)
+	if !ok {
+		return nil, errors.New("invalid token format in context")
+	}
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("unexpected signing method")
+		}
+
+		return cfg.JWT.Secret, nil
+	})
+	if err != nil || !token.Valid {
+		return nil, fmt.Errorf("invalid token: %s", err.Error())
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		stringUserID, ok := claims["sub"].(string)
+		if !ok {
+			return nil, errors.New("sub not found in token claims")
+		}
+
+		userID, err := strconv.Atoi(stringUserID)
+		if err != nil {
+			return nil, errors.New("problem parsing user ID")
+		}
+
+		uintUserID := uint(userID)
+		return &uintUserID, nil
+	}
+
+	return nil, errors.New("failed to parse token claims")
+}
