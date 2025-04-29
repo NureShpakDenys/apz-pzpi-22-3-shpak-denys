@@ -136,7 +136,7 @@ func (h *WaypointHandler) AddWaypoint(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		h.logAction(c, "create_waypoint", "Failed to create waypoint: "+err.Error(), false)
@@ -221,7 +221,7 @@ func (h *WaypointHandler) GetWaypoint(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		h.logAction(c, "get_waypoint", "Failed to fetch waypoint: "+err.Error(), false)
@@ -270,7 +270,7 @@ func (h *WaypointHandler) UpdateWaypoint(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return
@@ -376,7 +376,7 @@ func (h *WaypointHandler) DeleteWaypoint(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		h.logAction(c, "delete_waypoint", "Failed to delete waypoint: "+err.Error(), false)
@@ -478,7 +478,7 @@ func (h *WaypointHandler) GetDeviceConfig(c *gin.Context) {
 }
 
 func (h *WaypointHandler) logAction(c *gin.Context, actionType, description string, success bool) {
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		userID = nil
 	}

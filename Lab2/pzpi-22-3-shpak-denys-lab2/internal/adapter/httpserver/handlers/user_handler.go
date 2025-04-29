@@ -140,7 +140,7 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	currentUserID, err := getUserIDFromToken(c)
+	currentUserID, err := GetUserIDFromToken(c)
 	fmt.Println(currentUserID)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})

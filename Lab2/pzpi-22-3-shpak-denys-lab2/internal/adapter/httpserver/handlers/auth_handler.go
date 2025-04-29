@@ -131,7 +131,7 @@ func (h *AuthHandler) LoginUser(c *gin.Context) {
 // @Security     BearerAuth
 // @Router       /auth/logout [post]
 func (h *AuthHandler) LogoutUser(c *gin.Context) {
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		userID = nil
 	}

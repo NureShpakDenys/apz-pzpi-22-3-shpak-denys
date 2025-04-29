@@ -112,7 +112,7 @@ func (h *CompanyHandler) RegisterCompany(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		h.logAction(c, "create_company", "Failed to create company: "+err.Error(), false)
@@ -169,7 +169,7 @@ func (h *CompanyHandler) GetCompany(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return
@@ -297,7 +297,7 @@ func (h *CompanyHandler) DeleteCompany(c *gin.Context) {
 // @Security     BearerAuth
 // @Router       /company/{company_id}/add-user [post]
 func (h *CompanyHandler) AddUserToCompany(c *gin.Context) {
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "you can not do this"})
 		h.logAction(c, "add_user_to_company", "Failed to add user to company: "+err.Error(), false)
@@ -477,13 +477,13 @@ func (h *CompanyHandler) RemoveUserFromCompany(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "User removed from company successfully"})
 }
 
-// getUserIdFromToken gets the user ID from the token in the request
+// GetUserIDFromToken gets the user ID from the token in the request
 // c: The gin context
 // Returns: The user ID and an error if there was a problem
-// getUserIDFromToken gets the user ID from the token in the request
+// GetUserIDFromToken gets the user ID from the token in the request
 // c: The gin context
 // Returns: The user ID and an error if there was a problem
-func getUserIDFromToken(c *gin.Context) (*uint, error) {
+func GetUserIDFromToken(c *gin.Context) (*uint, error) {
 	tokenCookie, exists := c.Get("token")
 	if !exists {
 		return nil, errors.New("token not found in context")
@@ -551,7 +551,7 @@ func (h *CompanyHandler) GetCompanies(c *gin.Context) {
 }
 
 func (h *CompanyHandler) logAction(c *gin.Context, actionType, description string, success bool) {
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		userID = nil
 	}

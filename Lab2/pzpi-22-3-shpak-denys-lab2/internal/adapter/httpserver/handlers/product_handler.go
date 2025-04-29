@@ -98,7 +98,7 @@ func (h *ProductHandler) AddProduct(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		h.logAction(c, "create_product", "Failed to create product: "+err.Error(), false)
@@ -198,7 +198,7 @@ func (h *ProductHandler) GetProduct(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		h.logAction(c, "get_product", "Failed to fetch product: "+err.Error(), false)
@@ -272,7 +272,7 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		h.logAction(c, "update_product", "Failed to update product: "+err.Error(), false)
@@ -362,7 +362,7 @@ func (h *ProductHandler) DeleteProduct(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		h.logAction(c, "delete_product", "Failed to delete product: "+err.Error(), false)
@@ -399,7 +399,7 @@ func (h *ProductHandler) DeleteProduct(c *gin.Context) {
 }
 
 func (h *ProductHandler) logAction(c *gin.Context, actionType, description string, success bool) {
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		userID = nil
 	}

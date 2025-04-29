@@ -89,7 +89,7 @@ func (h *RouteHandler) CreateRoute(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		h.logAction(c, "create_route", "Failed to create route: "+err.Error(), false)
@@ -171,7 +171,7 @@ func (h *RouteHandler) GetRoute(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		h.logAction(c, "get_route", "Failed to fetch route: "+err.Error(), false)
@@ -225,7 +225,7 @@ func (h *RouteHandler) UpdateRoute(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		h.logAction(c, "update_route", "Failed to update route: "+err.Error(), false)
@@ -319,7 +319,7 @@ func (h *RouteHandler) DeleteRoute(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		h.logAction(c, "delete_route", "Failed to delete route: "+err.Error(), false)
@@ -381,7 +381,7 @@ func (h *RouteHandler) GetOptimalRoute(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		h.logAction(c, "get_optimal_route", "Failed to get optimal route: "+err.Error(), false)
@@ -461,7 +461,7 @@ func (h *RouteHandler) GetWeatherAlert(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		h.logAction(c, "get_weather_alert", "Failed to get weather alert: "+err.Error(), false)
@@ -514,7 +514,7 @@ func (h *RouteHandler) GetOptimalBackRoute(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		h.logAction(c, "get_optimal_back_route", "Failed to get optimal back route: "+err.Error(), false)
@@ -632,7 +632,7 @@ func (h *RouteHandler) GetSensorData(c *gin.Context) {
 }
 
 func (h *RouteHandler) logAction(c *gin.Context, actionType, description string, success bool) {
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		userID = nil
 	}

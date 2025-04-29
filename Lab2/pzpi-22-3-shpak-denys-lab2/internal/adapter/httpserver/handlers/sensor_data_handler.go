@@ -160,7 +160,7 @@ func (h *SensorDataHandler) GetSensorData(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return
@@ -202,7 +202,7 @@ func (h *SensorDataHandler) UpdateSensorData(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return
@@ -277,7 +277,7 @@ func (h *SensorDataHandler) DeleteSensorData(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return

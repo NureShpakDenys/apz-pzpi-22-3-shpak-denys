@@ -86,7 +86,7 @@ func (h *DeliveryHandler) CreateDelivery(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		h.logAction(c, "create_delivery", "Failed to create delivery: "+err.Error(), false)
@@ -189,7 +189,7 @@ func (h *DeliveryHandler) GetDelivery(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		h.logAction(c, "get_delivery", "Failed to fetch delivery: "+err.Error(), false)
@@ -248,7 +248,7 @@ func (h *DeliveryHandler) UpdateDelivery(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		h.logAction(c, "update_delivery", "Failed to update delivery: "+err.Error(), false)
@@ -337,7 +337,7 @@ func (h *DeliveryHandler) DeleteDelivery(c *gin.Context) {
 		return
 	}
 
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		h.logAction(c, "delete_delivery", "Failed to delete delivery: "+err.Error(), false)
@@ -373,7 +373,7 @@ func (h *DeliveryHandler) DeleteDelivery(c *gin.Context) {
 }
 
 func (h *DeliveryHandler) logAction(c *gin.Context, actionType, description string, success bool) {
-	userID, err := getUserIDFromToken(c)
+	userID, err := GetUserIDFromToken(c)
 	if err != nil {
 		userID = nil
 	}
