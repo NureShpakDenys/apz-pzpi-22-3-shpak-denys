@@ -26,8 +26,8 @@ type AdminService struct {
 	EncryptionKey []byte
 }
 
-func NewAdminService(cfg *config.Config, db *gorm.DB, encKey []byte) services.AdminService {
-	return &AdminService{cfg: cfg, db: db, EncryptionKey: encKey}
+func NewAdminService(cfg *config.Config, db *gorm.DB) services.AdminService {
+	return &AdminService{cfg: cfg, db: db, EncryptionKey: []byte(cfg.EncryptionKey)}
 }
 
 var backupTables = []string{

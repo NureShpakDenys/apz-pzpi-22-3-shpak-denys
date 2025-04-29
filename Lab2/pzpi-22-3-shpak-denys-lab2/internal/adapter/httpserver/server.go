@@ -5,6 +5,8 @@ import (
 	"log/slog"
 	"wayra/internal/adapter/config"
 	"wayra/internal/adapter/httpserver/handlers"
+	"wayra/internal/adapter/httpserver/handlers/admin"
+	"wayra/internal/adapter/httpserver/handlers/company"
 	"wayra/internal/adapter/httpserver/middlewares"
 	"wayra/internal/core/port/services"
 
@@ -33,7 +35,7 @@ func NewRouter(
 	log *slog.Logger,
 	cfg *config.Config,
 	authHandler *handlers.AuthHandler,
-	companyHandler *handlers.CompanyHandler,
+	companyHandler *company.CompanyHandler,
 	userHandler *handlers.UserHandler,
 	routeHanler *handlers.RouteHandler,
 	waypointHandler *handlers.WaypointHandler,
@@ -41,7 +43,7 @@ func NewRouter(
 	sensorDataHandler *handlers.SensorDataHandler,
 	deliveryHandler *handlers.DeliveryHandler,
 	productHandler *handlers.ProductHandler,
-	adminHandler *handlers.AdminHandler,
+	adminHandler *admin.AdminHandler,
 ) *gin.Engine {
 	r := gin.Default()
 

@@ -5,6 +5,8 @@ import (
 	"wayra/internal/adapter/config"
 	"wayra/internal/adapter/httpserver"
 	"wayra/internal/adapter/httpserver/handlers"
+	"wayra/internal/adapter/httpserver/handlers/admin"
+	"wayra/internal/adapter/httpserver/handlers/company"
 	"wayra/internal/adapter/repository"
 	"wayra/internal/core/domain/models"
 	"wayra/internal/core/port/services"
@@ -63,14 +65,15 @@ func BuildContainer() *dig.Container {
 	container.Provide(func(authService services.AuthService, cfg *config.Config, logService services.LogService, userService services.UserService) *handlers.AuthHandler {
 		return handlers.NewAuthHandler(authService, cfg.AuthConfig.TokenExpiry, logService, userService)
 	})
-	container.Provide(handlers.NewCompanyHandler)
+
+	container.Provide(company.NewCompanyHandler)
 	container.Provide(handlers.NewUserHandler)
 	container.Provide(handlers.NewRoutesHandler)
 	container.Provide(handlers.NewSensorDataHandler)
 	container.Provide(handlers.NewWaypointHandler)
 	container.Provide(handlers.NewDeliveryHandler)
 	container.Provide(handlers.NewProductHandler)
-	container.Provide(handlers.NewAdminHandler)
+	container.Provide(admin.NewAdminHandler)
 
 	// HTTP Server
 	container.Provide(httpserver.NewRouter)
