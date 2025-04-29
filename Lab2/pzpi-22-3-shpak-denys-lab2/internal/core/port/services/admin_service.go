@@ -17,4 +17,6 @@ type AdminService interface {
 	GetDBStatus(ctx context.Context) (*DBStatus, error)
 	OptimizeDatabase(ctx context.Context) error
 	ClearOldLogs(ctx context.Context, olderThanDays int) error
+	BackupDatabase(ctx context.Context, userID uint, backupPath string) error
+	RestoreDatabase(ctx context.Context, userID uint, backupPath string) error
 }
