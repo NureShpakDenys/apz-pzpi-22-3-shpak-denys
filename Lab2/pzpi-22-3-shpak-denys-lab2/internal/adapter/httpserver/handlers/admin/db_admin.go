@@ -275,3 +275,58 @@ func decryptFileTo(encryptedPath, decryptedPath string, key []byte) error {
 
 	return ioutil.WriteFile(decryptedPath, plaintext, 0644)
 }
+
+// GetDBStatus godoc
+// @Summary Get database status
+// @Description Get database status
+// @Tags admin
+// @Accept json
+// @Produce json
+// @Security     BearerAuth
+// @Router /admin/db-status [get]
+func (ah *AdminHandler) GetDBStatus(c *gin.Context) {
+	userID, err := handlers.GetUserIDFromToken(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	currentUser, err := ah.userService.GetByID(context.Background(), *userID)
+	if err != nil || currentUser.Role.Name != "db_admin" {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Access denied"})
+		return
+	}
+
+	dbStatus, _ := ah.AdminService.GetDBStatus(context.Background())
+
+	c.JSON(http.StatusOK, dbStatus)
+}
+
+// OptimizeDatabase godoc
+// @Summary Optimize database
+// @Description Optimize database
+// @Tags admin
+// @Accept json
+// @Produce json
+// @Security     BearerAuth
+// @Router /admin/optimize [post]
+func (ah *AdminHandler) OptimizeDatabase(c *gin.Context) {
+	userID, err := handlers.GetUserIDFromToken(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	currentUser, err := ah.userService.GetByID(context.Background(), *userID)
+	if err != nil || currentUser.Role.Name != "db_admin" {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Access denied"})
+		return
+	}
+
+	if err := ah.AdminService.OptimizeDatabase(context.Background()); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to optimize database"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Database optimized successfully"})
+}
