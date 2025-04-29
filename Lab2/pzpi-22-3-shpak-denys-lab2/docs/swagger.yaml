@@ -1,0 +1,1598 @@
+basePath: /
+definitions:
+  dtos.CompanyDTO:
+    properties:
+      address:
+        description: |-
+          Address is the address of the company.
+          Example: "Koningin Wilhelminaplein 13, 1062 HH Amsterdam"
+        type: string
+      creator:
+        allOf:
+        - $ref: '#/definitions/dtos.UserDTO'
+        description: Creator is the user who created the company.
+      deliveries:
+        description: Deliveries is the list of deliveries that belong to the company.
+        items:
+          $ref: '#/definitions/dtos.DeliveryDTO'
+        type: array
+      id:
+        description: |-
+          ID is the unique identifier of the company.
+          Example: 1
+        type: integer
+      name:
+        description: |-
+          Name is the name of the company.
+          Example: "TechTeam"
+        type: string
+      routes:
+        description: Routes is the list of routes that belong to the company.
+        items:
+          $ref: '#/definitions/dtos.RouteDTO'
+        type: array
+      users:
+        description: Users is the list of users that belong to the company.
+        items:
+          $ref: '#/definitions/dtos.UserDTO'
+        type: array
+    type: object
+  dtos.DeliveryDTO:
+    properties:
+      company_id:
+        description: |-
+          CompanyID is the unique identifier of the company
+          Example: 1
+        type: integer
+      date:
+        description: |-
+          Date is the date of the delivery
+          Example: 2021-01-01T00:00:00Z
+        type: string
+      duration:
+        description: |-
+          Duration is the duration of the delivery
+          Example: 1h
+        type: string
+      id:
+        description: |-
+          ID is the unique identifier of the delivery
+          Example: 1
+        type: integer
+      products:
+        description: Products is the list of products of the delivery
+        items:
+          $ref: '#/definitions/dtos.ProductDTO'
+        type: array
+      route_id:
+        description: |-
+          RouteID is the unique identifier of the route
+          Example: 1
+        type: integer
+      status:
+        description: |-
+          Status is the status of the delivery
+          Example: completed
+        type: string
+    type: object
+  dtos.ProductCategoryDTO:
+    properties:
+      description:
+        description: |-
+          Description is the product category description
+          Example: Food products
+        type: string
+      id:
+        description: |-
+          ID is the product category identifier
+          Example: 1
+        type: integer
+      is_perishable:
+        description: |-
+          IsPerishable is a flag that indicates if the product category is perishable
+          Example: true
+        type: boolean
+      max_humidity:
+        description: |-
+          MaxHumidity is the maximum humidity that the product category can be stored
+          Example: 20
+        type: number
+      max_temperature:
+        description: |-
+          MaxTemperature is the maximum temperature that the product category can be stored
+          Example: 20
+        type: number
+      min_humidity:
+        description: |-
+          MinHumidity is the minimum humidity that the product category can be stored
+          Example: 10
+        type: number
+      min_temperature:
+        description: |-
+          MinTemperature is the minimum temperature that the product category can be stored
+          Example: 10
+        type: number
+      name:
+        description: |-
+          Name is the product category name
+          Example: Food
+        type: string
+    type: object
+  dtos.ProductDTO:
+    properties:
+      id:
+        description: |-
+          ID is the unique identifier of the product
+          Example: 1
+        type: integer
+      name:
+        description: |-
+          Name is the name of the product
+          Example: Beer
+        type: string
+      product_category:
+        allOf:
+        - $ref: '#/definitions/dtos.ProductCategoryDTO'
+        description: ProductCategory is the category of the product
+      weight:
+        description: |-
+          Description is the description of the product
+          Example: A cold beer
+        type: number
+    type: object
+  dtos.RouteDTO:
+    properties:
+      details:
+        description: |-
+          Details is the details of the route
+          Example: Route 1 details
+        type: string
+      id:
+        description: |-
+          ID is the unique identifier of the route
+          Example: 1
+        type: integer
+      name:
+        description: |-
+          Name is the name of the route
+          Example: Route 1
+        type: string
+      status:
+        description: |-
+          Status is the status of the route
+          Example: normal temperature
+        type: string
+      waypoints:
+        description: Waypoints is a list of waypoints that the route has
+        items:
+          $ref: '#/definitions/dtos.WaypointDTO'
+        type: array
+    type: object
+  dtos.SensorDataDTO:
+    properties:
+      date:
+        description: |-
+          Date is the date of the SensorData
+          Example: 2021-01-01T00:00:00Z
+        type: string
+      humidity:
+        description: |-
+          Humidity is the humidity of the SensorData
+          Example: 0.5
+        type: number
+      id:
+        description: |-
+          ID is the unique identifier of the SensorData
+          Example: 1
+        type: integer
+      mean_pressure:
+        description: |-
+          WindDirection is the wind direction of the SensorData
+          Example: 0.5
+        type: number
+      temperature:
+        description: |-
+          Temperature is the temperature of the SensorData
+          Example: 25.5
+        type: number
+      wind_speed:
+        description: |-
+          Rain is the rain of the SensorData
+          Example: 0.5
+        type: number
+    type: object
+  dtos.UserDTO:
+    properties:
+      id:
+        description: |-
+          ID is the user identifier
+          Example: 1
+        type: integer
+      name:
+        description: |-
+          Name is the user name
+          Example: John Doe
+        type: string
+      password:
+        description: |-
+          Email is the user email
+          Example: password123
+        type: string
+    type: object
+  dtos.WaypointDTO:
+    properties:
+      details:
+        description: |-
+          Details is the details of the Waypoint
+          Example: Waypoint requires diagnostics
+        type: string
+      device_serial:
+        description: |-
+          DeviceSerial is the serial number of the device that sent the Waypoint
+          Example: 123456
+        type: string
+      get_weather_alerts:
+        description: |-
+          GetWeatherAlerts is a boolean that indicates if the company should get weather alerts
+          Example: true
+        type: boolean
+      id:
+        description: |-
+          ID is the unique identifier of the Waypoint
+          Example: 1
+        type: integer
+      latitude:
+        description: |-
+          Latitude is the latitude of the Waypoint
+          Example: -12.045
+        type: number
+      longitude:
+        description: |-
+          Longitude is the longitude of the Waypoint
+          Example: -77.0311
+        type: number
+      name:
+        description: |-
+          Name is the name of the Waypoint
+          Example: Waypoint 1
+        type: string
+      send_data_frequency:
+        description: |-
+          SendDataFrequency is the frequency of the data sent by the device in minutes
+          Example: 5
+        type: integer
+      sensor_data:
+        description: Altitude is the altitude of the Waypoint
+        items:
+          $ref: '#/definitions/dtos.SensorDataDTO'
+        type: array
+      status:
+        description: |-
+          Status is the status of the Waypoint
+          Example: ok
+        type: string
+    type: object
+  handlers.AddUserToCompanyRequest:
+    properties:
+      role:
+        allOf:
+        - $ref: '#/definitions/handlers.Role'
+        description: Role is the role of the user in the company
+        example: user | admin | manager
+      userID:
+        description: |-
+          UserID is the ID of the user to add
+          Example: 1
+        type: integer
+    type: object
+  handlers.AuthCredentials:
+    properties:
+      password:
+        description: |-
+          Password is the password of the user
+          Example: password123
+        example: password123
+        type: string
+      username:
+        description: |-
+          Username is the name of the user
+          Example: john_doe
+        example: john_doe
+        type: string
+    type: object
+  handlers.BackupDatabaseRequest:
+    properties:
+      backup_path:
+        description: Backup path is the path where the backup will be stored
+        type: string
+    type: object
+  handlers.ClearLogsRequest:
+    properties:
+      days:
+        type: integer
+    type: object
+  handlers.CompanyRequest:
+    properties:
+      address:
+        description: |-
+          Address is the address of the company
+          Example: 123 Main St
+        type: string
+      name:
+        description: |-
+          Name is the name of the company
+          Example: Wayra
+        type: string
+    type: object
+  handlers.CreateDeliveryRequest:
+    properties:
+      company_id:
+        description: |-
+          CompanyID is the ID of the company
+          example: 1
+        type: integer
+      date:
+        description: |-
+          Date is the date of the delivery
+          example: 2023-09-01
+        example: "2023-09-01"
+        type: string
+    type: object
+  handlers.CreateProductRequest:
+    properties:
+      deliveryID:
+        description: |-
+          DeliveryID is the ID of the delivery
+          example: 1
+        type: integer
+      name:
+        description: |-
+          Name is the name of the product
+          example: Apple
+        type: string
+      product_type:
+        description: |-
+          ProductType is the type of the product
+          example: Fruits
+        example: Fruits | Vegetables | Frozen Foods | Dairy Products | Meat
+        type: string
+      weight:
+        description: |-
+          Weight is the weight of the product
+          example: 0.5
+        type: number
+    type: object
+  handlers.CreateRouteRequest:
+    properties:
+      company_id:
+        description: |-
+          ID of the company to which the route belongs
+          example: 1
+        type: integer
+      name:
+        description: |-
+          Name of the route
+          example: Route 1
+        example: Route 1
+        type: string
+    type: object
+  handlers.CreateSensorDataRequest:
+    properties:
+      date:
+        description: |-
+          Date is the date and time when the sensor data was recorded
+          example: 2021-09-01T12:00:00Z
+        example: "2021-09-01T12:00:00Z"
+        type: string
+      humidity:
+        description: |-
+          Humidity is the humidity recorded by the sensor
+          example: 50.0
+        example: 50
+        type: number
+      pressure:
+        description: |-
+          MeanPressure is the mean pressure recorded by the sensor
+          example: 1013.25
+        example: 1013.25
+        type: number
+      temperature:
+        description: |-
+          Temperature is the temperature recorded by the sensor
+          example: 25.5
+        example: 25.5
+        type: number
+      waypoint_id:
+        description: |-
+          WaypointID is the ID of the waypoint where the sensor data was recorded
+          example: 1
+        type: integer
+      wind_speed:
+        description: |-
+          WindSpeed is the wind speed recorded by the sensor
+          example: 10.5
+        example: 10.5
+        type: number
+    type: object
+  handlers.CreateWaypointRequest:
+    properties:
+      device_serial:
+        description: |-
+          Device serial number
+          Example: "1234567890"
+        type: string
+      get_weather_alerts:
+        description: |-
+          GetWeatherAlerts of the waypoint
+          Example: true
+        type: boolean
+      latitude:
+        description: |-
+          Latitude of the waypoint
+          Example: -12.04318
+        type: number
+      longitude:
+        description: |-
+          Longitude of the waypoint
+          Example: -77.02824
+        type: number
+      name:
+        description: |-
+          Name of the waypoint
+          Example: "Waypoint 1"
+        type: string
+      route_id:
+        description: |-
+          Route ID to which the waypoint belongs
+          Example: 1
+        type: integer
+      send_data_frequency:
+        description: |-
+          SendDataFrequency of the waypoint
+          Example: 10
+        type: integer
+    type: object
+  handlers.RemoveUserFromCompanyRequest:
+    properties:
+      userID:
+        description: |-
+          UserID is the ID of the user to remove
+          Example: 1
+        type: integer
+    type: object
+  handlers.RestoreDatabaseRequest:
+    properties:
+      backup_path:
+        description: Backup path is the path where the backup is stored
+        type: string
+    type: object
+  handlers.Role:
+    enum:
+    - user
+    - admin
+    - manager
+    type: string
+    x-enum-varnames:
+    - RoleUser
+    - RoleAdmin
+    - RoleManager
+  handlers.UpdateDeliveryRequest:
+    properties:
+      date:
+        description: |-
+          Date is the date of the delivery
+          example: 2024-08-01
+        example: "2024-08-01"
+        type: string
+      duration:
+        description: |-
+          The duration of the delivery
+          example: 2 hours 30 minutes
+        example: 2 hours 30 minutes
+        type: string
+      status:
+        description: |-
+          Status is the status of the delivery
+          example: completed
+        example: completed
+        type: string
+    type: object
+  handlers.UpdateProductRequest:
+    properties:
+      name:
+        description: |-
+          Name is the name of the product
+          example: Apple
+        type: string
+      product_type:
+        description: |-
+          ProductType is the type of the product
+          example: Fruits
+        type: string
+      weight:
+        description: |-
+          Weight is the weight of the product
+          example: 0.5
+        type: number
+    type: object
+  handlers.UpdateRouteRequest:
+    properties:
+      details:
+        description: |-
+          Details of the route
+          example: Everything is fine
+        example: Everything is fine
+        type: string
+      name:
+        description: |-
+          Name of the route
+          example: Route 1
+        example: Route 1
+        type: string
+      status:
+        description: |-
+          Status of the route
+          example: Normal temperature
+        example: Normal temperature
+        type: string
+    type: object
+  handlers.UpdateSensorDataRequest:
+    properties:
+      date:
+        description: |-
+          Date is the date and time when the sensor data was recorded
+          example: 2021-09-01T12:00:00Z
+        example: "2021-09-01T12:00:00Z"
+        type: string
+      humidity:
+        description: |-
+          Humidity is the humidity recorded by the sensor
+          example: 50.0
+        example: 50
+        type: number
+      temperature:
+        description: |-
+          Temperature is the temperature recorded by the sensor
+          example: 25.5
+        example: 25.5
+        type: number
+    type: object
+  handlers.UpdateSystemConfigsRequest:
+    properties:
+      timeout_sec:
+        type: integer
+      token_ttl:
+        type: integer
+    type: object
+  handlers.UpdateUserInCompanyRequest:
+    properties:
+      role:
+        description: Role is the role of the user in the company
+        example: user | admin | manager
+        type: string
+      userID:
+        description: |-
+          UserID is the ID of the user to update
+          Example: 1
+        type: integer
+    type: object
+  handlers.UpdateUserRequest:
+    properties:
+      name:
+        description: |-
+          Name is the name of the user
+          Example: John Doe
+        type: string
+    type: object
+  handlers.UpdateUserRoleRequest:
+    properties:
+      roleId:
+        type: integer
+      userId:
+        type: integer
+    type: object
+  handlers.UpdateWaypointRequest:
+    properties:
+      details:
+        description: |-
+          Details of the waypoint
+          Example: "Everything is fine"
+        type: string
+      device_serial:
+        description: |-
+          Device serial number
+          Example: "1234567890"
+        type: string
+      get_weather_alerts:
+        description: |-
+          GetWeatherAlerts of the waypoint
+          Example: true
+        type: boolean
+      latitude:
+        description: |-
+          Latitude of the waypoint
+          Example: -12.04318
+        type: number
+      longitude:
+        description: |-
+          Longitude of the waypoint
+          Example: -77.02824
+        type: number
+      name:
+        description: |-
+          Name of the waypoint
+          Example: "Waypoint 1"
+        type: string
+      send_data_frequency:
+        description: |-
+          SendDataFrequency of the waypoint
+          Example: 10
+        type: integer
+      status:
+        description: |-
+          Status of the waypoint
+          Example: "ok"
+        type: string
+    type: object
+host: localhost:8081
+info:
+  contact: {}
+  termsOfService: http://swagger.io/terms/
+  title: API Specification
+  version: "1.0"
+paths:
+  /admin/backup:
+    post:
+      consumes:
+      - application/json
+      description: Backup the database in CSV format per table
+      parameters:
+      - description: Backup directory path
+        in: body
+        name: BackupDatabaseRequest
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.BackupDatabaseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Backup created
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Backup the database
+      tags:
+      - admin
+  /admin/change-role:
+    post:
+      consumes:
+      - application/json
+      description: Update user role
+      parameters:
+      - description: UpdateUserRoleRequest
+        in: body
+        name: UpdateUserRoleRequest
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateUserRoleRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update user role
+      tags:
+      - admin
+  /admin/clear-logs:
+    post:
+      consumes:
+      - application/json
+      description: Clear logs older than a specified number of days
+      parameters:
+      - description: ClearLogsRequest
+        in: body
+        name: ClearLogsRequest
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.ClearLogsRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Clear logs
+      tags:
+      - admin
+  /admin/db-status:
+    get:
+      consumes:
+      - application/json
+      description: Get database status
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get database status
+      tags:
+      - admin
+  /admin/health:
+    get:
+      consumes:
+      - application/json
+      description: Health check endpoint
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Health check
+      tags:
+      - admin
+  /admin/logs:
+    get:
+      consumes:
+      - application/json
+      description: Get server logs
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get server logs
+      tags:
+      - admin
+  /admin/optimize:
+    post:
+      consumes:
+      - application/json
+      description: Optimize database
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Optimize database
+      tags:
+      - admin
+  /admin/restore:
+    post:
+      consumes:
+      - application/json
+      description: Restore the database from encrypted backup files
+      parameters:
+      - description: Backup directory path
+        in: body
+        name: RestoreDatabaseRequest
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.RestoreDatabaseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Database restored
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Restore the database from backup
+      tags:
+      - admin
+  /admin/system-configs:
+    get:
+      consumes:
+      - application/json
+      description: Get system configs
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get system configs
+      tags:
+      - admin
+    put:
+      consumes:
+      - application/json
+      description: Update system configs
+      parameters:
+      - description: UpdateSystemConfigsRequest
+        in: body
+        name: UpdateSystemConfigsRequest
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateSystemConfigsRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update system configs
+      tags:
+      - admin
+  /analytics/{delivery_id}/optimal-back-route:
+    get:
+      description: Retrieves the optimal back route for the given route ID
+      parameters:
+      - description: delivery_id
+        in: path
+        name: delivery_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get optimal back route
+      tags:
+      - analytics
+  /analytics/{delivery_id}/optimal-route:
+    get:
+      description: Retrieves the optimal route for the given route ID
+      parameters:
+      - description: delivery_id
+        in: path
+        name: delivery_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get optimal route
+      tags:
+      - analytics
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates a user and returns a token
+      parameters:
+      - description: User credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.AuthCredentials'
+      produces:
+      - application/json
+      responses: {}
+      summary: Login user
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Logs out a user by invalidating their token
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Logout user
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Registers a new user with the provided details
+      parameters:
+      - description: User details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.AuthCredentials'
+      produces:
+      - application/json
+      responses: {}
+      summary: Register a new user
+      tags:
+      - auth
+  /company:
+    post:
+      consumes:
+      - application/json
+      description: Registers a new company with the provided details
+      parameters:
+      - description: Company details
+        in: body
+        name: company
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CompanyRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Register a new company
+      tags:
+      - company
+  /company/:
+    get:
+      description: Retrieves a list of all companies
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dtos.CompanyDTO'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Get all companies
+      tags:
+      - company
+  /company/{company_id}:
+    delete:
+      description: Deletes a company by its ID
+      parameters:
+      - description: Company ID
+        in: path
+        name: company_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete a company
+      tags:
+      - company
+    get:
+      description: Retrieves the details of a company by its ID
+      parameters:
+      - description: Company ID
+        in: path
+        name: company_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get company details
+      tags:
+      - company
+    put:
+      consumes:
+      - application/json
+      description: Updates the details of an existing company
+      parameters:
+      - description: Company ID
+        in: path
+        name: company_id
+        required: true
+        type: integer
+      - description: Updated company details
+        in: body
+        name: company
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CompanyRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update company details
+      tags:
+      - company
+  /company/{company_id}/add-user:
+    post:
+      consumes:
+      - application/json
+      description: Adds a user to a company if the request is made by the company
+        creator
+      parameters:
+      - description: Company ID
+        in: path
+        name: company_id
+        required: true
+        type: integer
+      - description: User ID to add
+        in: body
+        name: userID
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.AddUserToCompanyRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Add a user to a company
+      tags:
+      - company
+  /company/{company_id}/remove-user:
+    delete:
+      consumes:
+      - application/json
+      description: Removes a user from a company if the request is made by the company
+        creator
+      parameters:
+      - description: Company ID
+        in: path
+        name: company_id
+        required: true
+        type: integer
+      - description: User ID to remove
+        in: body
+        name: userID
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.RemoveUserFromCompanyRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Remove a user from a company
+      tags:
+      - company
+  /company/{company_id}/update-user:
+    put:
+      consumes:
+      - application/json
+      description: Updates a user in a company if the request is made by the company
+        creator
+      parameters:
+      - description: Company ID
+        in: path
+        name: company_id
+        required: true
+        type: integer
+      - description: User ID to update
+        in: body
+        name: userID
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateUserInCompanyRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update a user in a company
+      tags:
+      - company
+  /delivery:
+    post:
+      consumes:
+      - application/json
+      description: Create a delivery
+      parameters:
+      - description: CreateDeliveryRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateDeliveryRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create a delivery
+      tags:
+      - delivery
+  /delivery/{delivery_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a delivery
+      parameters:
+      - description: Delivery ID
+        in: path
+        name: delivery_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete a delivery
+      tags:
+      - delivery
+    get:
+      consumes:
+      - application/json
+      description: Get a delivery
+      parameters:
+      - description: Delivery ID
+        in: path
+        name: delivery_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get a delivery
+      tags:
+      - delivery
+    put:
+      consumes:
+      - application/json
+      description: Update a delivery
+      parameters:
+      - description: Delivery ID
+        in: path
+        name: delivery_id
+        required: true
+        type: integer
+      - description: UpdateDeliveryRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateDeliveryRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update a delivery
+      tags:
+      - delivery
+  /device-config/{waypoint_id}:
+    get:
+      description: Retrieves the configuration of a device
+      parameters:
+      - description: Waypoint ID
+        in: path
+        name: waypoint_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get device configuration
+      tags:
+      - waypoint
+  /products:
+    post:
+      consumes:
+      - application/json
+      description: Create a product
+      parameters:
+      - description: CreateProductRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateProductRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create a product
+      tags:
+      - product
+  /products/{product_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete a product
+      tags:
+      - product
+    get:
+      consumes:
+      - application/json
+      description: Get a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get a product
+      tags:
+      - product
+    put:
+      consumes:
+      - application/json
+      description: Update a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: integer
+      - description: UpdateProductRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateProductRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update a product
+      tags:
+      - product
+  /routes:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new route with the provided details
+      parameters:
+      - description: Route details
+        in: body
+        name: route
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateRouteRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create a new route
+      tags:
+      - route
+  /routes/{route_id}:
+    delete:
+      description: Deletes a route with the given ID
+      parameters:
+      - description: Route ID
+        in: path
+        name: route_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete a route
+      tags:
+      - route
+    get:
+      description: Retrieves a route with the given ID
+      parameters:
+      - description: Route ID
+        in: path
+        name: route_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get a route
+      tags:
+      - route
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing route with the given ID
+      parameters:
+      - description: Route ID
+        in: path
+        name: route_id
+        required: true
+        type: integer
+      - description: Updated route details
+        in: body
+        name: route
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateRouteRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update an existing route
+      tags:
+      - route
+  /routes/{route_id}/get-sensor-data:
+    get:
+      description: Retrieves the sensor data for the given route ID
+      parameters:
+      - description: route_id
+        in: path
+        name: route_id
+        required: true
+        type: integer
+      - description: Number of hours to get data for
+        in: query
+        name: for_hours
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get sensor data
+      tags:
+      - routes
+  /routes/{route_id}/weather-alert:
+    get:
+      description: Retrieves the weather alert for the given route ID
+      parameters:
+      - description: route_id
+        in: path
+        name: route_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get weather alert
+      tags:
+      - analytics
+  /sensor-data/:
+    post:
+      consumes:
+      - application/json
+      description: Adds new sensor data to the specified SensorData
+      parameters:
+      - description: Sensor data details
+        in: body
+        name: sensor_data
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateSensorDataRequest'
+      produces:
+      - application/json
+      responses: {}
+      summary: Add sensor data to a SensorData
+      tags:
+      - sensor
+  /sensor-data/{sensor_data_id}:
+    delete:
+      description: Deletes sensor data with the given ID
+      parameters:
+      - description: Sensor Data ID
+        in: path
+        name: sensor_data_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete sensor data by ID
+      tags:
+      - sensor
+    get:
+      description: Retrieves sensor data with the given ID
+      parameters:
+      - description: Sensor Data ID
+        in: path
+        name: sensor_data_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get sensor data by ID
+      tags:
+      - sensor
+    put:
+      consumes:
+      - application/json
+      description: Updates sensor data with the given ID
+      parameters:
+      - description: Sensor Data ID
+        in: path
+        name: sensor_data_id
+        required: true
+        type: integer
+      - description: Sensor data details
+        in: body
+        name: sensor_data
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateSensorDataRequest'
+      produces:
+      - application/json
+      responses: {}
+      summary: Update sensor data by ID
+      tags:
+      - sensor
+  /user/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user by ID
+      operationId: delete-user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete a user
+      tags:
+      - user
+    get:
+      consumes:
+      - application/json
+      description: Get a user by ID
+      operationId: get-user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get a user
+      tags:
+      - user
+    put:
+      consumes:
+      - application/json
+      description: Update a user by ID
+      operationId: update-user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateUserRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update a user
+      tags:
+      - user
+  /users:
+    get:
+      consumes:
+      - application/json
+      operationId: get-users
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get users
+      tags:
+      - user
+  /waypoints:
+    get:
+      description: Retrieves all waypoints
+      produces:
+      - application/json
+      responses: {}
+      summary: Get waypoints
+      tags:
+      - waypoint
+    post:
+      consumes:
+      - application/json
+      description: Adds a new waypoint to the specified route
+      parameters:
+      - description: Waypoint details
+        in: body
+        name: waypoint
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateWaypointRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Add a waypoint to a route
+      tags:
+      - waypoint
+  /waypoints/{waypoint_id}:
+    delete:
+      description: Deletes a waypoint
+      parameters:
+      - description: Waypoint ID
+        in: path
+        name: waypoint_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete waypoint
+      tags:
+      - waypoint
+    get:
+      description: Retrieves the details of a waypoint
+      parameters:
+      - description: Waypoint ID
+        in: path
+        name: waypoint_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get waypoint details
+      tags:
+      - waypoint
+    put:
+      consumes:
+      - application/json
+      description: Updates the details of a waypoint
+      parameters:
+      - description: Waypoint ID
+        in: path
+        name: waypoint_id
+        required: true
+        type: integer
+      - description: Waypoint details
+        in: body
+        name: waypoint
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateWaypointRequest'
+      produces:
+      - application/json
+      responses: {}
+      summary: Update waypoint details
+      tags:
+      - waypoint
+securityDefinitions:
+  BearerAuth:
+    description: 'Provide the Bearer token in the format: "Bearer {token}"'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
