@@ -186,16 +186,16 @@ func (h *RouteHandler) GetRoute(c *gin.Context) {
 		return
 	}
 
-	routeDTO := &dtos.RouteDTO{}
-	if err = dtoMapper.Map(routeDTO, route); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		h.logAction(c, "get_route", "Failed to fetch route: "+err.Error(), false)
+	// routeDTO := &dtos.RouteDTO{}
+	// if err = dtoMapper.Map(routeDTO, route); err != nil {
+	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	// 	h.logAction(c, "get_route", "Failed to fetch route: "+err.Error(), false)
 
-		return
-	}
+	// 	return
+	// }
 	h.logAction(c, "get_route", fmt.Sprintf("Route %d fetched successfully", routeID), true)
 
-	c.JSON(http.StatusOK, routeDTO)
+	c.JSON(http.StatusOK, route)
 }
 
 // UpdateRoute godoc

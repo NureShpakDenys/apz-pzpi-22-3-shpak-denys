@@ -28,7 +28,7 @@ type Route struct {
 	Company Company `gorm:"foreignKey:CompanyID" json:"company,omitempty"`
 
 	// Waypoints is the list of waypoints that the route has
-	Waypoints []Waypoint `gorm:"foreignKey:RouteID;constraint:OnDelete:CASCADE;" json:"waypoints,omitempty"`
+	Waypoints []Waypoint `gorm:"foreignKey:RouteID;constraint:OnDelete:CASCADE;" json:"waypoints"`
 }
 
 // LoadRelations is an implementation of the LoadRelations method from the model interface

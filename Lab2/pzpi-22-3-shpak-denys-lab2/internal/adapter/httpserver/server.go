@@ -72,6 +72,8 @@ func NewRouter(
 		sensorData.DELETE("/:sensor_data_id", sensorDataHandler.DeleteSensorData)
 	}
 
+	r.Use(middlewares.AuthMiddleware(log, authService))
+
 	routes := r.Group("/routes")
 	{
 		routes.POST("/", routeHanler.CreateRoute)
@@ -91,8 +93,6 @@ func NewRouter(
 		waypoints.DELETE("/:waypoint_id", waypointHandler.DeleteWaypoint)
 		waypoints.GET("/", waypointHandler.GetWaypoints)
 	}
-
-	r.Use(middlewares.AuthMiddleware(log, authService))
 
 	r.POST("/auth/logout", authHandler.LogoutUser)
 
