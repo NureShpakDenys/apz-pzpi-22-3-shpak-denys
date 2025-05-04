@@ -136,34 +136,34 @@ const DeliveryDetails = ({ user }) => {
           onClick={fetchOptimalRoutes}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
-          Отримати оптимальні маршрути
+          Get optimal routes
         </button>
 
-        {routesLoading && <p className="mt-2 text-gray-500">Завантаження маршрутів...</p>}
+        {routesLoading && <p className="mt-2 text-gray-500">Loading routes...</p>}
         {routesError && <p className="mt-2 text-red-600">{routesError}</p>}
       </div>
 
       {optimalRoute && (
         <div className="bg-white p-4 shadow rounded mt-4">
-          <h2 className="text-xl font-semibold mb-2 text-green-700">Оптимальний маршрут</h2>
-          <p><strong>Маршрут:</strong> {optimalRoute.route.name}</p>
-          <p><strong>Повідомлення:</strong> {optimalRoute.message}</p>
-          <p><strong>Рівняння:</strong> {optimalRoute.equation}</p>
-          <p><strong>Відстань:</strong> {optimalRoute.predict_data.Distance.toFixed(2)} км</p>
-          <p><strong>Час:</strong> {optimalRoute.predict_data.Time.toFixed(2)} год</p>
-          <p><strong>Швидкість:</strong> {optimalRoute.predict_data.Speed.toFixed(2)} км/год</p>
+          <h2 className="text-xl font-semibold mb-2 text-green-700">Optimal route</h2>
+          <p><strong>Route:</strong> {optimalRoute.route.name}</p>
+          <p><strong>Message:</strong> {optimalRoute.message}</p>
+          <p><strong>Equation:</strong> {optimalRoute.equation}</p>
+          <p><strong>Distance:</strong> {optimalRoute.predict_data.Distance.toFixed(2)} km</p>
+          <p><strong>Time:</strong> {optimalRoute.predict_data.Time.toFixed(2)} hours</p>
+          <p><strong>Speed:</strong> {optimalRoute.predict_data.Speed.toFixed(2)} km/hours</p>
         </div>
       )}
 
       {backRoute && (
         <div className="bg-white p-4 shadow rounded mt-4">
-          <h2 className="text-xl font-semibold mb-2 text-blue-700">Зворотний маршрут</h2>
-          <p><strong>Маршрут:</strong> {backRoute.route.name}</p>
-          <p><strong>Повідомлення:</strong> {backRoute.message}</p>
-          <p><strong>Рівняння:</strong> {backRoute.equation}</p>
-          <p><strong>Відстань:</strong> {backRoute.predict_data.Distance.toFixed(2)} км</p>
-          <p><strong>Час:</strong> {backRoute.predict_data.Time.toFixed(2)} год</p>
-          <p><strong>Швидкість:</strong> {backRoute.predict_data.Speed.toFixed(2)} км/год</p>
+          <h2 className="text-xl font-semibold mb-2 text-blue-700">Back route</h2>
+          <p><strong>Route:</strong> {backRoute.route.name}</p>
+          <p><strong>Message:</strong> {backRoute.message}</p>
+          <p><strong>Equation:</strong> {backRoute.equation}</p>
+          <p><strong>Distance:</strong> {backRoute.predict_data.Distance.toFixed(2)} km</p>
+          <p><strong>Time:</strong> {backRoute.predict_data.Time.toFixed(2)} hours</p>
+          <p><strong>Speed:</strong> {backRoute.predict_data.Speed.toFixed(2)} km/hours</p>
         </div>
       )}
 

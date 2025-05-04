@@ -123,19 +123,19 @@ const RouteDetails = ({ user }) => {
           onClick={fetchWeatherAlert}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
-          Перевірити попередження про погоду
+          Get weather alerts
         </button>
 
-        {alertLoading && <p className="mt-2 text-gray-500">Завантаження даних...</p>}
+        {alertLoading && <p className="mt-2 text-gray-500">Loading data...</p>}
         {alertError && <p className="mt-2 text-red-600">{alertError}</p>}
       </div>
 
       {weatherAlert && (
         <div className="bg-white p-4 shadow rounded mt-4">
-          <h2 className="text-xl font-semibold mb-2 text-red-700">Попередження про погоду</h2>
-          <p><strong>Тип:</strong> {weatherAlert.type}</p>
-          <p><strong>Повідомлення:</strong> {weatherAlert.message}</p>
-          <p><strong>Деталі:</strong> {weatherAlert.details}</p>
+          <h2 className="text-xl font-semibold mb-2 text-red-700">Weather alerts</h2>
+          <p><strong>Type:</strong> {weatherAlert.type}</p>
+          <p><strong>Message:</strong> {weatherAlert.message}</p>
+          <p><strong>Details:</strong> {weatherAlert.details}</p>
         </div>
       )}
 
