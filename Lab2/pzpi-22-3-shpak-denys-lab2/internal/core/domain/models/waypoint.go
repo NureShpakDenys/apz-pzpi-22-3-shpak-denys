@@ -30,7 +30,7 @@ type Waypoint struct {
 
 	// GetWeatherAlerts is a boolean that indicates if the company should get weather alerts
 	// Example: true
-	GetWeatherAlerts bool `gorm:"not null;column:get_weather_alerts"`
+	GetWeatherAlerts bool `gorm:"not null;default:false;column:get_weather_alerts"`
 
 	// Status is the status of the waypoint
 	// Example: ok
@@ -53,7 +53,7 @@ type Waypoint struct {
 
 // LoadRelations is an implementation of the LoadRelations interface
 func (w *Waypoint) LoadRelations(db *gorm.DB) *gorm.DB {
-	withRoute := db.Preload("Route").Preload("Route.Company").Preload("Route.Company.Creator")
-	withSensorData := withRoute.Preload("SensorData")
-	return withSensorData
+	// withRoute := db.Preload("Route").Preload("Route.Company").Preload("Route.Company.Creator")
+	// withSensorData := db.Preload("SensorData")
+	return db
 }

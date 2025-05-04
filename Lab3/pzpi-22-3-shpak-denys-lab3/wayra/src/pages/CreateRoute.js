@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-const CreateCompany = () => {
+const CreateRoute = () => {
+  const { company_id } = useParams();
   const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token")
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -17,8 +18,8 @@ const CreateCompany = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8081/company/",
-        { name, address },
+        "http://localhost:8081/routes/",
+        { company_id: Number(company_id), name },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -28,9 +29,9 @@ const CreateCompany = () => {
         }
       );
 
-      navigate(`/company/${response.data.id}`);
+      navigate(`/route/${response.data.id}`);
     } catch (err) {
-      setError("Ошибка при создании компании");
+      setError("Error while creating route");
       console.error(err);
     } finally {
       setLoading(false);
@@ -39,28 +40,17 @@ const CreateCompany = () => {
 
   return (
     <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded">
-      <h2 className="text-2xl font-bold text-center mb-4">Создать компанию</h2>
+      <h2 className="text-2xl font-bold text-center mb-4">Create Route</h2>
 
       {error && <p className="text-red-600 text-center">{error}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-gray-700 font-medium">Название компании</label>
+          <label className="block text-gray-700 font-medium">Route name</label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium">Адрес</label>
-          <input
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
             className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
@@ -71,11 +61,11 @@ const CreateCompany = () => {
           className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
           disabled={loading}
         >
-          {loading ? "Создание..." : "Создать компанию"}
+          {loading ? "Creating..." : "Create Route"}
         </button>
       </form>
     </div>
   );
 };
 
-export default CreateCompany;
+export default CreateRoute;

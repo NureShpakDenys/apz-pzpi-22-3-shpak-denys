@@ -201,16 +201,8 @@ func (h *DeliveryHandler) GetDelivery(c *gin.Context) {
 		return
 	}
 
-	deliveryDTO := &dtos.DeliveryDTO{}
-	if err = dtoMapper.Map(deliveryDTO, delivery); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		h.logAction(c, "get_delivery", "Failed to fetch delivery: "+err.Error(), false)
-
-		return
-	}
-
 	h.logAction(c, "get_delivery", fmt.Sprintf("Delivery %d fetched", deliveryID), true)
-	c.JSON(http.StatusOK, deliveryDTO)
+	c.JSON(http.StatusOK, delivery)
 }
 
 // UpdateDelivery godoc

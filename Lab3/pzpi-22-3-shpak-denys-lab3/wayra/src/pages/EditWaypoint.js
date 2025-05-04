@@ -1,33 +1,53 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-const CreateWaypoint = () => {
-  const { route_id } = useParams();
+const EditWaypoint = ({ user }) => {
+  const { waypoint_id } = useParams();
   const [name, setName] = useState("");
   const [deviceSerial, setDeviceSerial] = useState("");
   const [sendDataFrequency, setSendDataFrequency] = useState(50);
   const [getWeatherAlerts, setGetWeatherAlerts] = useState(true);
+  const [route_id, setRouteID] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
+ 
   const token = localStorage.getItem("token")
+  
+  useEffect(() => {
+    const fetchWaypoint = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8081/waypoints/${waypoint_id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        });
+
+        setName(res.data.Name);
+        setDeviceSerial(res.data.DeviceSerial);
+        setSendDataFrequency(res.data.SendDataFrequency);
+        setGetWeatherAlerts(res.data.GetWeatherAlerts);
+        setRouteID(res.data.RouteID);
+      } catch (err) {
+        setError("Error fetching waypoint data");
+        console.error(err);
+      }
+    };
+
+    fetchWaypoint();
+  }, [waypoint_id, token]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      const response = await axios.post(
-        "http://localhost:8081/waypoints/",
-        {
-          route_id: Number(route_id),
-          name,
-          device_serial: deviceSerial,
-          send_data_frequency: Number(sendDataFrequency),
-          get_weather_alerts: Boolean(getWeatherAlerts),
-        },
+      await axios.put(
+        `http://localhost:8081/waypoints/${waypoint_id}`,
+        { name, device_serial: deviceSerial, send_data_frequency: Number(sendDataFrequency), get_weather_alerts: Boolean(getWeatherAlerts) },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -39,7 +59,7 @@ const CreateWaypoint = () => {
 
       navigate(`/route/${route_id}`);
     } catch (err) {
-      setError("Error while creating waypoint");
+      setError("Error updating waypoint data");
       console.error(err);
     } finally {
       setLoading(false);
@@ -48,13 +68,13 @@ const CreateWaypoint = () => {
 
   return (
     <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded">
-      <h2 className="text-2xl font-bold text-center mb-4">Create Waypoint</h2>
+      <h2 className="text-2xl font-bold text-center mb-4">Edit Waypoint</h2>
 
       {error && <p className="text-red-600 text-center">{error}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-gray-700 font-medium">Name of the waypoint</label>
+          <label className="block text-gray-700 font-medium">Waypoint Name</label>
           <input
             type="text"
             value={name}
@@ -65,7 +85,7 @@ const CreateWaypoint = () => {
         </div>
 
         <div>
-          <label className="block text-gray-700 font-medium">Device Serial Number</label>
+          <label className="block text-gray-700 font-medium">Device Serial</label>
           <input
             type="text"
             value={deviceSerial}
@@ -98,14 +118,14 @@ const CreateWaypoint = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+          className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
           disabled={loading}
         >
-          {loading ? "Creating..." : "Create waypoint"}
+          {loading ? "Saving..." : "Save Changes"}
         </button>
       </form>
     </div>
   );
 };
 
-export default CreateWaypoint;
+export default EditWaypoint;

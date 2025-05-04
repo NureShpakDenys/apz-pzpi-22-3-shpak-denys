@@ -12,7 +12,7 @@ import "gorm.io/gorm"
 type Company struct {
 	// ID is the unique identifier of the company.
 	// Example: 1
-	ID uint `gorm:"primaryKey;column:id"`
+	ID uint `gorm:"primaryKey;column:id;autoIncrement"`
 
 	// Name is the name of the company.
 	// Example: "Wayra"

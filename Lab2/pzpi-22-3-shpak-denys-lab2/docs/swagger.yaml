@@ -1,5 +1,82 @@
 basePath: /
 definitions:
+  admin.BackupDatabaseRequest:
+    properties:
+      backup_path:
+        description: Backup path is the path where the backup will be stored
+        type: string
+    type: object
+  admin.ClearLogsRequest:
+    properties:
+      days:
+        type: integer
+    type: object
+  admin.RestoreDatabaseRequest:
+    properties:
+      backup_path:
+        description: Backup path is the path where the backup is stored
+        type: string
+    type: object
+  admin.UpdateSystemConfigsRequest:
+    properties:
+      timeout_sec:
+        type: integer
+      token_ttl:
+        type: integer
+    type: object
+  admin.UpdateUserRoleRequest:
+    properties:
+      roleId:
+        type: integer
+      userId:
+        type: integer
+    type: object
+  company.AddUserToCompanyRequest:
+    properties:
+      role:
+        allOf:
+        - $ref: '#/definitions/handlers.Role'
+        description: Role is the role of the user in the company
+        example: user | admin | manager
+      userID:
+        description: |-
+          UserID is the ID of the user to add
+          Example: 1
+        type: integer
+    type: object
+  company.CompanyRequest:
+    properties:
+      address:
+        description: |-
+          Address is the address of the company
+          Example: 123 Main St
+        type: string
+      name:
+        description: |-
+          Name is the name of the company
+          Example: Wayra
+        type: string
+    type: object
+  company.RemoveUserFromCompanyRequest:
+    properties:
+      userID:
+        description: |-
+          UserID is the ID of the user to remove
+          Example: 1
+        type: integer
+    type: object
+  company.UpdateUserInCompanyRequest:
+    properties:
+      role:
+        description: Role is the role of the user in the company
+        example: user | admin | manager
+        type: string
+      userID:
+        description: |-
+          UserID is the ID of the user to update
+          Example: 1
+        type: integer
+    type: object
   dtos.CompanyDTO:
     properties:
       address:
@@ -272,19 +349,6 @@ definitions:
           Example: ok
         type: string
     type: object
-  handlers.AddUserToCompanyRequest:
-    properties:
-      role:
-        allOf:
-        - $ref: '#/definitions/handlers.Role'
-        description: Role is the role of the user in the company
-        example: user | admin | manager
-      userID:
-        description: |-
-          UserID is the ID of the user to add
-          Example: 1
-        type: integer
-    type: object
   handlers.AuthCredentials:
     properties:
       password:
@@ -298,30 +362,6 @@ definitions:
           Username is the name of the user
           Example: john_doe
         example: john_doe
-        type: string
-    type: object
-  handlers.BackupDatabaseRequest:
-    properties:
-      backup_path:
-        description: Backup path is the path where the backup will be stored
-        type: string
-    type: object
-  handlers.ClearLogsRequest:
-    properties:
-      days:
-        type: integer
-    type: object
-  handlers.CompanyRequest:
-    properties:
-      address:
-        description: |-
-          Address is the address of the company
-          Example: 123 Main St
-        type: string
-      name:
-        description: |-
-          Name is the name of the company
-          Example: Wayra
         type: string
     type: object
   handlers.CreateDeliveryRequest:
@@ -452,30 +492,20 @@ definitions:
           Example: 10
         type: integer
     type: object
-  handlers.RemoveUserFromCompanyRequest:
-    properties:
-      userID:
-        description: |-
-          UserID is the ID of the user to remove
-          Example: 1
-        type: integer
-    type: object
-  handlers.RestoreDatabaseRequest:
-    properties:
-      backup_path:
-        description: Backup path is the path where the backup is stored
-        type: string
-    type: object
   handlers.Role:
     enum:
     - user
     - admin
     - manager
+    - db_admin
+    - system_admin
     type: string
     x-enum-varnames:
     - RoleUser
     - RoleAdmin
     - RoleManager
+    - RoleDBAdmin
+    - RoleSystemAdmin
   handlers.UpdateDeliveryRequest:
     properties:
       date:
@@ -557,25 +587,6 @@ definitions:
         example: 25.5
         type: number
     type: object
-  handlers.UpdateSystemConfigsRequest:
-    properties:
-      timeout_sec:
-        type: integer
-      token_ttl:
-        type: integer
-    type: object
-  handlers.UpdateUserInCompanyRequest:
-    properties:
-      role:
-        description: Role is the role of the user in the company
-        example: user | admin | manager
-        type: string
-      userID:
-        description: |-
-          UserID is the ID of the user to update
-          Example: 1
-        type: integer
-    type: object
   handlers.UpdateUserRequest:
     properties:
       name:
@@ -583,13 +594,6 @@ definitions:
           Name is the name of the user
           Example: John Doe
         type: string
-    type: object
-  handlers.UpdateUserRoleRequest:
-    properties:
-      roleId:
-        type: integer
-      userId:
-        type: integer
     type: object
   handlers.UpdateWaypointRequest:
     properties:
@@ -652,14 +656,10 @@ paths:
         name: BackupDatabaseRequest
         required: true
         schema:
-          $ref: '#/definitions/handlers.BackupDatabaseRequest'
+          $ref: '#/definitions/admin.BackupDatabaseRequest'
       produces:
       - application/json
-      responses:
-        "200":
-          description: Backup created
-          schema:
-            type: string
+      responses: {}
       security:
       - BearerAuth: []
       summary: Backup the database
@@ -676,7 +676,7 @@ paths:
         name: UpdateUserRoleRequest
         required: true
         schema:
-          $ref: '#/definitions/handlers.UpdateUserRoleRequest'
+          $ref: '#/definitions/admin.UpdateUserRoleRequest'
       produces:
       - application/json
       responses: {}
@@ -696,7 +696,7 @@ paths:
         name: ClearLogsRequest
         required: true
         schema:
-          $ref: '#/definitions/handlers.ClearLogsRequest'
+          $ref: '#/definitions/admin.ClearLogsRequest'
       produces:
       - application/json
       responses: {}
@@ -768,7 +768,7 @@ paths:
         name: RestoreDatabaseRequest
         required: true
         schema:
-          $ref: '#/definitions/handlers.RestoreDatabaseRequest'
+          $ref: '#/definitions/admin.RestoreDatabaseRequest'
       produces:
       - application/json
       responses:
@@ -804,7 +804,7 @@ paths:
         name: UpdateSystemConfigsRequest
         required: true
         schema:
-          $ref: '#/definitions/handlers.UpdateSystemConfigsRequest'
+          $ref: '#/definitions/admin.UpdateSystemConfigsRequest'
       produces:
       - application/json
       responses: {}
@@ -907,7 +907,7 @@ paths:
         name: company
         required: true
         schema:
-          $ref: '#/definitions/handlers.CompanyRequest'
+          $ref: '#/definitions/company.CompanyRequest'
       produces:
       - application/json
       responses: {}
@@ -981,7 +981,7 @@ paths:
         name: company
         required: true
         schema:
-          $ref: '#/definitions/handlers.CompanyRequest'
+          $ref: '#/definitions/company.CompanyRequest'
       produces:
       - application/json
       responses: {}
@@ -1007,7 +1007,7 @@ paths:
         name: userID
         required: true
         schema:
-          $ref: '#/definitions/handlers.AddUserToCompanyRequest'
+          $ref: '#/definitions/company.AddUserToCompanyRequest'
       produces:
       - application/json
       responses: {}
@@ -1033,7 +1033,7 @@ paths:
         name: userID
         required: true
         schema:
-          $ref: '#/definitions/handlers.RemoveUserFromCompanyRequest'
+          $ref: '#/definitions/company.RemoveUserFromCompanyRequest'
       produces:
       - application/json
       responses: {}
@@ -1059,7 +1059,7 @@ paths:
         name: userID
         required: true
         schema:
-          $ref: '#/definitions/handlers.UpdateUserInCompanyRequest'
+          $ref: '#/definitions/company.UpdateUserInCompanyRequest'
       produces:
       - application/json
       responses: {}
@@ -1586,6 +1586,8 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Update waypoint details
       tags:
       - waypoint

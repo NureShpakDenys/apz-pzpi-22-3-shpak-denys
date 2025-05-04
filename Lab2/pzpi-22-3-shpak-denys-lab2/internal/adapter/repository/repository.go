@@ -21,6 +21,10 @@ func NewRepository[T any](db *gorm.DB) port.Repository[T] {
 	return &GenericRepository[T]{db: db}
 }
 
+func (r *GenericRepository[T]) DB() *gorm.DB {
+	return r.db
+}
+
 // Add adds a new entity to the database
 // ctx: context
 // entity: entity to add

@@ -41,18 +41,11 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.BackupDatabaseRequest"
+                            "$ref": "#/definitions/admin.BackupDatabaseRequest"
                         }
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Backup created",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
+                "responses": {}
             }
         },
         "/admin/change-role": {
@@ -80,7 +73,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.UpdateUserRoleRequest"
+                            "$ref": "#/definitions/admin.UpdateUserRoleRequest"
                         }
                     }
                 ],
@@ -112,7 +105,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.ClearLogsRequest"
+                            "$ref": "#/definitions/admin.ClearLogsRequest"
                         }
                     }
                 ],
@@ -228,7 +221,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.RestoreDatabaseRequest"
+                            "$ref": "#/definitions/admin.RestoreDatabaseRequest"
                         }
                     }
                 ],
@@ -286,7 +279,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.UpdateSystemConfigsRequest"
+                            "$ref": "#/definitions/admin.UpdateSystemConfigsRequest"
                         }
                     }
                 ],
@@ -447,7 +440,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.CompanyRequest"
+                            "$ref": "#/definitions/company.CompanyRequest"
                         }
                     }
                 ],
@@ -539,7 +532,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.CompanyRequest"
+                            "$ref": "#/definitions/company.CompanyRequest"
                         }
                     }
                 ],
@@ -603,7 +596,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.AddUserToCompanyRequest"
+                            "$ref": "#/definitions/company.AddUserToCompanyRequest"
                         }
                     }
                 ],
@@ -642,7 +635,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.RemoveUserFromCompanyRequest"
+                            "$ref": "#/definitions/company.RemoveUserFromCompanyRequest"
                         }
                     }
                 ],
@@ -681,7 +674,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.UpdateUserInCompanyRequest"
+                            "$ref": "#/definitions/company.UpdateUserInCompanyRequest"
                         }
                     }
                 ],
@@ -1435,6 +1428,11 @@ const docTemplate = `{
                 "responses": {}
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Updates the details of a waypoint",
                 "consumes": [
                     "application/json"
@@ -1494,6 +1492,108 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "admin.BackupDatabaseRequest": {
+            "type": "object",
+            "properties": {
+                "backup_path": {
+                    "description": "Backup path is the path where the backup will be stored",
+                    "type": "string"
+                }
+            }
+        },
+        "admin.ClearLogsRequest": {
+            "type": "object",
+            "properties": {
+                "days": {
+                    "type": "integer"
+                }
+            }
+        },
+        "admin.RestoreDatabaseRequest": {
+            "type": "object",
+            "properties": {
+                "backup_path": {
+                    "description": "Backup path is the path where the backup is stored",
+                    "type": "string"
+                }
+            }
+        },
+        "admin.UpdateSystemConfigsRequest": {
+            "type": "object",
+            "properties": {
+                "timeout_sec": {
+                    "type": "integer"
+                },
+                "token_ttl": {
+                    "type": "integer"
+                }
+            }
+        },
+        "admin.UpdateUserRoleRequest": {
+            "type": "object",
+            "properties": {
+                "roleId": {
+                    "type": "integer"
+                },
+                "userId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "company.AddUserToCompanyRequest": {
+            "type": "object",
+            "properties": {
+                "role": {
+                    "description": "Role is the role of the user in the company",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/handlers.Role"
+                        }
+                    ],
+                    "example": "user | admin | manager"
+                },
+                "userID": {
+                    "description": "UserID is the ID of the user to add\nExample: 1",
+                    "type": "integer"
+                }
+            }
+        },
+        "company.CompanyRequest": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "description": "Address is the address of the company\nExample: 123 Main St",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name is the name of the company\nExample: Wayra",
+                    "type": "string"
+                }
+            }
+        },
+        "company.RemoveUserFromCompanyRequest": {
+            "type": "object",
+            "properties": {
+                "userID": {
+                    "description": "UserID is the ID of the user to remove\nExample: 1",
+                    "type": "integer"
+                }
+            }
+        },
+        "company.UpdateUserInCompanyRequest": {
+            "type": "object",
+            "properties": {
+                "role": {
+                    "description": "Role is the role of the user in the company",
+                    "type": "string",
+                    "example": "user | admin | manager"
+                },
+                "userID": {
+                    "description": "UserID is the ID of the user to update\nExample: 1",
+                    "type": "integer"
+                }
+            }
+        },
         "dtos.CompanyDTO": {
             "type": "object",
             "properties": {
@@ -1760,24 +1860,6 @@ const docTemplate = `{
                 }
             }
         },
-        "handlers.AddUserToCompanyRequest": {
-            "type": "object",
-            "properties": {
-                "role": {
-                    "description": "Role is the role of the user in the company",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/handlers.Role"
-                        }
-                    ],
-                    "example": "user | admin | manager"
-                },
-                "userID": {
-                    "description": "UserID is the ID of the user to add\nExample: 1",
-                    "type": "integer"
-                }
-            }
-        },
         "handlers.AuthCredentials": {
             "type": "object",
             "properties": {
@@ -1790,36 +1872,6 @@ const docTemplate = `{
                     "description": "Username is the name of the user\nExample: john_doe",
                     "type": "string",
                     "example": "john_doe"
-                }
-            }
-        },
-        "handlers.BackupDatabaseRequest": {
-            "type": "object",
-            "properties": {
-                "backup_path": {
-                    "description": "Backup path is the path where the backup will be stored",
-                    "type": "string"
-                }
-            }
-        },
-        "handlers.ClearLogsRequest": {
-            "type": "object",
-            "properties": {
-                "days": {
-                    "type": "integer"
-                }
-            }
-        },
-        "handlers.CompanyRequest": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "description": "Address is the address of the company\nExample: 123 Main St",
-                    "type": "string"
-                },
-                "name": {
-                    "description": "Name is the name of the company\nExample: Wayra",
-                    "type": "string"
                 }
             }
         },
@@ -1940,35 +1992,21 @@ const docTemplate = `{
                 }
             }
         },
-        "handlers.RemoveUserFromCompanyRequest": {
-            "type": "object",
-            "properties": {
-                "userID": {
-                    "description": "UserID is the ID of the user to remove\nExample: 1",
-                    "type": "integer"
-                }
-            }
-        },
-        "handlers.RestoreDatabaseRequest": {
-            "type": "object",
-            "properties": {
-                "backup_path": {
-                    "description": "Backup path is the path where the backup is stored",
-                    "type": "string"
-                }
-            }
-        },
         "handlers.Role": {
             "type": "string",
             "enum": [
                 "user",
                 "admin",
-                "manager"
+                "manager",
+                "db_admin",
+                "system_admin"
             ],
             "x-enum-varnames": [
                 "RoleUser",
                 "RoleAdmin",
-                "RoleManager"
+                "RoleManager",
+                "RoleDBAdmin",
+                "RoleSystemAdmin"
             ]
         },
         "handlers.UpdateDeliveryRequest": {
@@ -2048,48 +2086,12 @@ const docTemplate = `{
                 }
             }
         },
-        "handlers.UpdateSystemConfigsRequest": {
-            "type": "object",
-            "properties": {
-                "timeout_sec": {
-                    "type": "integer"
-                },
-                "token_ttl": {
-                    "type": "integer"
-                }
-            }
-        },
-        "handlers.UpdateUserInCompanyRequest": {
-            "type": "object",
-            "properties": {
-                "role": {
-                    "description": "Role is the role of the user in the company",
-                    "type": "string",
-                    "example": "user | admin | manager"
-                },
-                "userID": {
-                    "description": "UserID is the ID of the user to update\nExample: 1",
-                    "type": "integer"
-                }
-            }
-        },
         "handlers.UpdateUserRequest": {
             "type": "object",
             "properties": {
                 "name": {
                     "description": "Name is the name of the user\nExample: John Doe",
                     "type": "string"
-                }
-            }
-        },
-        "handlers.UpdateUserRoleRequest": {
-            "type": "object",
-            "properties": {
-                "roleId": {
-                    "type": "integer"
-                },
-                "userId": {
-                    "type": "integer"
                 }
             }
         },

@@ -39,7 +39,7 @@ type Delivery struct {
 	Company Company `gorm:"foreignKey:CompanyID;constraint:OnDelete:CASCADE;" json:"company,omitempty"`
 
 	// Products represents the products of the delivery
-	Products []Product `gorm:"foreignKey:DeliveryID;constraint:OnDelete:CASCADE;" json:"products,omitempty"`
+	Products []Product `gorm:"foreignKey:DeliveryID;constraint:OnDelete:CASCADE;" json:"products"`
 }
 
 // LoadRelations is an implementation of the LoadRelations interface

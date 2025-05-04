@@ -1,24 +1,45 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-const CreateCompany = () => {
+const EditRoute = ({ user }) => {
+  const { route_id } = useParams();
   const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+ 
+  const token = localStorage.getItem("token")
+  
+  useEffect(() => {
+    const fetchRoute = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8081/routes/${route_id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        });
 
-  const token = localStorage.getItem("token");
+        setName(res.data.Name);
+      } catch (err) {
+        setError("Error while loading route data");
+        console.error(err);
+      }
+    };
+
+    fetchRoute();
+  }, [route_id, token]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      const response = await axios.post(
-        "http://localhost:8081/company/",
-        { name, address },
+      await axios.put(
+        `http://localhost:8081/routes/${route_id}`,
+        { name },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -28,9 +49,9 @@ const CreateCompany = () => {
         }
       );
 
-      navigate(`/company/${response.data.id}`);
+      navigate(`/route/${route_id}`);
     } catch (err) {
-      setError("Ошибка при создании компании");
+      setError("Error while updating route");
       console.error(err);
     } finally {
       setLoading(false);
@@ -39,13 +60,13 @@ const CreateCompany = () => {
 
   return (
     <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded">
-      <h2 className="text-2xl font-bold text-center mb-4">Создать компанию</h2>
+      <h2 className="text-2xl font-bold text-center mb-4">Edit route</h2>
 
       {error && <p className="text-red-600 text-center">{error}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-gray-700 font-medium">Название компании</label>
+          <label className="block text-gray-700 font-medium">Route name</label>
           <input
             type="text"
             value={name}
@@ -55,27 +76,16 @@ const CreateCompany = () => {
           />
         </div>
 
-        <div>
-          <label className="block text-gray-700 font-medium">Адрес</label>
-          <input
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+          className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
           disabled={loading}
         >
-          {loading ? "Создание..." : "Создать компанию"}
+          {loading ? "Saving..." : "Save changes"}
         </button>
       </form>
     </div>
   );
 };
 
-export default CreateCompany;
+export default EditRoute;

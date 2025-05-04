@@ -236,16 +236,8 @@ func (h *WaypointHandler) GetWaypoint(c *gin.Context) {
 		return
 	}
 
-	waypointDTO := &dtos.WaypointDTO{}
-	if err = dtoMapper.Map(waypointDTO, waypoint); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		h.logAction(c, "get_waypoint", "Failed to fetch waypoint: "+err.Error(), false)
-
-		return
-	}
-
 	h.logAction(c, "get_waypoint", fmt.Sprintf("Waypoint %d fetched", waypointID), true)
-	c.JSON(http.StatusOK, waypointDTO)
+	c.JSON(http.StatusOK, waypoint)
 }
 
 // UpdateWaypoint godoc
@@ -254,6 +246,7 @@ func (h *WaypointHandler) GetWaypoint(c *gin.Context) {
 // @Tags         waypoint
 // @Accept       json
 // @Produce      json
+// @Security     BearerAuth
 // @Param        waypoint_id path int true "Waypoint ID"
 // @Param        waypoint body UpdateWaypointRequest true "Waypoint details"
 // @Router       /waypoints/{waypoint_id} [put]
@@ -296,6 +289,7 @@ func (h *WaypointHandler) UpdateWaypoint(c *gin.Context) {
 		return
 	}
 
+	// Обновляем только переданные значения
 	if waypointRequest.Name != "" {
 		waypoint.Name = waypointRequest.Name
 	}
@@ -316,9 +310,7 @@ func (h *WaypointHandler) UpdateWaypoint(c *gin.Context) {
 		waypoint.SendDataFrequency = waypointRequest.SendDataFrequency
 	}
 
-	if waypointRequest.GetWeatherAlerts {
-		waypoint.GetWeatherAlerts = waypointRequest.GetWeatherAlerts
-	}
+	waypoint.GetWeatherAlerts = waypointRequest.GetWeatherAlerts
 
 	if waypointRequest.Status != "" {
 		waypoint.Status = waypointRequest.Status
@@ -334,21 +326,12 @@ func (h *WaypointHandler) UpdateWaypoint(c *gin.Context) {
 	if err := h.waypointService.Update(context.Background(), waypoint); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		h.logAction(c, "update_waypoint", "Failed to update waypoint: "+err.Error(), false)
-
-		return
-	}
-
-	waypointDTO := &dtos.WaypointDTO{}
-	if err = dtoMapper.Map(waypointDTO, waypoint); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		h.logAction(c, "update_waypoint", "Failed to update waypoint: "+err.Error(), false)
-
 		return
 	}
 
 	h.logAction(c, "update_waypoint", fmt.Sprintf("Waypoint %d updated", waypointID), true)
 
-	c.JSON(http.StatusOK, waypointDTO)
+	c.JSON(http.StatusOK, waypoint)
 }
 
 // DeleteWaypoint godoc

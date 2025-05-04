@@ -46,7 +46,8 @@ func (s *GenericService[T]) Where(ctx context.Context, params *T) ([]T, error) {
 // entity: entity to update
 // returns: error
 func (s *GenericService[T]) Update(ctx context.Context, entity *T) error {
-	return s.Repository.Update(ctx, entity)
+	err := s.Repository.Update(ctx, entity)
+	return err
 }
 
 // Delete deletes an entity by its ID

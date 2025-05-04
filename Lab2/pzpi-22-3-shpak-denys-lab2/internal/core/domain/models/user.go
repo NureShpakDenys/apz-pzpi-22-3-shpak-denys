@@ -10,7 +10,7 @@ type User struct {
 
 	// Name is the name of the user
 	// Example: John Doe
-	Name string `gorm:"size:255;not null;column:name" json:"name"`
+	Name string `gorm:"size:255;not null;column:name; unique" json:"name"`
 
 	// Password is the password of the user
 	// Example: 111111

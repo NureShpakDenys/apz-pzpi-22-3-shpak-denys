@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const CompanyDetails = () => {
+const CompanyDetails = ({ user }) => {
   const { company_id } = useParams();
   const [data, setData] = useState(null);
   const [activeTab, setActiveTab] = useState("routes");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZXhwIjoxNzQ2Mzc5ODQ4LCJpYXQiOjE3NDYyOTM0NDgsImp0aSI6IjIiLCJ1c2VybmFtZSI6IiJ9.L9IusAwGCgQawW_Wr-UT0NDi9W9i7A61nsS9wCL7qP8';
-
+  const token = localStorage.getItem("token");
   useEffect(() => {
     const fetchCompany = async () => {
       try {
@@ -22,7 +23,7 @@ const CompanyDetails = () => {
         });
         setData(res.data);
       } catch (err) {
-        setError("Ошибка при загрузке данных");
+        setError("Error while loading company data");
         console.error(err);
       } finally {
         setLoading(false);
@@ -32,6 +33,20 @@ const CompanyDetails = () => {
     fetchCompany();
   }, [company_id]);
 
+  const handleDeleteCompany = async () => {
+    if (!window.confirm("Confirm deletion?")) return;
+
+    try {
+      await axios.delete(`http://localhost:8081/company/${company_id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      navigate("/companies");
+    } catch (err) {
+      console.error("Error while deleting company:", err);
+      alert("Error while deleting company");
+    }
+  };
+
   if (loading) return <div className="p-6 text-center">Загрузка...</div>;
   if (error) return <div className="p-6 text-center text-red-600">{error}</div>;
   if (!data) return null;
@@ -40,54 +55,80 @@ const CompanyDetails = () => {
     switch (activeTab) {
       case "routes":
         return (
-          <table className="w-full table-auto">
-            <thead>
-              <tr><th>Name</th><th>Status</th><th>Details</th></tr>
-            </thead>
-            <tbody>
-              {data.routes.map((route) => (
-                <tr key={route.id}>
-                  <td>{route.name}</td>
-                  <td>{route.status}</td>
-                  <td>{route.details}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <>
+            <h2 className="text-xl font-bold mb-4">Routes</h2>
+            {data.creator.id == user.id && (
+              <button
+                onClick={() => navigate(`/company/${company_id}/route/create`)}
+                className="px-4 py-2 bg-green-500 text-white rounded mt-4"
+              >
+                Add route
+              </button>
+            )}
+            <table className="w-full table-auto">
+              <thead>
+                <tr><th>Name</th><th>Status</th><th>Details</th></tr>
+              </thead>
+              <tbody>
+                {data.routes.map((route) => (
+                  <tr key={route.id} className="text-center">
+                    <td onClick={() => navigate(`/route/${route.id}`)} className="cursor-pointer hover:bg-gray-300 text-blue-500 underline">{route.name}</td>
+                    <td>{route.status}</td>
+                    <td>{route.details}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
         );
       case "deliveries":
         return (
-          <table className="w-full table-auto">
-            <thead>
-              <tr><th>Status</th><th>Date</th><th>Duration</th><th>Route ID</th></tr>
-            </thead>
-            <tbody>
-              {data.deliveries.map((d) => (
-                <tr key={d.id}>
-                  <td>{d.status}</td>
-                  <td>{new Date(d.date).toLocaleDateString()}</td>
-                  <td>{d.duration}</td>
-                  <td>{d.route_id}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <>
+            <h2 className="text-xl font-bold mb-4">Deliveries</h2>
+            {data.creator.id == user.id && (
+              <button
+                onClick={() => navigate(`/company/${company_id}/delivery/create`)}
+                className="px-4 py-2 bg-green-500 text-white rounded mt-4"
+              >
+                Add delivery
+              </button>
+            )}
+            <table className="w-full table-auto">
+              <thead>
+                <tr><th>ID</th><th>Status</th><th>Date</th><th>Duration</th><th>Route ID</th></tr>
+              </thead>
+              <tbody>
+                {data.deliveries.map((d) => (
+                  <tr key={d.id} className="text-center">
+                    <td onClick={() => navigate(`/delivery/${d.id}`)} className="cursor-pointer hover:bg-gray-300 text-blue-500 underline">{d.id}</td>
+                    <td>{d.status}</td>
+                    <td>{new Date(d.date).toLocaleDateString()}</td>
+                    <td>{d.duration}</td>
+                    <td>{d.route_id}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
         );
       case "users":
         return (
-          <table className="w-full table-auto">
-            <thead>
-              <tr><th>ID</th><th>Name</th></tr>
-            </thead>
-            <tbody>
-              {data.users.map((u) => (
-                <tr key={u.id}>
-                  <td>{u.id}</td>
-                  <td>{u.name}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <>
+            <h2 className="text-xl font-bold mb-4">Users</h2>
+            <table className="w-full table-auto">
+              <thead>
+                <tr><th>ID</th><th>Name</th></tr>
+              </thead>
+              <tbody>
+                {data.users.map((u) => (
+                  <tr key={u.id} className="text-center">
+                    <td>{u.id}</td>
+                    <td>{u.name}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
         );
       default:
         return null;
@@ -99,6 +140,22 @@ const CompanyDetails = () => {
       <div className="text-center mb-4">
         <h1 className="text-3xl font-bold">{data.name}</h1>
         <p className="text-gray-600">{data.address}</p>
+        {data.creator.id == user.id && (
+          <div className="flex justify-center space-x-4 mt-4">
+            <button
+              onClick={handleDeleteCompany}
+              className="px-4 py-2 bg-red-500 text-white rounded"
+            >
+              Delete
+            </button>
+            <button
+              onClick={() => navigate(`/company/${company_id}/edit`)}
+              className="px-4 py-2 bg-yellow-500 text-white rounded"
+            >
+              Edit
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="flex space-x-4 justify-center mb-4">

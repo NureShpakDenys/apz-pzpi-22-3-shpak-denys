@@ -1,7 +1,11 @@
 // Package port provides the repository interface for the core domain.
 package port // import "wayra/internal/core/port"
 
-import "context"
+import (
+	"context"
+
+	"gorm.io/gorm"
+)
 
 // Repository is the interface that wraps the basic CRUD operations.
 type Repository[T any] interface {
@@ -13,4 +17,5 @@ type Repository[T any] interface {
 	Delete(ctx context.Context, id uint) error
 	SkipTake(ctx context.Context, skip int, take int) (*[]T, error)
 	CountWhere(ctx context.Context, params *T) int64
+	DB() *gorm.DB
 }
