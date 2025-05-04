@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"time"
+	"wayra/internal/core/domain/dtos"
 	"wayra/internal/core/domain/models"
 	"wayra/internal/core/port/services"
 
@@ -117,9 +118,32 @@ func (h *AuthHandler) LoginUser(c *gin.Context) {
 	users, _ := h.UserService.Where(context.Background(), &models.User{Name: credentials.Username})
 	user := users[0]
 
+	userToReturn, err := h.UserService.GetByID(context.Background(), user.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user details"})
+		h.LogService.LogAction(nil, "login", "Failed to get user details: "+err.Error(), false)
+		return
+	}
+
+	type UserWithRole struct {
+		dtos.UserDTO
+		Role string `json:"role"`
+	}
+
+	userDTO := UserWithRole{
+		UserDTO: dtos.UserDTO{
+			ID:   userToReturn.ID,
+			Name: userToReturn.Name,
+		},
+		Role: userToReturn.Role.Name,
+	}
+
 	c.SetCookie("token", token, int(h.tokenExpiry.Seconds()), "/", "localhost", false, true)
 	h.LogService.LogAction(&user.ID, "login", "User logged in successfully", true)
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	c.JSON(http.StatusOK, gin.H{
+		"token": token,
+		"user":  userDTO,
+	})
 }
 
 // LogoutUser godoc

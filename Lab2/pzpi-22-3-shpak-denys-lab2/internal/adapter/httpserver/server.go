@@ -44,6 +44,7 @@ func NewRouter(
 	deliveryHandler *handlers.DeliveryHandler,
 	productHandler *handlers.ProductHandler,
 	adminHandler *admin.AdminHandler,
+	userCompanyHandler *handlers.UserCompanyHandler,
 ) *gin.Engine {
 	r := gin.Default()
 
@@ -109,6 +110,7 @@ func NewRouter(
 	{
 		company.POST("/", companyHandler.RegisterCompany)
 		company.GET("/:company_id", companyHandler.GetCompany)
+		company.GET("/:company_id/users", userCompanyHandler.GetCompanyUsers)
 		company.GET("/", companyHandler.GetCompanies)
 		company.PUT("/:company_id", companyHandler.UpdateCompany)
 		company.DELETE("/:company_id", companyHandler.DeleteCompany)

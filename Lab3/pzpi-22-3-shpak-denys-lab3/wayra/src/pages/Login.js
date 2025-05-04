@@ -2,8 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { getUserFromToken } from "../utils/auth";
-
 const Login = ({ setUser }) => {
    const [username, setUsername] = useState("");
    const [password, setPassword] = useState("");
@@ -15,32 +13,32 @@ const Login = ({ setUser }) => {
       e.preventDefault();
       setLoading(true);
       setError(null);
-
+    
       try {
-         const res = await axios.post(
-            "http://localhost:8081/auth/login",
-            { username, password },
-            {
-               headers: {
-                  Accept: "application/json",
-                  "Content-Type": "application/json",
-               },
-            }
-         );
-
-         if (res.data.token) {
-            localStorage.setItem("token", res.data.token);
-
-            setUser(getUserFromToken())
-            navigate("/companies");
-         }
+        const res = await axios.post(
+          "http://localhost:8081/auth/login",
+          { username, password },
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+    
+        if (res.data.token) {
+          localStorage.setItem("token", res.data.token);
+    
+          setUser(res.data.user);
+          navigate("/companies");
+        }
       } catch (err) {
-         setError("Error logging in. Please check your credentials.");
-         console.error(err);
+        setError("Error logging in. Please check your credentials.");
+        console.error(err);
       } finally {
-         setLoading(false);
+        setLoading(false);
       }
-   };
+    };
 
    return (
       <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded">

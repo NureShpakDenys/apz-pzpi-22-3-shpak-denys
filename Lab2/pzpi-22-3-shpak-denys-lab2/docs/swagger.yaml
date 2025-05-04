@@ -1068,6 +1068,25 @@ paths:
       summary: Update a user in a company
       tags:
       - company
+  /company/{company_id}/users:
+    get:
+      consumes:
+      - application/json
+      description: Get all users of a company by company ID
+      parameters:
+      - description: Company ID
+        in: path
+        name: company_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get all users of a company
+      tags:
+      - company
   /delivery:
     post:
       consumes:

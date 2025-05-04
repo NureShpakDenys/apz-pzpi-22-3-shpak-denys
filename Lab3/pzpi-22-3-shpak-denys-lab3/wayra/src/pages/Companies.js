@@ -21,7 +21,7 @@ const CompanyList = () => {
             });
             setCompanies(res.data);
          } catch (err) {
-            setError("Ошибка загрузки компаний");
+            setError("Error while loading companies data");
          } finally {
             setLoading(false);
          }

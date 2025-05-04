@@ -74,6 +74,7 @@ func BuildContainer() *dig.Container {
 	container.Provide(handlers.NewDeliveryHandler)
 	container.Provide(handlers.NewProductHandler)
 	container.Provide(admin.NewAdminHandler)
+	container.Provide(handlers.NewUserCompanyHandler)
 
 	// HTTP Server
 	container.Provide(httpserver.NewRouter)

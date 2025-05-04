@@ -6,6 +6,7 @@ import axios from "axios";
 const CompanyDetails = ({ user }) => {
   const { company_id } = useParams();
   const [data, setData] = useState(null);
+  const [users, setUsers] = useState([]);
   const [activeTab, setActiveTab] = useState("routes");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -31,6 +32,23 @@ const CompanyDetails = ({ user }) => {
     };
 
     fetchCompany();
+
+    const fetchCompanyUsers = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8081/company/${company_id}/users`, {
+          headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+        });
+
+        setUsers(res.data);
+      } catch (err) {
+        setError("Error while loading users data");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCompanyUsers();
   }, [company_id]);
 
   const handleDeleteCompany = async () => {
@@ -44,6 +62,39 @@ const CompanyDetails = ({ user }) => {
     } catch (err) {
       console.error("Error while deleting company:", err);
       alert("Error while deleting company");
+    }
+  };
+
+  const updateUserRole = async (userId, newRole) => {
+    try {
+      await axios.put(
+        `http://localhost:8081/company/${company_id}/update-user`,
+        { userID: userId, role: newRole },
+        {
+          headers: { Authorization: `Bearer ${token}`, Accept: "application/json", "Content-Type": "application/json" },
+        }
+      );
+
+      setUsers((prevUsers) =>
+        prevUsers.map((user) => (user.UserID === userId ? { ...user, Role: newRole } : user))
+      );
+    } catch (err) {
+      console.error("Error updating role:", err);
+    }
+  };
+
+  const removeUserFromCompany = async (userId) => {
+    if (!window.confirm("Are you sure?")) return;
+
+    try {
+      await axios.delete(`http://localhost:8081/company/${company_id}/remove-user`, {
+        headers: { Authorization: `Bearer ${token}`, Accept: "application/json", "Content-Type": "application/json" },
+        data: { userID: userId },
+      });
+
+      setUsers((prevUsers) => prevUsers.filter((user) => user.UserID !== userId));
+    } catch (err) {
+      console.error("Error removing user:", err);
     }
   };
 
@@ -126,13 +177,45 @@ const CompanyDetails = ({ user }) => {
             )}
             <table className="w-full table-auto">
               <thead>
-                <tr><th>ID</th><th>Name</th></tr>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Role</th>
+                  {data.creator.id == user.id && <th className="border p-2">Actions</th>}
+                </tr>
               </thead>
               <tbody>
-                {data.users.map((u) => (
+                {users.map((u) => (
                   <tr key={u.id} className="text-center">
-                    <td>{u.id}</td>
-                    <td>{u.name}</td>
+                    <td>{u.UserID}</td>
+                    <td>{u.user.name}</td>
+                    <td className="border p-2">
+                      {data.creator.id == user.id ? (
+                        <select value={u.Role} onChange={(e) => updateUserRole(u.UserID, e.target.value)} className="border rounded px-2 py-1">
+                          <option value="user">User</option>
+                          <option value="admin">Admin</option>
+                          <option value="manager">Manager</option>
+                        </select>
+                      ) : (
+                        <span>{u.Role}</span>
+                      )}
+                    </td>
+                    {user.id == users[0]?.company.CreatorID && (
+                      <td className="border p-2">
+                        <button
+                          onClick={() => updateUserRole(u.UserID, u.Role)}
+                          className="px-3 py-1 bg-blue-500 text-white rounded mr-2"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => removeUserFromCompany(u.UserID)}
+                          className="px-3 py-1 bg-red-500 text-white rounded"
+                        >
+                          Remove
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>

@@ -105,10 +105,12 @@ func (s *RouteService) GetOptimalRoute(
 
 		latestSensorData := []models.SensorData{}
 		for _, waypoint := range waypoints {
-			latestSensorData = append(
-				latestSensorData,
-				waypoint.SensorData[len(waypoint.SensorData)-1],
-			)
+			if len(waypoint.SensorData) > 0 {
+				latestSensorData = append(
+					latestSensorData,
+					waypoint.SensorData[len(waypoint.SensorData)-1],
+				)
+			}
 		}
 
 		avgTemp := 0.0
@@ -197,6 +199,9 @@ func (s *RouteService) GetOptimalRoute(
 		}
 	}
 
+	if optimalRoute == nil {
+		return "", nil, nil, models.Route{}, errors.New("no optimal route could be determined")
+	}
 	return additionalMessage, &predictData, coeffs, *optimalRoute, nil
 }
 

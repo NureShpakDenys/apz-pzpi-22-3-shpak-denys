@@ -27,13 +27,36 @@ import EditProduct from "./pages/EditProduct";
 import { getUserFromToken } from "./utils/auth";
 import AddUserToCompany from "./pages/AddUserToCompany";
 
+import AdminDashboard from "./pages/AdminDashboard";
+import SystemAdminDashboard from "./pages/SystemAdminDashboard";
+import DBAdminDashboard from "./pages/DBAdminDashboard";
+
+import axios from "axios";
+
 function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = getUserFromToken();
-    setUser(storedUser);
+    const fetchUser = async () => {
+      const storedUser = getUserFromToken();
+      const token = localStorage.getItem("token");
+  
+      if (!storedUser || !storedUser.id) return;
+  
+      try {
+        const usersRes = await axios.get(`http://localhost:8081/user/${storedUser.id}`, {
+          headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+        });
+  
+        setUser(usersRes.data);
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+      }
+    };
+  
+    fetchUser();
   }, []);
+  
 
   return (
     <Router>
@@ -62,11 +85,11 @@ function App() {
 
           <Route path="delivery/:delivery_id/product/add" element={!user ? <Navigate to="/login" /> : <AddProduct />} />
           <Route path="/product/:product_id/edit" element={!user ? <Navigate to="/login" /> : <EditProduct />} />
-          {/*
-          <Route path="/products" element={<Products />} />
-          <Route path="/product/create" element={<CreateProduct />} />
 
-          <Route path="/admin" element={<AdminDashboard />} />*/}
+          <Route path="/admin" element={user ? <AdminDashboard user_id={user.id} /> : <Navigate to="/login" />} />
+          <Route path="/system-admin" element={user ? <SystemAdminDashboard /> : <Navigate to="/login" />} />
+          <Route path="/db-admin" element={user ? <DBAdminDashboard /> : <Navigate to="/login" />} />
+
         </Routes>
       </div>
     </Router>

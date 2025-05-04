@@ -53,7 +53,7 @@ type Waypoint struct {
 
 // LoadRelations is an implementation of the LoadRelations interface
 func (w *Waypoint) LoadRelations(db *gorm.DB) *gorm.DB {
-	// withRoute := db.Preload("Route").Preload("Route.Company").Preload("Route.Company.Creator")
-	// withSensorData := db.Preload("SensorData")
-	return db
+	withRoute := db.Preload("Route").Preload("Route.Company").Preload("Route.Company.Creator")
+	withSensorData := withRoute.Preload("SensorData")
+	return withSensorData
 }

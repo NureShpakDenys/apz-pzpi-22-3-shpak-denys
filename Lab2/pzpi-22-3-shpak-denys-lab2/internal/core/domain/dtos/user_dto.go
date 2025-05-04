@@ -9,8 +9,4 @@ type UserDTO struct {
 	// Name is the user name
 	// Example: John Doe
 	Name string `json:"name"`
-
-	// Email is the user email
-	// Example: password123
-	Password string `json:"password"`
 }

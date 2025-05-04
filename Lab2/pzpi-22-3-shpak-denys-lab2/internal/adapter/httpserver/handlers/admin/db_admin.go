@@ -2,6 +2,7 @@ package admin
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"wayra/internal/adapter/httpserver/handlers"
 
@@ -42,6 +43,7 @@ func (ah *AdminHandler) BackupDatabase(c *gin.Context) {
 		return
 	}
 
+	fmt.Printf("User role: %s\n", user.Role.Name)
 	if user.Role.Name != "db_admin" {
 		c.JSON(http.StatusForbidden, gin.H{"error": "Access denied"})
 		return

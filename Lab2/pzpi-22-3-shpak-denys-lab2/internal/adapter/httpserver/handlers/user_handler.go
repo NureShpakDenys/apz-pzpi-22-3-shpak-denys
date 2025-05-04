@@ -59,11 +59,17 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	type UserWithRole struct {
+		dtos.UserDTO
+		Role string `json:"role"`
+	}
 
-	userDTO := &dtos.UserDTO{}
-	if err = dtoMapper.Map(userDTO, user); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+	userDTO := UserWithRole{
+		UserDTO: dtos.UserDTO{
+			ID:   user.ID,
+			Name: user.Name,
+		},
+		Role: user.Role.Name,
 	}
 
 	c.JSON(http.StatusOK, userDTO)
@@ -100,9 +106,8 @@ func (h *UserHandler) GetUsers(c *gin.Context) {
 
 		userDTOs = append(userDTOs, UserWithRole{
 			UserDTO: dtos.UserDTO{
-				ID:       user.ID,
-				Name:     user.Name,
-				Password: user.Password,
+				ID:   user.ID,
+				Name: user.Name,
 			},
 			Role: role,
 		})
