@@ -51,6 +51,22 @@ const DeliveryDetails = ({ user }) => {
   };
 
 
+  const handleDeleteProduct = async (productId) => {
+    if (!window.confirm("Confirm deletion?")) return;
+
+    try {
+      await axios.delete(`http://localhost:8081/products/${productId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setDelivery((prevDelivery) => ({
+        ...prevDelivery,
+        products: prevDelivery.products.filter((product) => product.ID !== productId),
+      }));
+    } catch (err) {
+      console.error("Error while deleting product:", err);
+      alert("Error while deleting product");
+    }
+  };
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <div className="bg-white p-6 shadow rounded mb-6 text-center">
@@ -84,6 +100,14 @@ const DeliveryDetails = ({ user }) => {
 
       <div className="bg-white p-4 shadow rounded">
         <h2 className="text-xl font-semibold mb-4">Products</h2>
+        {delivery.company.CreatorID == user.id && (
+          <button
+            onClick={() => navigate(`/delivery/${delivery_id}/product/add`)}
+            className="px-4 py-2 bg-green-500 text-white rounded mb-4"
+          >
+            Add product
+          </button>
+        )}
         <table className="w-full border table-auto">
           <thead className="bg-gray-100">
             <tr>
@@ -93,6 +117,7 @@ const DeliveryDetails = ({ user }) => {
               <th className="border px-4 py-2">Temperature (°C)</th>
               <th className="border px-4 py-2">Humidity (%)</th>
               <th className="border px-4 py-2">Perishable</th>
+              {delivery.company.CreatorID == user.id && <th className="px-4 py-2 border">Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -110,6 +135,22 @@ const DeliveryDetails = ({ user }) => {
                 <td className="border px-4 py-2">
                   {product.product_category.IsPerishable ? "Yes" : "No"}
                 </td>
+                {delivery.company.CreatorID == user.id && (
+                  <td className="px-4 py-2 border">
+                    <button
+                      onClick={() => navigate(`/product/${product.ID}/edit`)}
+                      className="px-3 py-1 bg-yellow-500 text-white rounded mr-2"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteProduct(product.ID)}
+                      className="px-3 py-1 bg-red-500 text-white rounded"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

@@ -6,7 +6,7 @@ import "gorm.io/gorm"
 type UserCompany struct {
 	// ID is the id of the user_company
 	// Example: 1
-	ID uint `gorm:"primaryKey;column:id"`
+	ID uint `gorm:"primaryKey;column:id; autoIncrement"`
 
 	// UserID is the id of the user
 	// Example: 1

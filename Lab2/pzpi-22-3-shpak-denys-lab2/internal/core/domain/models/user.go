@@ -6,7 +6,7 @@ import "gorm.io/gorm"
 type User struct {
 	// ID is the primary key of the user
 	// Example: 1
-	ID uint `gorm:"primaryKey;column:id"`
+	ID uint `gorm:"primaryKey;column:id; autoIncrement"`
 
 	// Name is the name of the user
 	// Example: John Doe

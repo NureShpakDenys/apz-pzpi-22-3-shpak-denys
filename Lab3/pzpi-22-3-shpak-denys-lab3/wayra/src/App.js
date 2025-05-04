@@ -21,7 +21,11 @@ import DeliveryDetails from "./pages/DeliveryDetails";
 import CreateDelivery from "./pages/CreateDelivery";
 import EditDelivery from "./pages/EditDelivery";
 
+import AddProduct from "./pages/AddProduct";
+import EditProduct from "./pages/EditProduct";
+
 import { getUserFromToken } from "./utils/auth";
+import AddUserToCompany from "./pages/AddUserToCompany";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -36,12 +40,6 @@ function App() {
       <Header user={user} setUser={setUser} />
       <div className="container mx-auto p-4">
         <Routes>
-          { /*<Route path="/" element={<Home />} />
-
-        
-          <Route path="/user/:id" element={<UserProfile />} />
-
-          */}
           <Route path="/login" element={user ? <Navigate to="/companies" /> : <Login setUser={setUser} />} />
           <Route path="/register" element={user ? <Navigate to="/companies" /> : <Register />} />
 
@@ -49,6 +47,7 @@ function App() {
           <Route path="/company/:company_id" element={!user ? <Navigate to="/login" /> : <CompanyDetails user={user} />} />
           <Route path="/company/create" element={!user ? <Navigate to="/login" /> : <CreateCompany />} />
           <Route path="/company/:company_id/edit" element={!user ? <Navigate to="/login" /> : <EditCompany user={user} />} />
+          <Route path="/company/:company_id/add-user" element={!user ? <Navigate to="/login" /> : <AddUserToCompany user={user} />} />
 
           <Route path="/route/:route_id" element={!user ? <Navigate to="/login" /> : <RouteDetails user={user} />} />
           <Route path="/company/:company_id/route/create" element={!user ? <Navigate to="/login" /> : <CreateRoute />} />
@@ -61,6 +60,8 @@ function App() {
           <Route path="/company/:company_id/delivery/create" element={!user ? <Navigate to="/login" /> : <CreateDelivery />} />
           <Route path="/delivery/:delivery_id/edit" element={!user ? <Navigate to="/login" /> : <EditDelivery user={user} />} />
 
+          <Route path="delivery/:delivery_id/product/add" element={!user ? <Navigate to="/login" /> : <AddProduct />} />
+          <Route path="/product/:product_id/edit" element={!user ? <Navigate to="/login" /> : <EditProduct />} />
           {/*
           <Route path="/products" element={<Products />} />
           <Route path="/product/create" element={<CreateProduct />} />

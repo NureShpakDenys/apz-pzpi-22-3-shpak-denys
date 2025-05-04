@@ -114,7 +114,16 @@ const CompanyDetails = ({ user }) => {
       case "users":
         return (
           <>
-            <h2 className="text-xl font-bold mb-4">Users</h2>
+            <h2 className="text-xl font-bold mb-2">Users</h2>
+            {data.creator.id == user.id && (
+              <button
+                onClick={() => navigate(`/company/${company_id}/add-user`)}
+                className="px-4 py-2 bg-green-500 text-white rounded mb-4"
+              >
+                Add user
+              </button>
+
+            )}
             <table className="w-full table-auto">
               <thead>
                 <tr><th>ID</th><th>Name</th></tr>

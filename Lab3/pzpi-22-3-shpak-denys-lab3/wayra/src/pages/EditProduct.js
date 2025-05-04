@@ -1,0 +1,123 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+
+const EditProduct = () => {
+   const { product_id } = useParams();
+   const [name, setName] = useState("");
+   const [productType, setProductType] = useState("Fruits");
+   const [weight, setWeight] = useState(1);
+   const [delivery_id, setDeliveryID] = useState(0);
+   const [loading, setLoading] = useState(false);
+   const [error, setError] = useState(null);
+   const navigate = useNavigate();
+
+   const token = localStorage.getItem("token");
+
+   useEffect(() => {
+      const fetchProduct = async () => {
+         try {
+            const res = await axios.get(`http://localhost:8081/products/${product_id}`, {
+               headers: {
+                  Authorization: `Bearer ${token}`,
+                  Accept: "application/json",
+               },
+            });
+
+            setName(res.data.Name);
+            setProductType(res.data.product_category.Name);
+            setWeight(res.data.Weight);
+            setDeliveryID(res.data.DeliveryID);
+         } catch (err) {
+            setError("Error fetching product data");
+            console.error(err);
+         }
+      };
+
+      fetchProduct();
+   }, [product_id, token]);
+
+   const handleSubmit = async (e) => {
+      e.preventDefault();
+      setLoading(true);
+      setError(null);
+
+      try {
+         await axios.put(
+            `http://localhost:8081/products/${product_id}`,
+            { name, product_type: productType, weight: parseFloat(weight) },
+            {
+               headers: {
+                  Authorization: `Bearer ${token}`,
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+               },
+            }
+         );
+
+         navigate(`/delivery/${delivery_id}`);
+      } catch (err) {
+         setError("Error updating product data");
+         console.error(err);
+      } finally {
+         setLoading(false);
+      }
+   };
+
+   return (
+      <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded">
+         <h2 className="text-2xl font-bold text-center mb-4">Product Edit</h2>
+
+         {error && <p className="text-red-600 text-center">{error}</p>}
+
+         <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+               <label className="block text-gray-700 font-medium">Product Name</label>
+               <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+               />
+            </div>
+
+            <div>
+               <label className="block text-gray-700 font-medium">Product Type</label>
+               <select
+                  value={productType}
+                  onChange={(e) => setProductType(e.target.value)}
+                  className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+               >
+                  <option>Fruits</option>
+                  <option>Vegetables</option>
+                  <option>Frozen Foods</option>
+                  <option>Dairy Products</option>
+                  <option>Meat</option>
+               </select>
+            </div>
+
+            <div>
+               <label className="block text-gray-700 font-medium">Weight (kg)</label>
+               <input
+                  type="number"
+                  value={weight}
+                  onChange={(e) => setWeight(e.target.value)}
+                  className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+               />
+            </div>
+
+            <button
+               type="submit"
+               className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
+               disabled={loading}
+            >
+               {loading ? "Updating..." : "Update Product"}
+            </button>
+         </form>
+      </div>
+   );
+};
+
+export default EditProduct;

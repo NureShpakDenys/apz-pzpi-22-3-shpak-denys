@@ -13,7 +13,6 @@ function Header({ user, setUser }) {
         <Link to="/companies" className="mr-4">Home</Link>
         {user ? (
           <>
-            <Link to={`/user/${user.id}`} className="mr-4">Profile</Link>
             <button onClick={handleLogout} className="bg-red-500 px-3 py-1 rounded">Logout</button>
           </>
         ) : (

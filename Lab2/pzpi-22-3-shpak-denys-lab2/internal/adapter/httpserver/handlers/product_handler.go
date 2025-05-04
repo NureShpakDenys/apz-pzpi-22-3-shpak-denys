@@ -224,17 +224,9 @@ func (h *ProductHandler) GetProduct(c *gin.Context) {
 		return
 	}
 
-	productDTO := &dtos.ProductDTO{}
-	if err = dtoMapper.Map(productDTO, product); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		h.logAction(c, "get_product", "Failed to fetch product: "+err.Error(), false)
-
-		return
-	}
-
 	h.logAction(c, "get_product", fmt.Sprintf("Product %d fetched successfully", productID), true)
 
-	c.JSON(http.StatusOK, productDTO)
+	c.JSON(http.StatusOK, product)
 }
 
 // UpdateProduct godoc
