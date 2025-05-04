@@ -8,6 +8,10 @@ const DeliveryDetails = ({ user }) => {
   const [delivery, setDelivery] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [optimalRoute, setOptimalRoute] = useState(null);
+  const [backRoute, setBackRoute] = useState(null);
+  const [routesLoading, setRoutesLoading] = useState(false);
+  const [routesError, setRoutesError] = useState(null);
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token")
@@ -31,6 +35,35 @@ const DeliveryDetails = ({ user }) => {
 
     fetchDelivery();
   }, [delivery_id]);
+
+  const fetchOptimalRoutes = async () => {
+    setRoutesLoading(true);
+    setRoutesError(null);
+
+    try {
+      const [optimalRes, backRes] = await Promise.all([
+        axios.get(`http://localhost:8081/analytics/${delivery_id}/optimal-route`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }),
+        axios.get(`http://localhost:8081/analytics/${delivery_id}/optimal-back-route`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }),
+      ]);
+      setOptimalRoute(optimalRes.data);
+      setBackRoute(backRes.data);
+    } catch (err) {
+      console.error("Error fetching routes", err);
+      setRoutesError("Помилка при отриманні маршрутів");
+    } finally {
+      setRoutesLoading(false);
+    }
+  };
 
   if (loading) return <div className="p-6 text-center">Загрузка...</div>;
   if (error) return <div className="p-6 text-red-600">{error}</div>;
@@ -97,6 +130,42 @@ const DeliveryDetails = ({ user }) => {
           </div>
         )}
       </div>
+
+      <div className="bg-white p-4 shadow rounded mt-6 text-center">
+        <button
+          onClick={fetchOptimalRoutes}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Отримати оптимальні маршрути
+        </button>
+
+        {routesLoading && <p className="mt-2 text-gray-500">Завантаження маршрутів...</p>}
+        {routesError && <p className="mt-2 text-red-600">{routesError}</p>}
+      </div>
+
+      {optimalRoute && (
+        <div className="bg-white p-4 shadow rounded mt-4">
+          <h2 className="text-xl font-semibold mb-2 text-green-700">Оптимальний маршрут</h2>
+          <p><strong>Маршрут:</strong> {optimalRoute.route.name}</p>
+          <p><strong>Повідомлення:</strong> {optimalRoute.message}</p>
+          <p><strong>Рівняння:</strong> {optimalRoute.equation}</p>
+          <p><strong>Відстань:</strong> {optimalRoute.predict_data.Distance.toFixed(2)} км</p>
+          <p><strong>Час:</strong> {optimalRoute.predict_data.Time.toFixed(2)} год</p>
+          <p><strong>Швидкість:</strong> {optimalRoute.predict_data.Speed.toFixed(2)} км/год</p>
+        </div>
+      )}
+
+      {backRoute && (
+        <div className="bg-white p-4 shadow rounded mt-4">
+          <h2 className="text-xl font-semibold mb-2 text-blue-700">Зворотний маршрут</h2>
+          <p><strong>Маршрут:</strong> {backRoute.route.name}</p>
+          <p><strong>Повідомлення:</strong> {backRoute.message}</p>
+          <p><strong>Рівняння:</strong> {backRoute.equation}</p>
+          <p><strong>Відстань:</strong> {backRoute.predict_data.Distance.toFixed(2)} км</p>
+          <p><strong>Час:</strong> {backRoute.predict_data.Time.toFixed(2)} год</p>
+          <p><strong>Швидкість:</strong> {backRoute.predict_data.Speed.toFixed(2)} км/год</p>
+        </div>
+      )}
 
       <div className="bg-white p-4 shadow rounded">
         <h2 className="text-xl font-semibold mb-4">Products</h2>

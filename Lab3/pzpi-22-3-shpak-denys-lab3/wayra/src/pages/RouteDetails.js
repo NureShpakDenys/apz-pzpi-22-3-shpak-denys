@@ -8,10 +8,13 @@ const RouteDetails = ({ user }) => {
   const [route, setRoute] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [weatherAlert, setWeatherAlert] = useState(null);
+  const [alertLoading, setAlertLoading] = useState(false);
+  const [alertError, setAlertError] = useState(null);
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token")
-  
+
   useEffect(() => {
     const fetchRoute = async () => {
       try {
@@ -32,6 +35,26 @@ const RouteDetails = ({ user }) => {
 
     fetchRoute();
   }, [route_id]);
+
+  const fetchWeatherAlert = async () => {
+    setAlertLoading(true);
+    setAlertError(null);
+
+    try {
+      const res = await axios.get(`http://localhost:8081/routes/${route_id}/weather-alert`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
+      setWeatherAlert(res.data.alerts);
+    } catch (err) {
+      console.error("Weather alert fetch error:", err);
+      setAlertError("Помилка при отриманні попередження про погоду.");
+    } finally {
+      setAlertLoading(false);
+    }
+  };
 
 
   const handleDeleteRoute = async () => {
@@ -94,6 +117,27 @@ const RouteDetails = ({ user }) => {
           </div>
         )}
       </div>
+
+      <div className="bg-white p-4 shadow rounded mt-6 text-center">
+        <button
+          onClick={fetchWeatherAlert}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Перевірити попередження про погоду
+        </button>
+
+        {alertLoading && <p className="mt-2 text-gray-500">Завантаження даних...</p>}
+        {alertError && <p className="mt-2 text-red-600">{alertError}</p>}
+      </div>
+
+      {weatherAlert && (
+        <div className="bg-white p-4 shadow rounded mt-4">
+          <h2 className="text-xl font-semibold mb-2 text-red-700">Попередження про погоду</h2>
+          <p><strong>Тип:</strong> {weatherAlert.type}</p>
+          <p><strong>Повідомлення:</strong> {weatherAlert.message}</p>
+          <p><strong>Деталі:</strong> {weatherAlert.details}</p>
+        </div>
+      )}
 
       <div className="bg-white p-4 shadow rounded">
         <h2 className="text-xl font-bold mb-4">Waypoints</h2>
