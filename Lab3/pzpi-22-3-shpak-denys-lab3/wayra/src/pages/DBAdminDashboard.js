@@ -3,7 +3,7 @@ import axios from "axios";
 
 const API_BASE = "http://localhost:8081/admin";
 
-const DBAdminDashboard = () => {
+const DBAdminDashboard = ({ t }) => {
    const token = localStorage.getItem("token");
    const authHeader = { headers: { Authorization: `Bearer ${token}` } };
 
@@ -71,11 +71,11 @@ const DBAdminDashboard = () => {
       fetchAll();
    }, []);
 
-   if (loading) return <div className="p-4 text-center text-lg">Loading...</div>;
+   if (loading) return <div className="p-4 text-center text-lg">{t("loading")}</div>;
 
    return (
       <div className="p-4 flex flex-col gap-4">
-         <h1 className="text-2xl font-bold">Database Admin Dashboard</h1>
+         <h1 className="text-2xl font-bold">{t("database_admin_dashboard")}</h1>
 
          {message && (
             <div className="p-3 bg-green-100 border border-green-300 rounded">
@@ -84,22 +84,22 @@ const DBAdminDashboard = () => {
          )}
 
          <div className="border p-4 rounded-xl shadow bg-white">
-            <h2 className="text-xl font-semibold mb-2">📊 Database Info</h2>
-            <p><strong>Database Size:</strong> {status.DatabaseSizeMB} MB</p>
-            <p><strong>Active Connections:</strong> {status.ActiveConnections}</p>
-            <p><strong>Last Backup:</strong> {status.LastBackupTime ? new Date(status.LastBackupTime).toLocaleString() : "N/A"}</p>
+            <h2 className="text-xl font-semibold mb-2">📊 {t("database_info")}</h2>
+            <p><strong>{t("database_size")}:</strong> {status.DatabaseSizeMB} MB</p>
+            <p><strong>{t("active_connection")}:</strong> {status.ActiveConnections}</p>
+            <p><strong>{t("last_backup")}:</strong> {status.LastBackupTime ? new Date(status.LastBackupTime).toLocaleString() : "N/A"}</p>
             <button
                onClick={fetchDBStatus}
                className="mt-2 px-4 py-1 border rounded hover:bg-gray-100"
             >
-               Refresh Info
+               {t("refresh_info")}
             </button>
          </div>
 
          <div className="border p-4 rounded-xl shadow bg-white">
-            <h2 className="text-xl font-semibold mb-2">💾 Backup & Restore</h2>
+            <h2 className="text-xl font-semibold mb-2">💾 {t("backup_restore")}</h2>
             <label className="block mb-2">
-               Backup Path:
+               {t("backup_path")}:
                <input
                   type="text"
                   value={backupPath}
@@ -113,24 +113,24 @@ const DBAdminDashboard = () => {
                   onClick={performBackup}
                   className="px-4 py-1 border rounded hover:bg-gray-100"
                >
-                  Create Backup
+                  {t("create_backup")}:
                </button>
                <button
                   onClick={performRestore}
                   className="px-4 py-1 border rounded hover:bg-gray-100"
                >
-                  Restore from Backup
+                  {t("restore_from_backup")}
                </button>
             </div>
          </div>
 
          <div className="border p-4 rounded-xl shadow bg-white">
-            <h2 className="text-xl font-semibold mb-2">🛠️ Optimize Database</h2>
+            <h2 className="text-xl font-semibold mb-2">🛠️ {t("optimize_database")}</h2>
             <button
                onClick={optimizeDB}
                className="px-4 py-1 border rounded hover:bg-gray-100"
             >
-               Run Optimization
+               {t("run_optimization")}
             </button>
          </div>
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-const CreateRoute = () => {
+const CreateRoute = ({t}) => {
   const { company_id } = useParams();
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -40,13 +40,13 @@ const CreateRoute = () => {
 
   return (
     <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded">
-      <h2 className="text-2xl font-bold text-center mb-4">Create Route</h2>
+      <h2 className="text-2xl font-bold text-center mb-4">{t("create_route")}</h2>
 
       {error && <p className="text-red-600 text-center">{error}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-gray-700 font-medium">Route name</label>
+          <label className="block text-gray-700 font-medium">{t("route_name")}</label>
           <input
             type="text"
             value={name}
@@ -61,7 +61,7 @@ const CreateRoute = () => {
           className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
           disabled={loading}
         >
-          {loading ? "Creating..." : "Create Route"}
+          {loading ? t("adding") : t("create_route")}
         </button>
       </form>
     </div>

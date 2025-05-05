@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-const EditDelivery = ({ user }) => {
+const EditDelivery = ({ user, t }) => {
   const { delivery_id } = useParams();
   const [date, setDate] = useState("");
   const [duration, setDuration] = useState("");
@@ -64,13 +64,13 @@ const EditDelivery = ({ user }) => {
 
   return (
     <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded">
-      <h2 className="text-2xl font-bold text-center mb-4">Edit Delivery</h2>
+      <h2 className="text-2xl font-bold text-center mb-4">{t("edit_delivery")}</h2>
 
       {error && <p className="text-red-600 text-center">{error}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-gray-700 font-medium">Delivery date</label>
+          <label className="block text-gray-700 font-medium">{t("edit_delivery")}</label>
           <input
             type="date"
             value={date}
@@ -81,7 +81,7 @@ const EditDelivery = ({ user }) => {
         </div>
 
         <div>
-          <label className="block text-gray-700 font-medium">Duration</label>
+          <label className="block text-gray-700 font-medium">{t("duration")}</label>
           <input
             type="text"
             value={duration}
@@ -93,16 +93,16 @@ const EditDelivery = ({ user }) => {
         </div>
 
         <div>
-          <label className="block text-gray-700 font-medium">Status</label>
+          <label className="block text-gray-700 font-medium">{t("status")}</label>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
             className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           >
-            <option value="not_started">Not started </option>
-            <option value="in_progress">In progress</option>
-            <option value="completed">Completed</option>
+            <option value="not_started">{t("not_started")}</option>
+            <option value="in_progress">{t("in_progress")}</option>
+            <option value="completed">{t("completed")}</option>
           </select>
         </div>
 
@@ -111,7 +111,7 @@ const EditDelivery = ({ user }) => {
           className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
           disabled={loading}
         >
-          {loading ? "Saving..." : "Save changes"}
+          {loading ? t("adding") : t("save")}
         </button>
       </form>
     </div>

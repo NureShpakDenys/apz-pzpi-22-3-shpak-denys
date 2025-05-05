@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-const AddUserToCompany = ({ user }) => {
+const AddUserToCompany = ({ user, t}) => {
   const { company_id } = useParams();
   const [users, setUsers] = useState([]);
   const [companyUsers, setCompanyUsers] = useState([]);
@@ -71,20 +71,20 @@ const AddUserToCompany = ({ user }) => {
 
   return (
     <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded">
-      <h2 className="text-2xl font-bold text-center mb-4">Add User to Company</h2>
+      <h2 className="text-2xl font-bold text-center mb-4">{t("add_user_to_company")}</h2>
 
       {error && <p className="text-red-600 text-center">{error}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-gray-700 font-medium">Select User</label>
+          <label className="block text-gray-700 font-medium">{t("select_user")}</label>
           <select
             value={selectedUser}
             onChange={(e) => setSelectedUser(e.target.value)}
             className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           >
-            <option value="">Select user...</option>
+            <option value="">{t("select_user")}</option>
             {users
               .filter((user) => !companyUsers.includes(user.id))
               .map((user) => (
@@ -96,7 +96,7 @@ const AddUserToCompany = ({ user }) => {
         </div>
 
         <div>
-          <label className="block text-gray-700 font-medium">Select Role</label>
+          <label className="block text-gray-700 font-medium">{t("select_role")}</label>
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
@@ -113,7 +113,7 @@ const AddUserToCompany = ({ user }) => {
           className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
           disabled={loading}
         >
-          {loading ? "Adding..." : "Add user"}
+          {loading ? t("adding") : t("add_user_to_company")}
         </button>
       </form>
     </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const AdminDashboard = ({ user_id }) => {
+const AdminDashboard = ({ user_id, t }) => {
   const [user, setUser] = useState({});
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
@@ -29,7 +29,6 @@ const AdminDashboard = ({ user_id }) => {
         setRoles(rolesRes);
       } catch (err) {
         setError("Error while loading data");
-        alert("Error while loading data");
         console.error(err);
       }
     };
@@ -75,21 +74,21 @@ const AdminDashboard = ({ user_id }) => {
     }
   };
 
-  if (loading) return <div className="p-6 text-center">Loading...</div>;
+  if (loading) return <div className="p-6 text-center">{t("loading")}</div>;
   if (error) return <div className="p-6 text-center text-red-600">{error}</div>;
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold text-center mb-4">Admin Dashboard</h1>
+      <h1 className="text-3xl font-bold text-center mb-4">{t("admin_dashboard")}</h1>
 
       <div className="bg-white shadow-md rounded p-4">
         <table className="w-full table-auto border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-100">
-              <th className="border p-2">ID</th>
-              <th className="border p-2">name</th>
-              <th className="border p-2">Password</th>
-              {user.role == "admin" && <th className="border p-2">Actions</th>}
+              <th className="border p-2">{t("id")}</th>
+              <th className="border p-2">{t("name")}</th>
+              <th className="border p-2">{t("password")}</th>
+              {user.role == "admin" && <th className="border p-2">{t("actions")}</th>}
             </tr>
           </thead>
           <tbody>
@@ -120,7 +119,7 @@ const AdminDashboard = ({ user_id }) => {
                       onClick={() => changeUserRole(u.id, roles.find((r) => r.name == u.role)?.id)}
                       className="px-3 py-1 bg-blue-500 text-white rounded"
                     >
-                      Save
+                      {t("save")}
                     </button>
                   </td>
                 )}

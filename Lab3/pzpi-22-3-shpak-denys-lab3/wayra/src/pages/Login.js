@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const Login = ({ setUser }) => {
+const Login = ({ setUser, t }) => {
    const [username, setUsername] = useState("");
    const [password, setPassword] = useState("");
    const [loading, setLoading] = useState(false);
@@ -42,13 +42,13 @@ const Login = ({ setUser }) => {
 
    return (
       <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded">
-         <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
+         <h2 className="text-2xl font-bold text-center mb-4">{t("login")}</h2>
 
          {error && <p className="text-red-600 text-center">{error}</p>}
 
          <form onSubmit={handleLogin} className="space-y-4">
             <div>
-               <label className="block text-gray-700 font-medium">Username</label>
+               <label className="block text-gray-700 font-medium">{t("username")}</label>
                <input
                   type="text"
                   value={username}
@@ -58,7 +58,7 @@ const Login = ({ setUser }) => {
                />
             </div>
             <div>
-               <label className="block text-gray-700 font-medium">Password</label>
+               <label className="block text-gray-700 font-medium">{t("password")}</label>
                <input
                   type="password"
                   value={password}
@@ -73,7 +73,7 @@ const Login = ({ setUser }) => {
                className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
                disabled={loading}
             >
-               {loading ? "Log in..." : "Log in"}
+               {loading ? t("loading") : t("login")}
             </button>
          </form>
       </div>

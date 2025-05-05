@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const DeliveryDetails = ({ user }) => {
+const DeliveryDetails = ({ user, t}) => {
   const { delivery_id } = useParams();
   const [delivery, setDelivery] = useState(null);
   const [error, setError] = useState(null);
@@ -27,7 +27,7 @@ const DeliveryDetails = ({ user }) => {
         setDelivery(res.data);
       } catch (err) {
         console.error(err);
-        setError("Ошибка при загрузке данных доставки.");
+        setError("Error loading delivery data.");
       } finally {
         setLoading(false);
       }
@@ -103,15 +103,15 @@ const DeliveryDetails = ({ user }) => {
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <div className="bg-white p-6 shadow rounded mb-6 text-center">
-        <h1 className="text-3xl font-bold">Delivery data</h1>
+        <h1 className="text-3xl font-bold">{t("delivery_data")}</h1>
         <p className="mt-2 text-gray-600">
-          <strong>Status:</strong> {delivery.Status}
+          <strong>{t("status")}:</strong> {delivery.Status}
         </p>
         <p className="text-gray-600">
-          <strong>Date:</strong> {new Date(delivery.Date).toLocaleDateString()}
+          <strong>{t("date")}:</strong> {new Date(delivery.Date).toLocaleDateString()}
         </p>
         <p className="text-gray-600">
-          <strong>Duration:</strong> {delivery.Duration}
+          <strong>{t("duration")}:</strong> {delivery.Duration}
         </p>
         {delivery.company.CreatorID == user.id && (
           <div className="flex justify-center space-x-4 mt-4">
@@ -119,13 +119,13 @@ const DeliveryDetails = ({ user }) => {
               onClick={handleDeleteDelivery}
               className="px-4 py-2 bg-red-500 text-white rounded"
             >
-              Delete
+              {t("delete")}
             </button>
             <button
               onClick={() => navigate(`/delivery/${delivery_id}/edit`)}
               className="px-4 py-2 bg-yellow-500 text-white rounded"
             >
-              Edit
+              {t("edit")}
             </button>
           </div>
         )}
@@ -136,64 +136,64 @@ const DeliveryDetails = ({ user }) => {
           onClick={fetchOptimalRoutes}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
-          Get optimal routes
+          {t("get_optimal_routes")}
         </button>
 
-        {routesLoading && <p className="mt-2 text-gray-500">Loading routes...</p>}
+        {routesLoading && <p className="mt-2 text-gray-500">{t("loading")}</p>}
         {routesError && <p className="mt-2 text-red-600">{routesError}</p>}
       </div>
 
       {optimalRoute && (
         <div className="bg-white p-4 shadow rounded mt-4">
-          <h2 className="text-xl font-semibold mb-2 text-green-700">Optimal route</h2>
-          <p><strong>Route:</strong> {optimalRoute.route.name}</p>
-          <p><strong>Message:</strong> {optimalRoute.message}</p>
-          <p><strong>Equation:</strong> {optimalRoute.equation}</p>
-          <p><strong>Distance:</strong> {optimalRoute.predict_data.Distance.toFixed(2)} km</p>
-          <p><strong>Time:</strong> {optimalRoute.predict_data.Time.toFixed(2)} hours</p>
-          <p><strong>Speed:</strong> {optimalRoute.predict_data.Speed.toFixed(2)} km/hours</p>
+          <h2 className="text-xl font-semibold mb-2 text-green-700">{t("optimal_route")}</h2>
+          <p><strong>{t("route")}:</strong> {optimalRoute.route.name}</p>
+          <p><strong>{t("message")}:</strong> {optimalRoute.message}</p>
+          <p><strong>{t("equation")}:</strong> {optimalRoute.equation}</p>
+          <p><strong>{t("distance")}:</strong> {optimalRoute.predict_data.Distance.toFixed(2)} {t("km")}</p>
+          <p><strong>{t("time")}:</strong> {optimalRoute.predict_data.Time.toFixed(2)} {t("hours")}</p>
+          <p><strong>{t("speed")}:</strong> {optimalRoute.predict_data.Speed.toFixed(2)} {t("km/hour")}</p>
         </div>
       )}
 
       {backRoute && (
         <div className="bg-white p-4 shadow rounded mt-4">
-          <h2 className="text-xl font-semibold mb-2 text-blue-700">Back route</h2>
-          <p><strong>Route:</strong> {backRoute.route.name}</p>
-          <p><strong>Message:</strong> {backRoute.message}</p>
-          <p><strong>Equation:</strong> {backRoute.equation}</p>
-          <p><strong>Distance:</strong> {backRoute.predict_data.Distance.toFixed(2)} km</p>
-          <p><strong>Time:</strong> {backRoute.predict_data.Time.toFixed(2)} hours</p>
-          <p><strong>Speed:</strong> {backRoute.predict_data.Speed.toFixed(2)} km/hours</p>
+          <h2 className="text-xl font-semibold mb-2 text-blue-700">{t("back_route")}</h2>
+          <p><strong>{t("route")}:</strong> {backRoute.route.name}</p>
+          <p><strong>{t("message")}:</strong> {backRoute.message}</p>
+          <p><strong>{t("equation")}:</strong> {backRoute.equation}</p>
+          <p><strong>{t("distance")}:</strong> {backRoute.predict_data.Distance.toFixed(2)} {t("km")}</p>
+          <p><strong>{t("time")}:</strong> {backRoute.predict_data.Time.toFixed(2)} {t("hours")}</p>
+          <p><strong>{t("speed")}:</strong> {backRoute.predict_data.Speed.toFixed(2)} {t("km/hour")}</p>
         </div>
       )}
 
       <div className="bg-white p-4 shadow rounded">
-        <h2 className="text-xl font-semibold mb-4">Products</h2>
+        <h2 className="text-xl font-semibold mb-4">{t("products")}</h2>
         {delivery.company.CreatorID == user.id && (
           <button
             onClick={() => navigate(`/delivery/${delivery_id}/product/add`)}
             className="px-4 py-2 bg-green-500 text-white rounded mb-4"
           >
-            Add product
+            {t("add_product")}
           </button>
         )}
         <table className="w-full border table-auto">
           <thead className="bg-gray-100">
             <tr>
-              <th className="border px-4 py-2">Name</th>
-              <th className="border px-4 py-2">Weight</th>
-              <th className="border px-4 py-2">Category</th>
-              <th className="border px-4 py-2">Temperature (°C)</th>
-              <th className="border px-4 py-2">Humidity (%)</th>
-              <th className="border px-4 py-2">Perishable</th>
-              {delivery.company.CreatorID == user.id && <th className="px-4 py-2 border">Actions</th>}
+              <th className="border px-4 py-2">{t("name")}</th>
+              <th className="border px-4 py-2">{t("weight")}</th>
+              <th className="border px-4 py-2">{t("category")}</th>
+              <th className="border px-4 py-2">{t("temperature")} ({t("°C")})</th>
+              <th className="border px-4 py-2">{t("humidity")} (%)</th>
+              <th className="border px-4 py-2">{t("perishable")}</th>
+              {delivery.company.CreatorID == user.id && <th className="px-4 py-2 border">{t("actions")}</th>}
             </tr>
           </thead>
           <tbody>
             {delivery.products.map((product) => (
               <tr key={product.ID} className="text-center">
                 <td className="border px-4 py-2">{product.Name}</td>
-                <td className="border px-4 py-2">{product.Weight} kg</td>
+                <td className="border px-4 py-2">{product.Weight} {t("kg")}</td>
                 <td className="border px-4 py-2">{product.product_category.Name}</td>
                 <td className="border px-4 py-2">
                   {product.product_category.MinTemperature}–{product.product_category.MaxTemperature}
@@ -202,7 +202,7 @@ const DeliveryDetails = ({ user }) => {
                   {product.product_category.MinHumidity}–{product.product_category.MaxHumidity}
                 </td>
                 <td className="border px-4 py-2">
-                  {product.product_category.IsPerishable ? "Yes" : "No"}
+                  {product.product_category.IsPerishable ? t("yes") : t("no")}
                 </td>
                 {delivery.company.CreatorID == user.id && (
                   <td className="px-4 py-2 border">
@@ -210,13 +210,13 @@ const DeliveryDetails = ({ user }) => {
                       onClick={() => navigate(`/product/${product.ID}/edit`)}
                       className="px-3 py-1 bg-yellow-500 text-white rounded mr-2"
                     >
-                      Edit
+                      {t("edit")}
                     </button>
                     <button
                       onClick={() => handleDeleteProduct(product.ID)}
                       className="px-3 py-1 bg-red-500 text-white rounded"
                     >
-                      Delete
+                      {t("delete")}
                     </button>
                   </td>
                 )}

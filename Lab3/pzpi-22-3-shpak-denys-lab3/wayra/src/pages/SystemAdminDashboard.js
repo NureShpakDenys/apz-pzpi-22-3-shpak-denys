@@ -3,7 +3,7 @@ import axios from "axios";
 
 const API_BASE = "http://localhost:8081/admin";
 
-const SystemAdminDashboard = () => {
+const SystemAdminDashboard = ({t}) => {
    const [loading, setLoading] = useState(true);
    const token = localStorage.getItem("token");
    const authHeader = { headers: { Authorization: `Bearer ${token}` } };
@@ -74,35 +74,32 @@ const SystemAdminDashboard = () => {
    }, []);
 
    if (loading) {
-      return <div className="p-4 text-center text-lg">Loading...</div>;
+      return <div className="p-4 text-center text-lg">{t("loading")}</div>;
    }
 
    return (
       <div className="flex flex-row gap-4 p-4">
-         {/* Левая колонка */}
          <div className="flex flex-col gap-4 w-1/4">
-            {/* Health Check */}
             <div className="border p-4 rounded-xl shadow">
-               <h2 className="text-xl font-bold mb-2">Health check</h2>
-               <p>db_status: {health.db_status}</p>
-               <p>Server time: {health.server_time.substring(0, 19).replace('T', ' ')}</p>
-               <p>uptime: {health.uptime}</p>
+               <h2 className="text-xl font-bold mb-2">{t("health_check")}</h2>
+               <p>{t("db_status")}: {health.db_status}</p>
+               <p>{t("server_time")}: {health.server_time.substring(0, 19).replace('T', ' ')}</p>
+               <p>{t("uptime")}: {health.uptime}</p>
                <button
                   onClick={fetchHealth}
                   className="mt-2 px-4 py-1 border rounded hover:bg-gray-100"
                >
-                  Check
+                  {t("check")}
                </button>
             </div>
 
-            {/* System Configs */}
             <div className="border p-4 rounded-xl shadow">
-               <h2 className="text-xl font-bold mb-2">System_configs</h2>
+               <h2 className="text-xl font-bold mb-2">{t("system_configs")}</h2>
                <p>
-                  Encryption key exists: {configs.encryption_key_exists ? "✔️" : "❌"}
+               {t("encryption_key_exists")}: {configs.encryption_key_exists ? "✔️" : "❌"}
                </p>
                <div className="my-2">
-                  <label>auth_token_ttl_hours:</label>
+                  <label>{t("auth_token_ttl_hours")}:</label>
                   <input
                      type="number"
                      className="ml-2 border px-1 w-16"
@@ -116,7 +113,7 @@ const SystemAdminDashboard = () => {
                   />
                </div>
                <div className="mb-2">
-                  <label>http_timeout_seconds:</label>
+                  <label>{t("http_timeout_seconds")}:</label>
                   <input
                      type="number"
                      className="ml-2 border px-1 w-16"
@@ -133,15 +130,14 @@ const SystemAdminDashboard = () => {
                   onClick={saveConfigs}
                   className="px-4 py-1 border rounded hover:bg-gray-100"
                >
-                  Save
+                  {t("save")}
                </button>
             </div>
          </div>
 
-         {/* Правая карточка логов */}
          <div className="border p-4 rounded-xl shadow w-3/4">
             <div className="flex items-center mb-4">
-               <label className="mr-2">CLEAR IF OLDER THAN (days)</label>
+               <label className="mr-2">{t("clear_if_older_than")}</label>
                <input
                   type="number"
                   value={clearDays}
@@ -158,12 +154,12 @@ const SystemAdminDashboard = () => {
             <table className="w-full border-t text-sm">
                <thead>
                   <tr className="bg-gray-100">
-                     <th className="border px-2 py-1">ID</th>
-                     <th className="border px-2 py-1">CreatedAt</th>
-                     <th className="border px-2 py-1">UserID</th>
-                     <th className="border px-2 py-1">ActionType</th>
-                     <th className="border px-2 py-1">Description</th>
-                     <th className="border px-2 py-1">Success</th>
+                     <th className="border px-2 py-1">{t("id")}</th>
+                     <th className="border px-2 py-1">{t("created_at")}</th>
+                     <th className="border px-2 py-1">{t("user_id")}</th>
+                     <th className="border px-2 py-1">{t("actions")}</th>
+                     <th className="border px-2 py-1">{t("description")}</th>
+                     <th className="border px-2 py-1">{t("description")}</th>
                   </tr>
                </thead>
                <tbody>
@@ -220,7 +216,7 @@ const SystemAdminDashboard = () => {
                   className="px-3 py-1 border rounded hover:bg-gray-100"
                   disabled={currentPage === totalPages}
                >
-                  Next
+                  {t("next")}
                </button>
             </div>
          </div>

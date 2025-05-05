@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-const AddProduct = () => {
+const AddProduct = ({ t }) => {
    const { delivery_id } = useParams();
    const [name, setName] = useState("");
    const [productType, setProductType] = useState("Fruits");
@@ -47,13 +47,13 @@ const AddProduct = () => {
 
    return (
       <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded">
-         <h2 className="text-2xl font-bold text-center mb-4">Add Product</h2>
+         <h2 className="text-2xl font-bold text-center mb-4">{t("add_product")}</h2>
 
          {error && <p className="text-red-600 text-center">{error}</p>}
 
          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-               <label className="block text-gray-700 font-medium">Product name</label>
+               <label className="block text-gray-700 font-medium">{t("product_name")}</label>
                <input
                   type="text"
                   value={name}
@@ -64,7 +64,7 @@ const AddProduct = () => {
             </div>
 
             <div>
-               <label className="block text-gray-700 font-medium">Product type</label>
+               <label className="block text-gray-700 font-medium">{t("product_type")}</label>
                <select
                   value={productType}
                   onChange={(e) => setProductType(e.target.value)}
@@ -79,7 +79,7 @@ const AddProduct = () => {
             </div>
 
             <div>
-               <label className="block text-gray-700 font-medium">Weight (kg)</label>
+               <label className="block text-gray-700 font-medium">{t("weight")}</label>
                <input
                   type="number"
                   value={weight}
@@ -94,7 +94,7 @@ const AddProduct = () => {
                className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
                disabled={loading}
             >
-               {loading ? "Adding..." : "Add Product"}
+               {loading ? t("adding") : t("add_product")}
             </button>
          </form>
       </div>

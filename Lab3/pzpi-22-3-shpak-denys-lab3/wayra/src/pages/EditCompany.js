@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-const EditCompany = ({ user }) => {
+const EditCompany = ({ user, t }) => {
   const { company_id } = useParams();
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -62,13 +62,13 @@ const EditCompany = ({ user }) => {
 
   return (
     <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded">
-      <h2 className="text-2xl font-bold text-center mb-4">Edit company</h2>
+      <h2 className="text-2xl font-bold text-center mb-4">{t("edit_company")}</h2>
 
       {error && <p className="text-red-600 text-center">{error}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-gray-700 font-medium">Company name</label>
+          <label className="block text-gray-700 font-medium">{t("company_name")}</label>
           <input
             type="text"
             value={name}
@@ -79,7 +79,7 @@ const EditCompany = ({ user }) => {
         </div>
 
         <div>
-          <label className="block text-gray-700 font-medium">Address</label>
+          <label className="block text-gray-700 font-medium">{t("address")}</label>
           <input
             type="text"
             value={address}
@@ -94,7 +94,7 @@ const EditCompany = ({ user }) => {
           className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
           disabled={loading}
         >
-          {loading ? "Saving..." : "Save changes"}
+          {loading ? t("adding") : t("save")}
         </button>
       </form>
     </div>

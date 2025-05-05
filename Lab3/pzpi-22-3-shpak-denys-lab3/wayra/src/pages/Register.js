@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const Register = () => {
+const Register = ({ t }) => {
    const [username, setUsername] = useState("");
    const [password, setPassword] = useState("");
    const [loading, setLoading] = useState(false);
@@ -39,13 +39,13 @@ const Register = () => {
 
    return (
       <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded">
-         <h2 className="text-2xl font-bold text-center mb-4">Register</h2>
+         <h2 className="text-2xl font-bold text-center mb-4">{t("Register")}</h2>
 
          {error && <p className="text-red-600 text-center">{error}</p>}
 
          <form onSubmit={handleRegister} className="space-y-4">
             <div>
-               <label className="block text-gray-700 font-medium">User name</label>
+               <label className="block text-gray-700 font-medium">{t('username')}</label>
                <input
                   type="text"
                   value={username}
@@ -55,7 +55,7 @@ const Register = () => {
                />
             </div>
             <div>
-               <label className="block text-gray-700 font-medium">Password </label>
+               <label className="block text-gray-700 font-medium">{t("password")}</label>
                <input
                   type="password"
                   value={password}
@@ -70,7 +70,7 @@ const Register = () => {
                className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
                disabled={loading}
             >
-               {loading ? "Register..." : "Register  "}
+               {loading ? t("loading") : t("register")}
             </button>
          </form>
       </div>

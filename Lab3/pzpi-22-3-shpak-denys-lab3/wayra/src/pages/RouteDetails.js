@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const RouteDetails = ({ user }) => {
+const RouteDetails = ({ user, t }) => {
   const { route_id } = useParams();
   const [route, setRoute] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -88,31 +88,31 @@ const RouteDetails = ({ user }) => {
     }
   };
 
-  if (loading) return <div className="p-6 text-center">Loading...</div>;
+  if (loading) return <div className="p-6 text-center">{t("loading")}</div>;
   if (error) return <div className="p-6 text-center text-red-600">{error}</div>;
   if (!route) return null;
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <div className="bg-white p-4 shadow rounded mb-4">
-        <h2 className="text-2xl font-bold mb-2">Route Data</h2>
-        <p><strong>Name:</strong> {route.Name}</p>
-        <p><strong>Status:</strong> {route.Status}</p>
-        <p><strong>Details:</strong> {route.Details}</p>
-        <p><strong>Company:</strong> {route.company?.Name}</p>
+        <h2 className="text-2xl font-bold mb-2">{t("route_details")}</h2>
+        <p><strong>{t("name")}:</strong> {route.Name}</p>
+        <p><strong>{t("status")}:</strong> {route.Status}</p>
+        <p><strong>{t("details")}:</strong> {route.Details}</p>
+        <p><strong>{t("company")}:</strong> {route.company?.Name}</p>
         {route.company.CreatorID == user.id && (
           <div className="flex space-x-4 mt-4">
             <button
               onClick={handleDeleteRoute}
               className="px-4 py-2 bg-red-500 text-white rounded"
             >
-              Delete
+              {t("delete")}
             </button>
             <button
               onClick={() => navigate(`/route/${route_id}/edit`)}
               className="px-4 py-2 bg-yellow-500 text-white rounded"
             >
-              Edit
+              {t("edit")}
             </button>
           </div>
         )}
@@ -123,42 +123,42 @@ const RouteDetails = ({ user }) => {
           onClick={fetchWeatherAlert}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
-          Get weather alerts
+          {t("get_weather_alerts")}
         </button>
 
-        {alertLoading && <p className="mt-2 text-gray-500">Loading data...</p>}
+        {alertLoading && <p className="mt-2 text-gray-500">{t("loading")}</p>}
         {alertError && <p className="mt-2 text-red-600">{alertError}</p>}
       </div>
 
       {weatherAlert && (
         <div className="bg-white p-4 shadow rounded mt-4">
-          <h2 className="text-xl font-semibold mb-2 text-red-700">Weather alerts</h2>
-          <p><strong>Type:</strong> {weatherAlert.type}</p>
-          <p><strong>Message:</strong> {weatherAlert.message}</p>
-          <p><strong>Details:</strong> {weatherAlert.details}</p>
+          <h2 className="text-xl font-semibold mb-2 text-red-700">{t("weather_alerts")}</h2>
+          <p><strong>{t("type")}:</strong> {weatherAlert.type}</p>
+          <p><strong>{t("message")}:</strong> {weatherAlert.message}</p>
+          <p><strong>{t("details")}:</strong> {weatherAlert.details}</p>
         </div>
       )}
 
       <div className="bg-white p-4 shadow rounded">
-        <h2 className="text-xl font-bold mb-4">Waypoints</h2>
+        <h2 className="text-xl font-bold mb-4">{t("waypoints")}</h2>
         {route.company.CreatorID == user?.id && (
           <button
             onClick={() => navigate(`/route/${route_id}/waypoint/create`)}
             className="px-4 py-2 bg-green-500 text-white rounded mt-4"
           >
-            Create waypoint
+            {t("create_waypoint")}
           </button>
         )}
 
         <table className="w-full table-auto border">
           <thead>
             <tr className="bg-gray-100">
-              <th className="px-4 py-2 border">Name</th>
-              <th className="px-4 py-2 border">Latitude</th>
-              <th className="px-4 py-2 border">Longitude</th>
-              <th className="px-4 py-2 border">Status</th>
-              <th className="px-4 py-2 border">Details</th>
-              {route.company.CreatorID == user.id && <th className="px-4 py-2 border">Actions</th>}
+              <th className="px-4 py-2 border">{t("name")}</th>
+              <th className="px-4 py-2 border">{t("latitude")}</th>
+              <th className="px-4 py-2 border">{t("longitude")}</th>
+              <th className="px-4 py-2 border">{t("status")}</th>
+              <th className="px-4 py-2 border">{t("details")}</th>
+              {route.company.CreatorID == user.id && <th className="px-4 py-2 border">{t("actions")}</th>}
             </tr>
           </thead>
           <tbody>
@@ -175,13 +175,13 @@ const RouteDetails = ({ user }) => {
                       onClick={() => navigate(`/waypoint/${wp.ID}/edit`)}
                       className="px-3 py-1 bg-yellow-500 text-white rounded mr-2"
                     >
-                      Edit
+                      {t("edit")}
                     </button>
                     <button
                       onClick={() => handleDeleteWaypoint(wp.ID)}
                       className="px-3 py-1 bg-red-500 text-white rounded"
                     >
-                      Delete
+                      {t("delete")}
                     </button>
                   </td>
                 )}

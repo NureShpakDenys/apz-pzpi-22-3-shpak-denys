@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-const CreateWaypoint = () => {
+const CreateWaypoint = ({ t }) => {
   const { route_id } = useParams();
   const [name, setName] = useState("");
   const [deviceSerial, setDeviceSerial] = useState("");
@@ -48,13 +48,13 @@ const CreateWaypoint = () => {
 
   return (
     <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded">
-      <h2 className="text-2xl font-bold text-center mb-4">Create Waypoint</h2>
+      <h2 className="text-2xl font-bold text-center mb-4">{t("create_waypoint")}</h2>
 
       {error && <p className="text-red-600 text-center">{error}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-gray-700 font-medium">Name of the waypoint</label>
+          <label className="block text-gray-700 font-medium">{t("waypoint_name")}</label>
           <input
             type="text"
             value={name}
@@ -65,7 +65,7 @@ const CreateWaypoint = () => {
         </div>
 
         <div>
-          <label className="block text-gray-700 font-medium">Device Serial Number</label>
+          <label className="block text-gray-700 font-medium">{t("device_serial")}</label>
           <input
             type="text"
             value={deviceSerial}
@@ -76,7 +76,7 @@ const CreateWaypoint = () => {
         </div>
 
         <div>
-          <label className="block text-gray-700 font-medium">Data Sending Frequency (seconds)</label>
+          <label className="block text-gray-700 font-medium">{t("data_sending_frequancy")}</label>
           <input
             type="number"
             value={sendDataFrequency}
@@ -93,7 +93,7 @@ const CreateWaypoint = () => {
             onChange={(e) => setGetWeatherAlerts(e.target.checked)}
             className="w-5 h-5"
           />
-          <label className="text-gray-700 font-medium">Get Weather Alerts</label>
+          <label className="text-gray-700 font-medium">{t("get_weather_alerts")}</label>
         </div>
 
         <button
@@ -101,7 +101,7 @@ const CreateWaypoint = () => {
           className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
           disabled={loading}
         >
-          {loading ? "Creating..." : "Create waypoint"}
+          {loading ? t("adding") : t("create_waypoint")}
         </button>
       </form>
     </div>

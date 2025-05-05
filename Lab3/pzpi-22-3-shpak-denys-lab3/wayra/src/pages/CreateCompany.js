@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const CreateCompany = () => {
+const CreateCompany = ({ t }) => {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
@@ -39,13 +39,13 @@ const CreateCompany = () => {
 
   return (
     <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded">
-      <h2 className="text-2xl font-bold text-center mb-4">Создать компанию</h2>
+      <h2 className="text-2xl font-bold text-center mb-4">{t("create_company")}</h2>
 
       {error && <p className="text-red-600 text-center">{error}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-gray-700 font-medium">Название компании</label>
+          <label className="block text-gray-700 font-medium">{t("name")}</label>
           <input
             type="text"
             value={name}
@@ -56,7 +56,7 @@ const CreateCompany = () => {
         </div>
 
         <div>
-          <label className="block text-gray-700 font-medium">Адрес</label>
+          <label className="block text-gray-700 font-medium">{t("address")}</label>
           <input
             type="text"
             value={address}
@@ -71,7 +71,7 @@ const CreateCompany = () => {
           className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
           disabled={loading}
         >
-          {loading ? "Создание..." : "Создать компанию"}
+          {loading ? t("adding") : t("create_company")}
         </button>
       </form>
     </div>

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ArrowRight, PlusCircle } from "lucide-react";
 
-const CompanyList = () => {
+const CompanyList = ({t}) => {
    const [companies, setCompanies] = useState([]);
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState(null);
@@ -30,12 +30,12 @@ const CompanyList = () => {
       fetchCompanies();
    }, []);
 
-   if (loading) return <div className="p-6 text-center">loading...</div>;
+   if (loading) return <div className="p-6 text-center">{t("loading")}</div>;
    if (error) return <div className="p-6 text-red-600">{error}</div>;
 
    return (
       <div className="p-6 max-w-4xl mx-auto">
-         <h1 className="text-3xl font-bold mb-4 text-center">Companies</h1>
+         <h1 className="text-3xl font-bold mb-4 text-center">{t("companies")}</h1>
          
          <div className="text-center mb-4">
             <button
@@ -43,7 +43,7 @@ const CompanyList = () => {
                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition flex items-center justify-center space-x-2"
             >
                <PlusCircle className="w-5 h-5" />
-               <span>Create company</span>
+               <span>{t("create_company")}</span>
             </button>
          </div>
 

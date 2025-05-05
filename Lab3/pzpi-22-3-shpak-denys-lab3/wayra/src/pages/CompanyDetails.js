@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const CompanyDetails = ({ user }) => {
+const CompanyDetails = ({ user, t }) => {
   const { company_id } = useParams();
   const [data, setData] = useState(null);
   const [users, setUsers] = useState([]);
@@ -98,7 +98,7 @@ const CompanyDetails = ({ user }) => {
     }
   };
 
-  if (loading) return <div className="p-6 text-center">Загрузка...</div>;
+  if (loading) return <div className="p-6 text-center">{t("loading")}</div>;
   if (error) return <div className="p-6 text-center text-red-600">{error}</div>;
   if (!data) return null;
 
@@ -107,18 +107,18 @@ const CompanyDetails = ({ user }) => {
       case "routes":
         return (
           <>
-            <h2 className="text-xl font-bold mb-4">Routes</h2>
+            <h2 className="text-xl font-bold mb-2">{t("routes")}</h2>
             {data.creator.id == user.id && (
               <button
                 onClick={() => navigate(`/company/${company_id}/route/create`)}
-                className="px-4 py-2 bg-green-500 text-white rounded mt-4"
+                className="px-4 py-2 bg-green-500 text-white rounded mb-2"
               >
-                Add route
+                {t("add_route")}
               </button>
             )}
             <table className="w-full table-auto">
               <thead>
-                <tr><th>Name</th><th>Status</th><th>Details</th></tr>
+                <tr><th>{t("name")}</th><th>{t("status")}</th><th>{t("details")}</th></tr>
               </thead>
               <tbody>
                 {data.routes.map((route) => (
@@ -135,18 +135,24 @@ const CompanyDetails = ({ user }) => {
       case "deliveries":
         return (
           <>
-            <h2 className="text-xl font-bold mb-4">Deliveries</h2>
+            <h2 className="text-xl font-bold mb-2">{t("deliveries")}</h2>
             {data.creator.id == user.id && (
               <button
                 onClick={() => navigate(`/company/${company_id}/delivery/create`)}
-                className="px-4 py-2 bg-green-500 text-white rounded mt-4"
+                className="px-4 py-2 bg-green-500 text-white rounded mb-2"
               >
-                Add delivery
+                {t("add_delivery")}
               </button>
             )}
             <table className="w-full table-auto">
               <thead>
-                <tr><th>ID</th><th>Status</th><th>Date</th><th>Duration</th><th>Route ID</th></tr>
+                <tr>
+                  <th>{t("id")}</th>
+                  <th>{t("status")}</th>
+                  <th>{t("date")}</th>
+                  <th>{t("duration")}</th>
+                  <th>{t("route_id")}</th>
+                </tr>
               </thead>
               <tbody>
                 {data.deliveries.map((d) => (
@@ -165,23 +171,23 @@ const CompanyDetails = ({ user }) => {
       case "users":
         return (
           <>
-            <h2 className="text-xl font-bold mb-2">Users</h2>
+            <h2 className="text-xl font-bold mb-2">{t("users")}</h2>
             {data.creator.id == user.id && (
               <button
                 onClick={() => navigate(`/company/${company_id}/add-user`)}
-                className="px-4 py-2 bg-green-500 text-white rounded mb-4"
+                className="px-4 py-2 bg-green-500 text-white rounded mb-2"
               >
-                Add user
+                {t("add_user")}
               </button>
 
             )}
             <table className="w-full table-auto">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Role</th>
-                  {data.creator.id == user.id && <th className="border p-2">Actions</th>}
+                  <th>{t("id")}</th>
+                  <th>{t("name")}</th>
+                  <th>{t("role")}</th>
+                  {data.creator.id == user.id && <th className="border p-2">{t("actions")}</th>}
                 </tr>
               </thead>
               <tbody>
@@ -206,13 +212,13 @@ const CompanyDetails = ({ user }) => {
                           onClick={() => updateUserRole(u.UserID, u.Role)}
                           className="px-3 py-1 bg-blue-500 text-white rounded mr-2"
                         >
-                          Save
+                          {t("save")}
                         </button>
                         <button
                           onClick={() => removeUserFromCompany(u.UserID)}
                           className="px-3 py-1 bg-red-500 text-white rounded"
                         >
-                          Remove
+                          {t("remove")}
                         </button>
                       </td>
                     )}
@@ -238,22 +244,22 @@ const CompanyDetails = ({ user }) => {
               onClick={handleDeleteCompany}
               className="px-4 py-2 bg-red-500 text-white rounded"
             >
-              Delete
+              {t("delete")}
             </button>
             <button
               onClick={() => navigate(`/company/${company_id}/edit`)}
               className="px-4 py-2 bg-yellow-500 text-white rounded"
             >
-              Edit
+              {t("edit")}
             </button>
           </div>
         )}
       </div>
 
       <div className="flex space-x-4 justify-center mb-4">
-        <button onClick={() => setActiveTab("routes")} className="px-4 py-2 bg-blue-200 rounded">Routes</button>
-        <button onClick={() => setActiveTab("deliveries")} className="px-4 py-2 bg-blue-200 rounded">Deliveries</button>
-        <button onClick={() => setActiveTab("users")} className="px-4 py-2 bg-blue-200 rounded">Users</button>
+        <button onClick={() => setActiveTab("routes")} className="px-4 py-2 bg-blue-200 rounded">{t("routes")}</button>
+        <button onClick={() => setActiveTab("deliveries")} className="px-4 py-2 bg-blue-200 rounded">{t("deliveries")}</button>
+        <button onClick={() => setActiveTab("users")} className="px-4 py-2 bg-blue-200 rounded">{t("users")}</button>
       </div>
 
       <div className="overflow-x-auto bg-white shadow-md rounded p-4">
