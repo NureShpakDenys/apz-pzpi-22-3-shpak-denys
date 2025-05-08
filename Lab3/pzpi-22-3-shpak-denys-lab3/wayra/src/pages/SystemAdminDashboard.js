@@ -3,7 +3,7 @@ import axios from "axios";
 
 const API_BASE = "http://localhost:8081/admin";
 
-const SystemAdminDashboard = ({t}) => {
+const SystemAdminDashboard = ({ t, i18n }) => {
    const [loading, setLoading] = useState(true);
    const token = localStorage.getItem("token");
    const authHeader = { headers: { Authorization: `Bearer ${token}` } };
@@ -23,6 +23,7 @@ const SystemAdminDashboard = ({t}) => {
    const indexOfFirstLog = indexOfLastLog - logsPerPage;
    const logsToDisplay = logs.slice(indexOfFirstLog, indexOfLastLog);
    const totalPages = Math.ceil(logs.length / logsPerPage);
+   const lang = i18n.language;
 
    const fetchHealth = async () => {
       const res = await axios.get(`${API_BASE}/health`, authHeader);
@@ -64,7 +65,7 @@ const SystemAdminDashboard = ({t}) => {
                fetchLogs()
             ]);
          } catch (error) {
-            console.error("Ошибка загрузки:", error);
+            console.error("loading error:", error);
          } finally {
             setLoading(false);
          }
@@ -83,7 +84,10 @@ const SystemAdminDashboard = ({t}) => {
             <div className="border p-4 rounded-xl shadow">
                <h2 className="text-xl font-bold mb-2">{t("health_check")}</h2>
                <p>{t("db_status")}: {health.db_status}</p>
-               <p>{t("server_time")}: {health.server_time.substring(0, 19).replace('T', ' ')}</p>
+               <p>{t("server_time")}: {
+                  lang === "en"
+                     ? new Date(health.server_time).toLocaleString("en-US")
+                     : new Date(health.server_time).toLocaleString("uk-UA")}</p>
                <p>{t("uptime")}: {health.uptime}</p>
                <button
                   onClick={fetchHealth}
@@ -96,7 +100,7 @@ const SystemAdminDashboard = ({t}) => {
             <div className="border p-4 rounded-xl shadow">
                <h2 className="text-xl font-bold mb-2">{t("system_configs")}</h2>
                <p>
-               {t("encryption_key_exists")}: {configs.encryption_key_exists ? "✔️" : "❌"}
+                  {t("encryption_key_exists")}: {configs.encryption_key_exists ? "✔️" : "❌"}
                </p>
                <div className="my-2">
                   <label>{t("auth_token_ttl_hours")}:</label>
@@ -148,7 +152,7 @@ const SystemAdminDashboard = ({t}) => {
                   onClick={clearLogs}
                   className="px-4 py-1 border rounded hover:bg-gray-100"
                >
-                  CLEAR
+                  {t("clear")}
                </button>
             </div>
             <table className="w-full border-t text-sm">
@@ -166,7 +170,11 @@ const SystemAdminDashboard = ({t}) => {
                   {logsToDisplay.map((log) => (
                      <tr key={log.ID}>
                         <td className="border px-2 py-1">{log.ID}</td>
-                        <td className="border px-2 py-1">{log.CreatedAt}</td>
+                        <td className="border px-2 py-1">
+                           {lang === "en"
+                              ? new Date(log.CreatedAt).toLocaleString("en-US")
+                              : new Date(log.CreatedAt).toLocaleString("uk-UA")}
+                        </td>
                         <td className="border px-2 py-1">{log.UserID}</td>
                         <td className="border px-2 py-1">{log.ActionType}</td>
                         <td className="border px-2 py-1">{log.Description}</td>
@@ -181,7 +189,7 @@ const SystemAdminDashboard = ({t}) => {
                   className="px-3 py-1 border rounded hover:bg-gray-100"
                   disabled={currentPage === 1}
                >
-                  Prev
+                  {t("prev")}
                </button>
 
                {[...Array(totalPages)].map((_, idx) => {

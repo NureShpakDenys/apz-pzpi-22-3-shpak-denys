@@ -290,11 +290,6 @@ definitions:
           Name is the user name
           Example: John Doe
         type: string
-      password:
-        description: |-
-          Email is the user email
-          Example: password123
-        type: string
     type: object
   dtos.WaypointDTO:
     properties:
@@ -520,6 +515,12 @@ definitions:
           example: 2 hours 30 minutes
         example: 2 hours 30 minutes
         type: string
+      route_id:
+        description: |-
+          Id of the route
+          example: 1
+        example: 1
+        type: integer
       status:
         description: |-
           Status is the status of the delivery

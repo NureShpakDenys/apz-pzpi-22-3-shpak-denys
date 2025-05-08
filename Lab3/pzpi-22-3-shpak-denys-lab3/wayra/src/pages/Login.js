@@ -33,7 +33,6 @@ const Login = ({ setUser, t }) => {
           navigate("/companies");
         }
       } catch (err) {
-        setError("Error logging in. Please check your credentials.");
         console.error(err);
       } finally {
         setLoading(false);

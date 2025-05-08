@@ -9,50 +9,48 @@ const AdminDashboard = ({ user_id, t }) => {
   const [error, setError] = useState(null);
   const token = localStorage.getItem("token");
 
+  const getTranslatedRoles = () => [
+    { id: 1, name: "admin" },
+    { id: 2, name: "user" },
+    { id: 3, name: "manager" },
+    { id: 4, name: "db_admin" },
+    { id: 5, name: "system_admin" },
+  ];
+
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
+    const fetchUsers = async () => {
       try {
         const usersRes = await axios.get("http://localhost:8081/users", {
           headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
         });
-
-        const rolesRes = [
-          { id: 1, name: "admin" },
-          { id: 2, name: "user" },
-          { id: 3, name: "manager" },
-          { id: 4, name: "db_admin" },
-          { id: 5, name: "system_admin" },
-        ];
-
         setUsers(usersRes.data);
-        setRoles(rolesRes);
       } catch (err) {
-        setError("Error while loading data");
+        setError("Error while loading users");
         console.error(err);
       }
     };
 
-    fetchData();
-
     const fetchUser = async () => {
-      setLoading(true);
       try {
         const res = await axios.get(`http://localhost:8081/user/${user_id}`, {
           headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
         });
-        console.log(JSON.stringify(res.data));
         setUser(res.data);
       } catch (err) {
-        setError("Error while loading user data");
+        setError("Error while loading user");
         console.error(err);
       } finally {
         setLoading(false);
       }
-    }
+    };
 
+    fetchUsers();
     fetchUser();
-  }, [token]);
+  }, [token, user_id]);
+
+  useEffect(() => {
+    setRoles(getTranslatedRoles());
+  }, [t]);
 
   const changeUserRole = async (userId, roleId) => {
     try {

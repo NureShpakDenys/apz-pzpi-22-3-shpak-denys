@@ -51,7 +51,6 @@ const EditRoute = ({ user, t }) => {
 
       navigate(`/route/${route_id}`);
     } catch (err) {
-      setError("Error while updating route");
       console.error(err);
     } finally {
       setLoading(false);

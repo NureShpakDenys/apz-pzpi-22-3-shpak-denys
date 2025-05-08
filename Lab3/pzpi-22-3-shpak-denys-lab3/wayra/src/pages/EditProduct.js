@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import convert from "../utils/convertors";
 
-const EditProduct = ({ t }) => {
+const EditProduct = ({ t, i18n }) => {
    const { product_id } = useParams();
    const [name, setName] = useState("");
    const [productType, setProductType] = useState("Fruits");
@@ -11,7 +12,7 @@ const EditProduct = ({ t }) => {
    const [loading, setLoading] = useState(false);
    const [error, setError] = useState(null);
    const navigate = useNavigate();
-
+   const system = i18n.language === "uk" ? "metric" : "imperial";
    const token = localStorage.getItem("token");
 
    useEffect(() => {
@@ -26,10 +27,9 @@ const EditProduct = ({ t }) => {
 
             setName(res.data.Name);
             setProductType(res.data.product_category.Name);
-            setWeight(res.data.Weight);
+            system === "imperial" ? setWeight(convert(parseFloat(res.data.Weight), "weight", "imperial")) : setWeight(parseFloat(res.data.Weight));
             setDeliveryID(res.data.DeliveryID);
          } catch (err) {
-            setError("Error fetching product data");
             console.error(err);
          }
       };
@@ -37,15 +37,26 @@ const EditProduct = ({ t }) => {
       fetchProduct();
    }, [product_id, token]);
 
+   useEffect(() => {
+      system === "imperial" ? setWeight(convert(parseFloat(weight), "weight", "imperial")) : setWeight(convert(parseFloat(weight), "weight", "metric"));
+   }, [system])
+
    const handleSubmit = async (e) => {
       e.preventDefault();
       setLoading(true);
       setError(null);
 
+      const lang = i18n.language;
+
+      const weightToSend = lang === "en" ? convert(parseFloat(weight), "weight", "metrical") : parseFloat(weight);
       try {
          await axios.put(
             `http://localhost:8081/products/${product_id}`,
-            { name, product_type: productType, weight: parseFloat(weight) },
+            {
+               name,
+               product_type: productType,
+               weight: weightToSend,
+            },
             {
                headers: {
                   Authorization: `Bearer ${token}`,
@@ -89,16 +100,16 @@ const EditProduct = ({ t }) => {
                   onChange={(e) => setProductType(e.target.value)}
                   className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                >
-                  <option>Fruits</option>
-                  <option>Vegetables</option>
-                  <option>Frozen Foods</option>
-                  <option>Dairy Products</option>
-                  <option>Meat</option>
+                  <option value="Fruits">{t("product_type.Fruits")}</option>
+                  <option value="Vegetables">{t("product_type.Vegetables")}</option>
+                  <option value="Frozen Foods">{t("product_type.Frozen Foods")}</option>
+                  <option value="Dairy Products">{t("product_type.Dairy Products")}</option>
+                  <option value="Meat">{t("product_type.Meat")}</option>
                </select>
             </div>
 
             <div>
-               <label className="block text-gray-700 font-medium">{t("weight")} ({t("kg")})</label>
+               <label className="block text-gray-700 font-medium">{t("weight")}</label>
                <input
                   type="number"
                   value={weight}

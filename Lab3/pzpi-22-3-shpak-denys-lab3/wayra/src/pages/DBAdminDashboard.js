@@ -3,19 +3,18 @@ import axios from "axios";
 
 const API_BASE = "http://localhost:8081/admin";
 
-const DBAdminDashboard = ({ t }) => {
+const DBAdminDashboard = ({ t, i18n }) => {
    const token = localStorage.getItem("token");
    const authHeader = { headers: { Authorization: `Bearer ${token}` } };
-
    const [status, setStatus] = useState({
       DatabaseSizeMB: 0,
       ActiveConnections: 0,
       LastBackupTime: "",
    });
-
    const [backupPath, setBackupPath] = useState("");
    const [message, setMessage] = useState("");
    const [loading, setLoading] = useState(true);
+   const lang = i18n.language;
 
    const fetchDBStatus = async () => {
       try {
@@ -87,7 +86,10 @@ const DBAdminDashboard = ({ t }) => {
             <h2 className="text-xl font-semibold mb-2">📊 {t("database_info")}</h2>
             <p><strong>{t("database_size")}:</strong> {status.DatabaseSizeMB} MB</p>
             <p><strong>{t("active_connection")}:</strong> {status.ActiveConnections}</p>
-            <p><strong>{t("last_backup")}:</strong> {status.LastBackupTime ? new Date(status.LastBackupTime).toLocaleString() : "N/A"}</p>
+            <p><strong>{t("last_backup")}:</strong> {status.LastBackupTime ? (
+                  lang === "en" ? new Date(status.LastBackupTime).toLocaleString("en-US") : new Date(status.LastBackupTime).toLocaleString("uk-UA")
+               ) : "N/A"}</p>
+               
             <button
                onClick={fetchDBStatus}
                className="mt-2 px-4 py-1 border rounded hover:bg-gray-100"
@@ -113,7 +115,7 @@ const DBAdminDashboard = ({ t }) => {
                   onClick={performBackup}
                   className="px-4 py-1 border rounded hover:bg-gray-100"
                >
-                  {t("create_backup")}:
+                  {t("create_backup")}
                </button>
                <button
                   onClick={performRestore}

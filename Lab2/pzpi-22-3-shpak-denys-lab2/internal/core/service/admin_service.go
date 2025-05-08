@@ -66,6 +66,7 @@ func (s *AdminService) BackupDatabase(ctx context.Context, userID uint, backupPa
 
 func (s *AdminService) RestoreDatabase(ctx context.Context, userID uint, backupPath string) error {
 	tempPath := fmt.Sprintf("%s/temp", backupPath)
+	fmt.Println(tempPath)
 	if err := os.MkdirAll(tempPath, 0755); err != nil {
 		return fmt.Errorf("failed to create temp directory: %w", err)
 	}
@@ -235,6 +236,9 @@ func (s *AdminService) truncateTable(table string) error {
 }
 
 func (s *AdminService) importTable(table, filePath string) error {
+	fmt.Println("table: ", table)
+	fmt.Println("filePath: ", filePath)
+
 	cmd := exec.Command(
 		"psql",
 		"-U", "postgres",

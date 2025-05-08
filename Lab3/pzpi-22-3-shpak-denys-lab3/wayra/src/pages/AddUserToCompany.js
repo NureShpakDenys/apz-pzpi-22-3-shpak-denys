@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-const AddUserToCompany = ({ user, t}) => {
+const AddUserToCompany = ({ user, t }) => {
   const { company_id } = useParams();
   const [users, setUsers] = useState([]);
   const [companyUsers, setCompanyUsers] = useState([]);
@@ -17,26 +17,26 @@ const AddUserToCompany = ({ user, t}) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-         const resUsers = await axios.get("http://localhost:8081/users", {
-           headers: {
-             Authorization: `Bearer ${token}`,
-             Accept: "application/json",
-           },
-         });
- 
-         const resCompany = await axios.get(`http://localhost:8081/company/${company_id}`, {
-           headers: {
-             Authorization: `Bearer ${token}`,
-             Accept: "application/json",
-           },
-         });
- 
-         setUsers(resUsers.data);
-         setCompanyUsers(resCompany.data.users.map((user) => user.id));
-       } catch (err) {
-         setError("Error fetching users or company data");
-         console.error(err);
-       }
+        const resUsers = await axios.get("http://localhost:8081/users", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        });
+
+        const resCompany = await axios.get(`http://localhost:8081/company/${company_id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        });
+
+        setUsers(resUsers.data);
+        setCompanyUsers(resCompany.data.users.map((user) => user.id));
+      } catch (err) {
+        setError("Error fetching users or company data");
+        console.error(err);
+      }
     };
 
     fetchUsers();
@@ -102,9 +102,9 @@ const AddUserToCompany = ({ user, t}) => {
             onChange={(e) => setRole(e.target.value)}
             className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option>user</option>
-            <option>admin</option>
-            <option>manager</option>
+            <option value="user">{t("company_role.user")}</option>
+            <option value="admin">{t("company_role.admin")}</option>
+            <option value="manager">{t("company_role.manager")}</option>
           </select>
         </div>
 

@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import convert from "../utils/convertors";
 
-const DeliveryDetails = ({ user, t}) => {
+const DeliveryDetails = ({ user, t, i18n }) => {
   const { delivery_id } = useParams();
   const [delivery, setDelivery] = useState(null);
   const [error, setError] = useState(null);
@@ -13,6 +14,7 @@ const DeliveryDetails = ({ user, t}) => {
   const [routesLoading, setRoutesLoading] = useState(false);
   const [routesError, setRoutesError] = useState(null);
   const navigate = useNavigate();
+  const system = i18n.language === "uk" ? "metric" : "imperial";
 
   const token = localStorage.getItem("token")
   useEffect(() => {
@@ -149,9 +151,17 @@ const DeliveryDetails = ({ user, t}) => {
           <p><strong>{t("route")}:</strong> {optimalRoute.route.name}</p>
           <p><strong>{t("message")}:</strong> {optimalRoute.message}</p>
           <p><strong>{t("equation")}:</strong> {optimalRoute.equation}</p>
-          <p><strong>{t("distance")}:</strong> {optimalRoute.predict_data.Distance.toFixed(2)} {t("km")}</p>
+          <p><strong>{t("distance")}:</strong> {
+            system === "imperial"
+              ? `${convert(optimalRoute.predict_data.Distance, "distance", "imperial").toFixed(2)}`
+              : `${optimalRoute.predict_data.Distance}`
+          } {t("km")}</p>
           <p><strong>{t("time")}:</strong> {optimalRoute.predict_data.Time.toFixed(2)} {t("hours")}</p>
-          <p><strong>{t("speed")}:</strong> {optimalRoute.predict_data.Speed.toFixed(2)} {t("km/hour")}</p>
+          <p><strong>{t("speed")}:</strong> {
+            system === "imperial"
+              ? `${convert(optimalRoute.predict_data.Speed, "speed", "imperial").toFixed(2)}`
+              : `${optimalRoute.predict_data.Speed.toFixed(2)}`
+          } {t("km/hour")}</p>
         </div>
       )}
 
@@ -161,9 +171,17 @@ const DeliveryDetails = ({ user, t}) => {
           <p><strong>{t("route")}:</strong> {backRoute.route.name}</p>
           <p><strong>{t("message")}:</strong> {backRoute.message}</p>
           <p><strong>{t("equation")}:</strong> {backRoute.equation}</p>
-          <p><strong>{t("distance")}:</strong> {backRoute.predict_data.Distance.toFixed(2)} {t("km")}</p>
+          <p><strong>{t("distance")}:</strong> {
+            system === "imperial"
+              ? `${convert(backRoute.predict_data.Distance, "distance", "imperial").toFixed(2)}`
+              : `${backRoute.predict_data.Distance}`
+          } {t("km")}</p>
           <p><strong>{t("time")}:</strong> {backRoute.predict_data.Time.toFixed(2)} {t("hours")}</p>
-          <p><strong>{t("speed")}:</strong> {backRoute.predict_data.Speed.toFixed(2)} {t("km/hour")}</p>
+          <p><strong>{t("speed")}:</strong> {
+            system === "imperial"
+              ? `${convert(backRoute.predict_data.Speed, "speed", "imperial").toFixed(2)}`
+              : `${backRoute.predict_data.Speed.toFixed(2)}`
+        } {t("km/hour")}</p>
         </div>
       )}
 
@@ -193,10 +211,22 @@ const DeliveryDetails = ({ user, t}) => {
             {delivery.products.map((product) => (
               <tr key={product.ID} className="text-center">
                 <td className="border px-4 py-2">{product.Name}</td>
-                <td className="border px-4 py-2">{product.Weight} {t("kg")}</td>
-                <td className="border px-4 py-2">{product.product_category.Name}</td>
                 <td className="border px-4 py-2">
-                  {product.product_category.MinTemperature}–{product.product_category.MaxTemperature}
+                  {system === "imperial"
+                    ? `${convert(product.Weight, "weight", "imperial").toFixed(1)}`
+                    : `${product.Weight.toFixed(1)}`}
+                </td>
+                <td className="border px-4 py-2">{t(`product_type.${product.product_category.Name}`)}</td>
+                <td className="border px-4 py-2">
+                  {system === "imperial"
+                    ? `${convert(product.product_category.MinTemperature, "temperature", "imperial").toFixed(1)}    `
+                    : `${product.product_category.MinTemperature}   `
+                  }
+                   - 
+                  {system === "imperial"
+                    ? `   ${convert(product.product_category.MaxTemperature, "temperature", "imperial").toFixed(1)}`
+                    : `   ${product.product_category.MaxTemperature}`
+                  }
                 </td>
                 <td className="border px-4 py-2">
                   {product.product_category.MinHumidity}–{product.product_category.MaxHumidity}

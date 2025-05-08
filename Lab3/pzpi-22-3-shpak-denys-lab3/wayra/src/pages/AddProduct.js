@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import convert from "../utils/convertors";
 
-const AddProduct = ({ t }) => {
+const AddProduct = ({ t, i18n}) => {
    const { delivery_id } = useParams();
    const [name, setName] = useState("");
    const [productType, setProductType] = useState("Fruits");
@@ -17,7 +18,10 @@ const AddProduct = ({ t }) => {
       e.preventDefault();
       setLoading(true);
       setError(null);
+      const lang = i18n.language;
 
+      const weightToSend = lang === "en" ? convert(parseFloat(weight), "weight", "metrical") : parseFloat(weight);
+      
       try {
          const response = await axios.post(
             "http://localhost:8081/products/",
@@ -25,8 +29,8 @@ const AddProduct = ({ t }) => {
                deliveryID: Number(delivery_id),
                name,
                product_type: productType,
-               weight: parseFloat(weight),
-             },
+               weight: weightToSend,
+            },
             {
                headers: {
                   Authorization: `Bearer ${token}`,
@@ -70,12 +74,13 @@ const AddProduct = ({ t }) => {
                   onChange={(e) => setProductType(e.target.value)}
                   className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                >
-                  <option>Fruits</option>
-                  <option>Vegetables</option>
-                  <option>Frozen Foods</option>
-                  <option>Dairy Products</option>
-                  <option>Meat</option>
+                  <option value="Fruits">{t("product_type.Fruits")}</option>
+                  <option value="Vegetables">{t("product_type.Vegetables")}</option>
+                  <option value="Frozen Foods">{t("product_type.Frozen Foods")}</option>
+                  <option value="Dairy Products">{t("product_type.Dairy Products")}</option>
+                  <option value="Meat">{t("product_type.Meat")}</option>
                </select>
+
             </div>
 
             <div>

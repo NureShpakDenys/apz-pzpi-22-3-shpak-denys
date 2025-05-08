@@ -31,7 +31,6 @@ const CreateRoute = ({t}) => {
 
       navigate(`/route/${response.data.id}`);
     } catch (err) {
-      setError("Error while creating route");
       console.error(err);
     } finally {
       setLoading(false);

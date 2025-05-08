@@ -1835,10 +1835,6 @@ const docTemplate = `{
                 "name": {
                     "description": "Name is the user name\nExample: John Doe",
                     "type": "string"
-                },
-                "password": {
-                    "description": "Email is the user email\nExample: password123",
-                    "type": "string"
                 }
             }
         },
@@ -2051,6 +2047,11 @@ const docTemplate = `{
                     "description": "The duration of the delivery\nexample: 2 hours 30 minutes",
                     "type": "string",
                     "example": "2 hours 30 minutes"
+                },
+                "route_id": {
+                    "description": "Id of the route\nexample: 1",
+                    "type": "integer",
+                    "example": 1
                 },
                 "status": {
                     "description": "Status is the status of the delivery\nexample: completed",

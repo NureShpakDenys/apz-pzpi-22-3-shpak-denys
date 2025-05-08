@@ -2,9 +2,8 @@
   "add_product": "Додати продукт",
   "product_name": "Назва продукту",
   "product_type": "Тип продукту",
-  "weight" : "Вага (кг)",
+  "weight": "Вага (кг)",
   "adding": "Додається...",
-  
   "companies": "Компанії",
   "home": "Головна",
   "admin": "Адмін",
@@ -13,22 +12,17 @@
   "logout": "Вийти",
   "login": "Увійти",
   "register": "Реєстрація",
-
   "add_user_to_company": "Додати користувача до компанії",
   "select_user": "Обрати користувача",
   "select_role": "Обрати роль",
-
   "loading": "Завантаження...",
-
   "admin_dashboard": "Адмінська панель",
-  "id": "Ідентифікатор",
+  "id": "ID",
   "name": "Ім'я",
   "password": "Пароль",
   "actions": "Дії",
-  "save":  "Зберегти",
-
+  "save": "Зберегти",
   "create_company": "Створити компанію",
-
   "routes": "Маршрути",
   "add_route": "Додати маршрут",
   "status": "Статус",
@@ -44,22 +38,16 @@
   "remove": "Прибрати",
   "delete": "Видалити",
   "edit": "Редагувати",
-
   "address": "Адреса",
-
   "create_delivery": "Створити постачання",
   "delivery_date": "Дата постачання",
-
   "create_route": "Створити маршрут",
   "route_name": "Назва маршруту",
-
   "create_waypoint": "Створити вузол",
   "waypoint_name": "Назва вузла",
   "device_serial": "Серійний номер пристрою",
-
   "data_sending_frequancy": "Частота відправки даних (секунди)",
   "get_weather_alerts": "Отримувати погодні сповіщення",
-
   "database_admin_dashboard": "Панель управління БД",
   "database_info": "Інформація про базу даних",
   "refresh_info": "Оновити інформацію",
@@ -103,7 +91,6 @@
   "edit_product": "Редагувати продукт",
   "edit_route": "Редагувати маршрут",
   "edit_waypoint": "Редагувати вузол",
-
   "username": "Ім'я користувача",
   "route_details": "Деталі маршруту",
   "company": "Компанія",
@@ -126,5 +113,20 @@
   "user_id": "ID користувача",
   "description": "Опис",
   "success": "Успішно",
-  "next": "Далі"
+  "next": "Далі",
+  "product_type.Fruits": "Фрукти",
+  "product_type.Vegetables": "Овочі",
+  "product_type.Frozen Foods": "Заморожені продукти",
+  "product_type.Dairy Products": "Молочні продукти",
+  "product_type.Meat": "Мʼясо",
+  "company_role.admin": "Адміністратор",
+  "company_role.user": "Користувач",
+  "company_role.manager": "Менеджер",
+  "system_role.admin": "Адміністратор",
+  "system_role.db_admin": "Адміністратор БД",
+  "system_role.user": "Користувач",
+  "system_role.system_admin": "Системний адміністратор",
+  "system_role.manager": "Менеджер",
+  "prev": "Попередній",
+  "clear": "Очистити"
 }

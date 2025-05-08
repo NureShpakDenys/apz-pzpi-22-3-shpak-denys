@@ -2,9 +2,8 @@
    "add_product": "Add Product",
    "product_name": "Product name",
    "product_type": "Product type",
-   "weight" : "Weight",
+   "weight": "Weight (lbs)",
    "adding": "Adding...",
-   
    "companies": "Companies",
    "home": "Home",
    "admin": "Admin",
@@ -13,22 +12,17 @@
    "logout": "Logout",
    "login": "Login",
    "register": "Register",
-
    "add_user_to_company": "Add User to Company",
    "select_user": "Select User",
    "select_role": "Select Role",
-
    "loading": "Loading...",
-
    "admin_dashboard": "Admin Dashboard",
    "id": "ID",
    "name": "Name",
    "password": "Password",
    "actions": "Actions",
-   "save":  "Save",
-
+   "save": "Save",
    "create_company": "Create company",
-
    "routes": "Routes",
    "add_route": "Add route",
    "status": "Status",
@@ -44,22 +38,16 @@
    "remove": "Remove",
    "delete": "Delete",
    "edit": "Edit",
-
    "address": "Address",
-
    "create_delivery": "Create delivery",
    "delivery_date": "Delivery date",
-
    "create_route": "Create Route",
    "route_name": "Route name",
-
    "create_waypoint": "Create Waypoint",
    "waypoint_name": "Waypoint name",
    "device_serial": "Device serial number",
-
    "data_sending_frequancy": "Data Sending Frequency (seconds)",
    "get_weather_alerts": "Get Weather Alerts",
-
    "database_admin_dashboard": "Database Admin Dashboard",
    "database_info": "Database Info",
    "refresh_info": "Refresh Info",
@@ -103,7 +91,6 @@
    "edit_product": "Edit product",
    "edit_route": "Edit route",
    "edit_waypoint": "Edit waypoint",
-
    "username": "Username",
    "route_details": "Route details",
    "company": "Company",
@@ -126,5 +113,20 @@
    "user_id": "User ID",
    "description": "Description",
    "success": "Success",
-   "next": "Next"
+   "next": "Next",
+   "product_type.Fruits": "Fruits",
+   "product_type.Vegetables": "Vegetables",
+   "product_type.Frozen Foods": "Frozen Foods",
+   "product_type.Dairy Products": "Dairy Products",
+   "product_type.Meat": "Meat",
+   "company_role.admin": "Admin",
+   "company_role.user": "User",
+   "company_role.manager": "Manager",
+   "system_role.admin": "Admin",
+   "system_role.db_admin": "DB Admin",
+   "system_role.user": "User",
+   "system_role.system_admin": "System Admin",
+   "system_role.manager": "Manager",
+   "prev": "Prev",
+   "clear": "Clear"
 }

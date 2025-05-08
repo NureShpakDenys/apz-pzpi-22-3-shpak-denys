@@ -65,6 +65,10 @@ type UpdateDeliveryRequest struct {
 	// The duration of the delivery
 	// example: 2 hours 30 minutes
 	Duration string `json:"duration" example:"2 hours 30 minutes"`
+
+	// Id of the route
+	// example: 1
+	RouteID uint `json:"route_id" example:"1"`
 }
 
 // CreateDelivery godoc
@@ -277,6 +281,9 @@ func (h *DeliveryHandler) UpdateDelivery(c *gin.Context) {
 	}
 	if deliveryRequest.Duration != "" {
 		delivery.Duration = deliveryRequest.Duration
+	}
+	if deliveryRequest.RouteID != 0 {
+		delivery.RouteID = deliveryRequest.RouteID
 	}
 
 	delivery.Company = models.Company{}

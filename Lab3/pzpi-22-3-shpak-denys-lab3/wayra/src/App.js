@@ -37,13 +37,18 @@ import { useTranslation } from "react-i18next";
 function App() {
   const [user, setUser] = useState(null);
   const { i18n, t } = useTranslation();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
+      setLoading(true);
       const storedUser = getUserFromToken();
       const token = localStorage.getItem("token");
   
-      if (!storedUser || !storedUser.id) return;
+      if (!storedUser || !storedUser.id) {
+        setLoading(false);
+        return;
+      }
   
       try {
         const usersRes = await axios.get(`http://localhost:8081/user/${storedUser.id}`, {
@@ -53,12 +58,17 @@ function App() {
         setUser(usersRes.data);
       } catch (err) {
         console.error("Error fetching user data:", err);
+      } finally {
+        setLoading(false);
       }
     };
   
     fetchUser();
   }, []);
   
+  if (loading) {
+    return <div className="p-6 text-center text-blue-500">{t("loading")}...</div>;
+  }
 
   return (
     <Router>
@@ -69,7 +79,7 @@ function App() {
           <Route path="/register" element={user ? <Navigate to="/companies" /> : <Register t={t} />} />
 
           <Route path="/companies" element={<Companies t={t} />} />
-          <Route path="/company/:company_id" element={!user ? <Navigate to="/login" /> : <CompanyDetails user={user} t={t} />} />
+          <Route path="/company/:company_id" element={!user ? <Navigate to="/login" /> : <CompanyDetails user={user} t={t} i18n={i18n} />} />
           <Route path="/company/create" element={!user ? <Navigate to="/login" /> : <CreateCompany t={t} />} />
           <Route path="/company/:company_id/edit" element={!user ? <Navigate to="/login" /> : <EditCompany user={user} t={t} />} />
           <Route path="/company/:company_id/add-user" element={!user ? <Navigate to="/login" /> : <AddUserToCompany user={user} t={t} />} />
@@ -81,16 +91,16 @@ function App() {
           <Route path="/route/:route_id/waypoint/create" element={!user ? <Navigate to="/login" /> : <CreateWaypoint t={t} />} />
           <Route path="/waypoint/:waypoint_id/edit" element={!user ? <Navigate to="/login" /> : <EditWaypoint user={user} t={t} />} />
 
-          <Route path="/delivery/:delivery_id" element={!user ? <Navigate to="/login" /> : <DeliveryDetails user={user} t={t} />} />
+          <Route path="/delivery/:delivery_id" element={!user ? <Navigate to="/login" /> : <DeliveryDetails user={user} t={t} i18n={i18n} />} />
           <Route path="/company/:company_id/delivery/create" element={!user ? <Navigate to="/login" /> : <CreateDelivery t={t} />} />
           <Route path="/delivery/:delivery_id/edit" element={!user ? <Navigate to="/login" /> : <EditDelivery user={user} t={t} />} />
 
-          <Route path="delivery/:delivery_id/product/add" element={!user ? <Navigate to="/login" /> : <AddProduct t={t} />} />
-          <Route path="/product/:product_id/edit" element={!user ? <Navigate to="/login" /> : <EditProduct t={t} />} />
+          <Route path="delivery/:delivery_id/product/add" element={!user ? <Navigate to="/login" /> : <AddProduct t={t} i18n={i18n} />} />
+          <Route path="/product/:product_id/edit" element={!user ? <Navigate to="/login" /> : <EditProduct t={t} i18n={i18n} />} />
 
           <Route path="/admin" element={user ? <AdminDashboard user_id={user.id} t={t} /> : <Navigate to="/login" />} />
-          <Route path="/system-admin" element={user ? <SystemAdminDashboard t={t} /> : <Navigate to="/login" />} />
-          <Route path="/db-admin" element={user ? <DBAdminDashboard t={t} /> : <Navigate to="/login" />} />
+          <Route path="/system-admin" element={user ? <SystemAdminDashboard t={t} i18n={i18n} /> : <Navigate to="/login" />} />
+          <Route path="/db-admin" element={user ? <DBAdminDashboard t={t} i18n={i18n} /> : <Navigate to="/login" />} />
 
         </Routes>
       </div>

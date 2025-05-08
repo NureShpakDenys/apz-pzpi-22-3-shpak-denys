@@ -30,7 +30,6 @@ const CreateCompany = ({ t }) => {
 
       navigate(`/company/${response.data.id}`);
     } catch (err) {
-      setError("Ошибка при создании компании");
       console.error(err);
     } finally {
       setLoading(false);
