@@ -5,12 +5,12 @@
 
 
 
+
 ЗВІТ
 з лабораторної роботи №3
 з дисципліни «Архітектура програмного забезпечення»
-на тему: «РОЗРОБКА ПРОГРАМНОЇ АРХІТЕКТУРИ, СТВОРЕННЯ ТА
-ВІДЛАГОДЖЕННЯ ПРОГРАМНОГО КОДУ ВЕБ КЛІЄНТА
-ПРОГРАМНОЇ СИСТЕМИ»
+на тему: «РОЗРОБКА ВЕБКЛІЄНТА СИСТЕМИ»
+
 
 
 
@@ -33,7 +33,7 @@
 
 №	Дата	Версія звіту	Опис змін та виправлень
 1	02.05.2025	0.1	Створено структуру звіту. Визначено завдання на дану лабораторну роботу.
-2			
+2	08.05.2025	0.1	Описано хід роботи, додаток А, додаток Б, додаток В. Сформульовано висновок роботи. 
 
 2 ЗАВДАННЯ
 
@@ -42,30 +42,654 @@
 3 ОПИС ВИКОНАНОЇ РОБОТИ
 
 До виконаної роботи було створено відеозвіт, посилання на який наведено у додатку А.
+Усі графічні матеріали наведені у додатку Б.
+У процесі виконання лабораторної роботи було створено клієнтську частину вебзастосунку з використанням React. Робота розпочалася зі створення нового проєкту та базової ініціалізації структури. У межах реалізації було створено кілька ключових сторінок, зокрема головна сторінка, сторінка авторизації, сторінка панелі адміністратора та інші допоміжні компоненти.
+Під час розробки особливу увагу приділено загальній функціональності користувацького інтерфейсу, зокрема його зручності та адаптивності. Основні елементи бізнес-логіки були реалізовані на рівні окремих компонентів, що відповідають за взаємодію з API, обробку введених даних, навігацію та вивід інформації.
+Також було реалізовано базовий функціонал адміністрування, що дозволяє керувати окремими частинами системи з боку адміністратора. Окремий акцент зроблено на реалізації механізмів локалізації та інтерналізації — було впроваджено можливість перемикання мов інтерфейсу, що забезпечує гнучкість системи для багатомовного середовища.
+Деякий код застосунку наведено у додатку В.
 ВИСНОВКИ
 
-У результаті виконання даної лабораторної роботи було 
+У результаті виконання даної лабораторної роботи було розроблено веб клієнт системи. Створено зручний інтерфейс для базових операцій, функцій бізнес логіки та адміністрування. Втілено локалізацію та інтерналізацію системи.
 
 ДОДАТОК А
 Відеозапис
 
-Відеозапис презентації результатів лабораторної роботи: 
+Відеозапис презентації результатів лабораторної роботи: https://youtu.be/q_J-aF2eTDg
 
 Хронологічний опис відеозапису:
-00:00 Вітання. Доповідач вітається, розповідає про те, яку роботу було виконано у результаті виконання лабораторної роботи.
+00:00 Вітання. Мовець вітається та визначає тему відеозвіту.
+00:36 Загальний функціонал. Демострується загальний функціонал. Операції над об’єктами системи. Їх створення, перегляд, редагування та видалення.
+04:17 Функції бізнес логіки. Деманструється інтерфейс для використання функцій бізнес логіки для знаходження оптимальних маршрутів постачань, а також повідомлень про загрози на маршруті.
+05:57 Функції платформного адміністратора. Демонструється функціонал зміни ролей користувачів, а також додавання їх до компаній та надання їх ролей.
+07:06 Функції адміністратора баз даних. Демонструються функції перевірки стану системи, створення резервних копій та відновлення даних з резервних копій а також функція оптимізація бази даних.
+08:29 Функції системного адміністратора. Демонструються функції перевірки стану сервера, зміни конфігурацій системи та управлінням журналом логів.
+09:46 Локалізація та інтерналізація. Демонструється результат втілення локалізації мови, величин та мір, часу та його формату.
+12:00 Висновки. Підбиваються підсумки доповіді.
 ДОДАТОК Б
 Графічні матеріали
 
+ 
 Рисунок Б.1 – UML діаграма прецедентів
 
+ 
+Рисунок Б.2 – UML діаграма компонентів
+
+ 
+Рисунок Б.3 – UML діаграма діяльності
+
+ 
+Рисунок Б.4 – UML діаграма взаємодії
 
 ДОДАТОК В
 Програмний код
 
-В.1 
+В.1 Підключення локалізації.
 
-GitHub репозиторій: 
+GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab3/pzpi-22-3-shpak-denys-lab3/wayra/src/i18n.js
 
-  1  Програмний код
+ 1  import i18n from 'i18next';
+ 2  import { initReactI18next } from 'react-i18next';
+ 3  import LanguageDetector from 'i18next-browser-languagedetector';
+ 4  
+ 5  import translationEN from './locales/en/translation.json';
+ 6  import translationUK from './locales/uk/translation.json';
+ 7  
+ 8  const resources = {
+ 9    en: { translation: translationEN },
+10    uk: { translation: translationUK }
+11  };
+12  
+13  i18n
+14    .use(LanguageDetector)
+15    .use(initReactI18next)
+16    .init({
+17      resources,
+18      fallbackLng: 'en',
+19      interpolation: { escapeValue: false }
+20    });
+21  
+22  export default i18n;
+
+
+
+В.2 Конвертація величин.
+
+GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab3/pzpi-22-3-shpak-denys-lab3/wayra/src/utils/convertors.js
+
+ 1  function cToF(celsius) {
+ 2     return (celsius * 9 / 5) + 32;
+ 3  }
+ 4  
+ 5  function fToC(fahrenheit) {
+ 6     return (fahrenheit - 32) * 5 / 9;
+ 7  }
+ 8  
+ 9  function kmToMiles(km) {
+10     return km * 0.621371;
+11  }
+12  
+13  function milesToKm(miles) {
+14     return miles / 0.621371;
+15  }
+16  
+17  function kgToLbs(kg) {
+18     return kg * 2.20462;
+19  }
+20  
+21  function lbsToKg(lbs) {
+22     return lbs / 2.20462;
+23  }
+24  
+25  function kmphToMph(kmh) {
+26     return kmh * 0.621371;
+27  }
+28  
+29  function mphToKmh(mph) {
+30     return mph / 0.621371;
+31  }
+32  
+33  export default function convert(value, type, to) {
+34     switch (type) {
+35        case "temperature":
+36           return to === "imperial" ? cToF(value) : fToC(value);
+37        case "distance":
+38           return to === "imperial" ? kmToMiles(value) : milesToKm(value);
+39        case "weight":
+40           return to === "imperial" ? kgToLbs(value) : lbsToKg(value);
+41        case "speed":
+42           return to === "imperial" ? kmphToMph(value) : mphToKmh(value);
+43        default:
+44           return value;
+45     }
+46  }
+47  
+
+В.3 Адміністративна панель. Платформний адміністратор.
+
+GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab3/pzpi-22-3-shpak-denys-lab3/wayra/src/pages/AdminDashboard.js
+
+  1  import { useEffect, useState } from "react";
+  2  import axios from "axios";
+  3  
+  4  const AdminDashboard = ({ user_id, t }) => {
+  5    const [user, setUser] = useState({});
+  6    const [users, setUsers] = useState([]);
+  7    const [roles, setRoles] = useState([]);
+  8    const [loading, setLoading] = useState(true);
+  9    const [error, setError] = useState(null);
+ 10    const token = localStorage.getItem("token");
+ 11  
+ 12    const getTranslatedRoles = () => [
+ 13      { id: 1, name: "admin" },
+ 14      { id: 2, name: "user" },
+ 15      { id: 3, name: "manager" },
+ 16      { id: 4, name: "db_admin" },
+ 17      { id: 5, name: "system_admin" },
+ 18    ];
+ 19  
+ 20    useEffect(() => {
+ 21      const fetchUsers = async () => {
+ 22        try {
+ 23          const usersRes = await axios.get("http://localhost:8081/users", {
+ 24            headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+ 25          });
+ 26          setUsers(usersRes.data);
+ 27        } catch (err) {
+ 28          setError("Error while loading users");
+ 29          console.error(err);
+ 30        }
+ 31      };
+ 32  
+ 33      const fetchUser = async () => {
+ 34        try {
+ 35          const res = await axios.get(`http://localhost:8081/user/${user_id}`, {
+ 36            headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+ 37          });
+ 38          setUser(res.data);
+ 39        } catch (err) {
+ 40          setError("Error while loading user");
+ 41          console.error(err);
+ 42        } finally {
+ 43          setLoading(false);
+ 44        }
+ 45      };
+ 46  
+ 47      fetchUsers();
+ 48      fetchUser();
+ 49    }, [token, user_id]);
+ 50  
+ 51    useEffect(() => {
+ 52      setRoles(getTranslatedRoles());
+ 53    }, [t]);
+ 54  
+ 55    const changeUserRole = async (userId, roleId) => {
+ 56      try {
+ 57        await axios.post(
+ 58          "http://localhost:8081/admin/change-role",
+ 59          { userId, roleId },
+ 60          {
+ 61            headers: { Authorization: `Bearer ${token}`, Accept: "application/json", "Content-Type": "application/json" },
+ 62          }
+ 63        );
+ 64  
+ 65        setUsers((prevUsers) =>
+ 66          prevUsers.map((user) =>
+ 67            user.id == userId ? { ...user, role: roles.find((r) => r.id == roleId).name } : user
+ 68          )
+ 69        );
+ 70      } catch (err) {
+ 71        console.error("Error updating user role:", err);
+ 72      }
+ 73    };
+ 74  
+ 75    if (loading) return <div className="p-6 text-center">{t("loading")}</div>;
+ 76    if (error) return <div className="p-6 text-center text-red-600">{error}</div>;
+ 77  
+ 78    return (
+ 79      <div className="p-6 max-w-6xl mx-auto">
+ 80        <h1 className="text-3xl font-bold text-center mb-4">{t("admin_dashboard")}</h1>
+ 81  
+ 82        <div className="bg-white shadow-md rounded p-4">
+ 83          <table className="w-full table-auto border-collapse border border-gray-300">
+ 84            <thead>
+ 85              <tr className="bg-gray-100">
+ 86                <th className="border p-2">{t("id")}</th>
+ 87                <th className="border p-2">{t("name")}</th>
+ 88                <th className="border p-2">{t("password")}</th>
+ 89                {user.role == "admin" && <th className="border p-2">{t("actions")}</th>}
+ 90              </tr>
+ 91            </thead>
+ 92            <tbody>
+ 93              {users.map((u) => (
+ 94                <tr key={u.id} className="text-center">
+ 95                  <td className="border p-2">{u.id}</td>
+ 96                  <td className="border p-2">{u.name}</td>
+ 97                  <td className="border p-2">
+ 98                    {user.role == "admin" ? (
+ 99                      <select
+100                        value={roles.find((r) => r.name == u.role)?.id || ""}
+101                        onChange={(e) => changeUserRole(u.id, Number(e.target.value))}
+102                        className="border rounded px-2 py-1"
+103                      >
+104                        {roles.map((role) => (
+105                          <option key={role.id} value={role.id}>
+106                            {role.name}
+107                          </option>
+108                        ))}
+109                      </select>
+110                    ) : (
+111                      <span>{u.role}</span>
+112                    )}
+113                  </td>
+114                  {user.role == "admin" && (
+115                    <td className="border p-2">
+116                      <button
+117                        onClick={() => changeUserRole(u.id, roles.find((r) => r.name == u.role)?.id)}
+118                        className="px-3 py-1 bg-blue-500 text-white rounded"
+119                      >
+120                        {t("save")}
+121                      </button>
+122                    </td>
+123                  )}
+124                </tr>
+125              ))}
+126            </tbody>
+127          </table>
+128        </div>
+129      </div>
+130    );
+131  };
+132  
+133  export default AdminDashboard;
+
+В.4 Адміністративна панель. Системний адміністратор.
+
+GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab3/pzpi-22-3-shpak-denys-lab3/wayra/src/pages/SystemAdminDashboard.js
+
+  1  import { useEffect, useState } from "react";
+  2  import axios from "axios";
+  3  
+  4  const API_BASE = "http://localhost:8081/admin";
+  5  
+  6  const SystemAdminDashboard = ({ t, i18n }) => {
+  7     const [loading, setLoading] = useState(true);
+  8     const token = localStorage.getItem("token");
+  9     const authHeader = { headers: { Authorization: `Bearer ${token}` } };
+ 10     const [health, setHealth] = useState({});
+ 11     const [configs, setConfigs] = useState({
+ 12        auth_token_ttl_hours: 0,
+ 13        encryption_key_exists: false,
+ 14        http_timeout_seconds: 0,
+ 15     });
+ 16     const [logs, setLogs] = useState([]);
+ 17     const [clearDays, setClearDays] = useState(3);
+ 18  
+ 19     const [currentPage, setCurrentPage] = useState(1);
+ 20     const logsPerPage = 10;
+ 21  
+ 22     const indexOfLastLog = currentPage * logsPerPage;
+ 23     const indexOfFirstLog = indexOfLastLog - logsPerPage;
+ 24     const logsToDisplay = logs.slice(indexOfFirstLog, indexOfLastLog);
+ 25     const totalPages = Math.ceil(logs.length / logsPerPage);
+ 26     const lang = i18n.language;
+ 27  
+ 28     const fetchHealth = async () => {
+ 29        const res = await axios.get(`${API_BASE}/health`, authHeader);
+ 30        setHealth(res.data);
+ 31     };
+ 32  
+ 33     const fetchConfigs = async () => {
+ 34        const res = await axios.get(`${API_BASE}/system-configs`, authHeader);
+ 35        setConfigs(res.data);
+ 36     };
+ 37  
+ 38     const saveConfigs = async () => {
+ 39        await axios.put(
+ 40           `${API_BASE}/system-configs`,
+ 41           {
+ 42              timeout_sec: configs.http_timeout_seconds,
+ 43              token_ttl: configs.auth_token_ttl_hours,
+ 44           },
+ 45           authHeader
+ 46        );
+ 47     };
+ 48  
+ 49     const fetchLogs = async () => {
+ 50        const res = await axios.get(`${API_BASE}/logs`, authHeader);
+ 51        setLogs(res.data);
+ 52     };
+ 53  
+ 54     const clearLogs = async () => {
+ 55        await axios.post(`${API_BASE}/clear-logs`, { days: clearDays }, authHeader);
+ 56        fetchLogs();
+ 57     };
+ 58  
+ 59     useEffect(() => {
+ 60        const fetchAll = async () => {
+ 61           try {
+ 62              await Promise.all([
+ 63                 fetchHealth(),
+ 64                 fetchConfigs(),
+ 65                 fetchLogs()
+ 66              ]);
+ 67           } catch (error) {
+ 68              console.error("loading error:", error);
+ 69           } finally {
+ 70              setLoading(false);
+ 71           }
+ 72        };
+ 73  
+ 74        fetchAll();
+ 75     }, []);
+ 76  
+ 77     if (loading) {
+ 78        return <div className="p-4 text-center text-lg">{t("loading")}</div>;
+ 79     }
+ 80  
+ 81     return (
+ 82        <div className="flex flex-row gap-4 p-4">
+ 83           <div className="flex flex-col gap-4 w-1/4">
+ 84              <div className="border p-4 rounded-xl shadow">
+ 85                 <h2 className="text-xl font-bold mb-2">{t("health_check")}</h2>
+ 86                 <p>{t("db_status")}: {health.db_status}</p>
+ 87                 <p>{t("server_time")}: {
+ 88                    lang === "en"
+ 89                       ? new Date(health.server_time).toLocaleString("en-US")
+ 90                       : new Date(health.server_time).toLocaleString("uk-UA")}</p>
+ 91                 <p>{t("uptime")}: {health.uptime}</p>
+ 92                 <button
+ 93                    onClick={fetchHealth}
+ 94                    className="mt-2 px-4 py-1 border rounded hover:bg-gray-100"
+ 95                 >
+ 96                    {t("check")}
+ 97                 </button>
+ 98              </div>
+ 99  
+100              <div className="border p-4 rounded-xl shadow">
+101                 <h2 className="text-xl font-bold mb-2">{t("system_configs")}</h2>
+102                 <p>
+103                    {t("encryption_key_exists")}: {configs.encryption_key_exists ? "✔️" : "❌"}
+104                 </p>
+105                 <div className="my-2">
+106                    <label>{t("auth_token_ttl_hours")}:</label>
+107                    <input
+108                       type="number"
+109                       className="ml-2 border px-1 w-16"
+110                       value={configs.auth_token_ttl_hours}
+111                       onChange={(e) =>
+112                          setConfigs({
+113                             ...configs,
+114                             auth_token_ttl_hours: parseInt(e.target.value),
+115                          })
+116                       }
+117                    />
+118                 </div>
+119                 <div className="mb-2">
+120                    <label>{t("http_timeout_seconds")}:</label>
+121                    <input
+122                       type="number"
+123                       className="ml-2 border px-1 w-16"
+124                       value={configs.http_timeout_seconds}
+125                       onChange={(e) =>
+126                          setConfigs({
+127                             ...configs,
+128                             http_timeout_seconds: parseInt(e.target.value),
+129                          })
+130                       }
+131                    />
+132                 </div>
+133                 <button
+134                    onClick={saveConfigs}
+135                    className="px-4 py-1 border rounded hover:bg-gray-100"
+136                 >
+137                    {t("save")}
+138                 </button>
+139              </div>
+140           </div>
+141  
+142           <div className="border p-4 rounded-xl shadow w-3/4">
+143              <div className="flex items-center mb-4">
+144                 <label className="mr-2">{t("clear_if_older_than")}</label>
+145                 <input
+146                    type="number"
+147                    value={clearDays}
+148                    onChange={(e) => setClearDays(parseInt(e.target.value))}
+149                    className="border px-2 w-16 mr-2"
+150                 />
+151                 <button
+152                    onClick={clearLogs}
+153                    className="px-4 py-1 border rounded hover:bg-gray-100"
+154                 >
+155                    {t("clear")}
+156                 </button>
+157              </div>
+158              <table className="w-full border-t text-sm">
+159                 <thead>
+160                    <tr className="bg-gray-100">
+161                       <th className="border px-2 py-1">{t("id")}</th>
+162                       <th className="border px-2 py-1">{t("created_at")}</th>
+163                       <th className="border px-2 py-1">{t("user_id")}</th>
+164                       <th className="border px-2 py-1">{t("actions")}</th>
+165                       <th className="border px-2 py-1">{t("description")}</th>
+166                       <th className="border px-2 py-1">{t("description")}</th>
+167                    </tr>
+168                 </thead>
+169                 <tbody>
+170                    {logsToDisplay.map((log) => (
+171                       <tr key={log.ID}>
+172                          <td className="border px-2 py-1">{log.ID}</td>
+173                          <td className="border px-2 py-1">
+174                             {lang === "en"
+175                                ? new Date(log.CreatedAt).toLocaleString("en-US")
+176                                : new Date(log.CreatedAt).toLocaleString("uk-UA")}
+177                          </td>
+178                          <td className="border px-2 py-1">{log.UserID}</td>
+179                          <td className="border px-2 py-1">{log.ActionType}</td>
+180                          <td className="border px-2 py-1">{log.Description}</td>
+181                          <td className="border px-2 py-1">{log.Success ? "✔️" : "❌"}</td>
+182                       </tr>
+183                    ))}
+184                 </tbody>
+185              </table>
+186              <div className="flex justify-center mt-4 space-x-2">
+187                 <button
+188                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+189                    className="px-3 py-1 border rounded hover:bg-gray-100"
+190                    disabled={currentPage === 1}
+191                 >
+192                    {t("prev")}
+193                 </button>
+194  
+195                 {[...Array(totalPages)].map((_, idx) => {
+196                    const page = idx + 1;
+197                    if (
+198                       page === 1 ||
+199                       page === totalPages ||
+200                       (page >= currentPage - 1 && page <= currentPage + 1)
+201                    ) {
+202                       return (
+203                          <button
+204                             key={idx}
+205                             onClick={() => setCurrentPage(page)}
+206                             className={`px-3 py-1 border rounded ${currentPage === page ? "bg-blue-500 text-white" : "hover:bg-gray-100"}`}
+207                          >
+208                             {page}
+209                          </button>
+210                       );
+211                    } else if (
+212                       (page === currentPage - 2 || page === currentPage + 2)
+213                    ) {
+214                       return <span key={idx} className="px-2">...</span>;
+215                    } else {
+216                       return null;
+217                    }
+218                 })}
+219  
+220                 <button
+221                    onClick={() =>
+222                       setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+223                    }
+224                    className="px-3 py-1 border rounded hover:bg-gray-100"
+225                    disabled={currentPage === totalPages}
+226                 >
+227                    {t("next")}
+228                 </button>
+229              </div>
+230           </div>
+231        </div>
+232     );
+233  };
+234  
+235  export default SystemAdminDashboard;
+
+В.5 Адміністративна панель. Адміністратор баз даних.
+
+GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab3/pzpi-22-3-shpak-denys-lab3/wayra/src/pages/DBAdminDashboard.js
+
+  1  import { useEffect, useState } from "react";
+  2  import axios from "axios";
+  3  
+  4  const API_BASE = "http://localhost:8081/admin";
+  5  
+  6  const DBAdminDashboard = ({ t, i18n }) => {
+  7     const token = localStorage.getItem("token");
+  8     const authHeader = { headers: { Authorization: `Bearer ${token}` } };
+  9     const [status, setStatus] = useState({
+ 10        DatabaseSizeMB: 0,
+ 11        ActiveConnections: 0,
+ 12        LastBackupTime: "",
+ 13     });
+ 14     const [backupPath, setBackupPath] = useState("");
+ 15     const [message, setMessage] = useState("");
+ 16     const [loading, setLoading] = useState(true);
+ 17     const lang = i18n.language;
+ 18  
+ 19     const fetchDBStatus = async () => {
+ 20        try {
+ 21           const res = await axios.get(`${API_BASE}/db-status`, authHeader);
+ 22           setStatus(res.data);
+ 23        } catch (error) {
+ 24           console.error("Error get DB status:", error);
+ 25        }
+ 26     };
+ 27  
+ 28     const performBackup = async () => {
+ 29        try {
+ 30           const res = await axios.post(
+ 31              `${API_BASE}/backup`,
+ 32              { backup_path: backupPath },
+ 33              authHeader
+ 34           );
+ 35           setMessage(res.data.message);
+ 36           fetchDBStatus();
+ 37        } catch (error) {
+ 38           console.error("Backup error:", error);
+ 39        }
+ 40     };
+ 41  
+ 42     const performRestore = async () => {
+ 43        try {
+ 44           const res = await axios.post(
+ 45              `${API_BASE}/restore`,
+ 46              { backup_path: backupPath },
+ 47              authHeader
+ 48           );
+ 49           setMessage(res.data.message);
+ 50           fetchDBStatus();
+ 51        } catch (error) {
+ 52           console.error("Restore error:", error);
+ 53        }
+ 54     };
+ 55  
+ 56     const optimizeDB = async () => {
+ 57        try {
+ 58           const res = await axios.post(`${API_BASE}/optimize`, {}, authHeader);
+ 59           setMessage(res.data.message);
+ 60        } catch (error) {
+ 61           console.error("Optimize error:", error);
+ 62        }
+ 63     };
+ 64  
+ 65     useEffect(() => {
+ 66        const fetchAll = async () => {
+ 67           await fetchDBStatus();
+ 68           setLoading(false);
+ 69        };
+ 70        fetchAll();
+ 71     }, []);
+ 72  
+ 73     if (loading) return <div className="p-4 text-center text-lg">{t("loading")}</div>;
+ 74  
+ 75     return (
+ 76        <div className="p-4 flex flex-col gap-4">
+ 77           <h1 className="text-2xl font-bold">{t("database_admin_dashboard")}</h1>
+ 78  
+ 79           {message && (
+ 80              <div className="p-3 bg-green-100 border border-green-300 rounded">
+ 81                 ✅ {message}
+ 82              </div>
+ 83           )}
+ 84  
+ 85           <div className="border p-4 rounded-xl shadow bg-white">
+ 86              <h2 className="text-xl font-semibold mb-2">📊 {t("database_info")}</h2>
+ 87              <p><strong>{t("database_size")}:</strong> {status.DatabaseSizeMB} MB</p>
+ 88              <p><strong>{t("active_connection")}:</strong> {status.ActiveConnections}</p>
+ 89              <p><strong>{t("last_backup")}:</strong> {status.LastBackupTime ? (
+ 90                    lang === "en" ? new Date(status.LastBackupTime).toLocaleString("en-US") : new Date(status.LastBackupTime).toLocaleString("uk-UA")
+ 91                 ) : "N/A"}</p>
+ 92                 
+ 93              <button
+ 94                 onClick={fetchDBStatus}
+ 95                 className="mt-2 px-4 py-1 border rounded hover:bg-gray-100"
+ 96              >
+ 97                 {t("refresh_info")}
+ 98              </button>
+ 99           </div>
+100  
+101           <div className="border p-4 rounded-xl shadow bg-white">
+102              <h2 className="text-xl font-semibold mb-2">💾 {t("backup_restore")}</h2>
+103              <label className="block mb-2">
+104                 {t("backup_path")}:
+105                 <input
+106                    type="text"
+107                    value={backupPath}
+108                    onChange={(e) => setBackupPath(e.target.value)}
+109                    placeholder="Enter folder path"
+110                    className="ml-2 border px-2 py-1 w-1/2"
+111                 />
+112              </label>
+113              <div className="flex gap-4 mt-2">
+114                 <button
+115                    onClick={performBackup}
+116                    className="px-4 py-1 border rounded hover:bg-gray-100"
+117                 >
+118                    {t("create_backup")}
+119                 </button>
+120                 <button
+121                    onClick={performRestore}
+122                    className="px-4 py-1 border rounded hover:bg-gray-100"
+123                 >
+124                    {t("restore_from_backup")}
+125                 </button>
+126              </div>
+127           </div>
+128  
+129           <div className="border p-4 rounded-xl shadow bg-white">
+130              <h2 className="text-xl font-semibold mb-2">🛠️ {t("optimize_database")}</h2>
+131              <button
+132                 onClick={optimizeDB}
+133                 className="px-4 py-1 border rounded hover:bg-gray-100"
+134              >
+135                 {t("run_optimization")}
+136              </button>
+137           </div>
+138  
+139   
+140        </div>
+141     );
+142  };
+143  
+144  export default DBAdminDashboard;
+
 
 
