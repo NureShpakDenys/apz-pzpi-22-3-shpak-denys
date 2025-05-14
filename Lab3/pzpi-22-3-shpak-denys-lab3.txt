@@ -84,7 +84,7 @@
 
 GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab3/pzpi-22-3-shpak-denys-lab3/wayra/src/pages/DeliveryDetails.js
 
-   1  import { useEffect, useState } from "react";
+  1  import { useEffect, useState } from "react";
   2  import { useParams } from "react-router-dom";
   3  import axios from "axios";
   4  import { useNavigate } from "react-router-dom";
