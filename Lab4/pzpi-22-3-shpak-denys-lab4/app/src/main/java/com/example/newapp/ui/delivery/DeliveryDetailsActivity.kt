@@ -1,4 +1,3 @@
-// In a new file: ui/delivery/DeliveryDetailsActivity.kt
 package com.example.newapp.ui.delivery
 
 import android.content.Intent
