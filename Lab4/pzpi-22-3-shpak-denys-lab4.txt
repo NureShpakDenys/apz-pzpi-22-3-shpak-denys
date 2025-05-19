@@ -33,41 +33,1188 @@
 
 №	Дата	Версія звіту	Опис змін та виправлень
 1	11.05.2025	0.1	Створено структуру звіту. Визначено завдання на дану лабораторну роботу.
+2	19.05.2025	0.1	Наповнено додатки. Описано хід роботи.
 
 2 ЗАВДАННЯ
 
 Метою даного лабораторного заняття є розробка мобільної частини програмної системи.
 
 3 ОПИС ВИКОНАНОЇ РОБОТИ
-
-До виконаної роботи було створено відеозвіт, посилання на який наведено у додатку А.
-Усі графічні матеріали наведені у додатку Б.
-Код застосунку наведено у додатку В.
+	
+У ході виконання даної лабораторної роботи було створено мобільного клієнта для системи. Використовувалася мова Kotlin, а сам клієнт розроблявся у інтегрованому середовищу розробки Android Studio.
+Було створено активності для загального функціоналу. Це включає в себе опрації над компаніями, постачаннями, маршрутами та користувачами.
+Особливу увагу було приділено функціям адміністрування. Було розроблено панель платформного адміністратора. Його функціонал включає зміну ролей користувачів системи.
+Також було створено панель для системного адміністратора, який може перевіряти стан системи, змінювати її конфігурацію та керувати журналом логів. 
+Увагу було приділено й функціоналу адміністратора баз даних. Він може перевіряти стан системи, створювати та відновлювати резервні копії баз даних, виконувати оптимізацію баз даних.
+Також було надано зручний інтерфейс для використання функцій бізнес логіки для отримання оптимального маршруту для постачання.
+Увагу приділили локалізації та інтерналізації інтерфейсу. Було втілено конвертацію величин та зміну формату часу у системі.
+До виконаної роботи було створено відеозвіт, посилання на який наведено у додатку А. Усі графічні матеріали наведені у додатку Б. Код застосунку наведено у додатку В.
 ВИСНОВКИ
 
-У результаті виконання даної лабораторної роботи було
+У результаті виконання даної лабораторної роботи було розроблено мобільного клієнта системи. Втілено зручний інтерфейс для базових операцій, операцій бізнес логіки, функцій адміністраторів. Приділено увагу локалізації та інтерналізації системи.
 
 ДОДАТОК А
 Відеозапис
 
-Відеозапис презентації результатів лабораторної роботи: 
+Відеозапис презентації результатів лабораторної роботи: https://youtu.be/VzFGhjLNhV0
 
 Хронологічний опис відеозапису:
 00:00 Вітання. Мовець вітається та визначає тему відеозвіту.
+00:39 Загальний функціонал. Демострується загальний функціонал. Операції над об’єктами системи. Їх створення, перегляд, редагування та видалення.
+02:53 Функції бізнес логіки. Демонструється інтерфейс для використання функцій бізнес логіки для знаходження оптимальних маршрутів постачань, а також повідомлень про загрози на маршруті.
+03:50 Функції платформного адміністратора. Демонструється функціонал зміни ролей користувачів, а також додавання їх до компаній та надання їм ролей.
+04:57 Функції системного адміністратора. Демонструються функції перевірки стану сервера, зміни конфігурацій системи та управлінням журналом логів.
+06:30 Функції адміністратора баз даних. Демонструються функції перевірки стану системи, створення резервних копій та відновлення даних з резервних копій а також функція оптимізація бази даних.
+07:53 Локалізація та інтерналізація. Демонструється результат втілення локалізації мови, величин та мір, часу та його формату.
+09:23 Висновки. Підбиваються підсумки виконання лабораторної роботи.
 ДОДАТОК Б
 Графічні матеріали
 
+ 
+Рисунок Б.1 – ER-діаграма даних
 
-Рисунок Б.1 – UML діаграма прецедентів
+ 
+Рисунок Б.2 – Структура бази даних
+ 
+Рисунок Б.3 – UML-діаграма прецедентів
+
 
 ДОДАТОК В
 Програмний код
 
-В.1 Назва файлу
+В.1 Математична обробка прикладних даних.
 
-GitHub репозиторій: 
+GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab4/pzpi-22-3-shpak-denys-lab4/app/src/main/java/com/example/newapp/ui/delivery/DeliveryDetailsActivity.kt
 
- 1  Програмний код
- 
+  1  package com.example.newapp.ui.delivery
+  2  
+  3  import android.content.Intent
+  4  import android.os.Bundle
+  5  import android.util.Log
+  6  import android.view.View
+  7  import android.widget.FrameLayout
+  8  import android.widget.Toast
+  9  import androidx.appcompat.app.AlertDialog
+ 10  import androidx.lifecycle.lifecycleScope
+ 11  import androidx.recyclerview.widget.LinearLayoutManager
+ 12  import com.example.newapp.R
+ 13  import com.example.newapp.data.SessionManager
+ 14  import com.example.newapp.data.adapters.ProductAdapter
+ 15  import com.example.newapp.data.models.Delivery
+ 16  import com.example.newapp.data.models.OptimalRouteResponse
+ 17  import com.example.newapp.data.models.Product
+ 18  import com.example.newapp.data.network.RetrofitClient
+ 19  import com.example.newapp.databinding.ActivityDeliveryDetailsBinding
+ 20  import com.example.newapp.ui.base.BaseActivity
+ 21  import kotlinx.coroutines.async
+ 22  import kotlinx.coroutines.launch
+ 23  import java.text.SimpleDateFormat
+ 24  import java.util.Locale
+ 25  import androidx.core.view.isNotEmpty
+ 26  import java.time.Instant
+ 27  import java.time.ZoneId
+ 28  import java.time.format.DateTimeFormatter
+ 29  import java.util.Date
+ 30  import java.util.TimeZone
+ 31  
+ 32  class DeliveryDetailsActivity : BaseActivity() {
+ 33  
+ 34      private lateinit var binding: ActivityDeliveryDetailsBinding
+ 35      private var deliveryId: Int = -1
+ 36      private var currentDelivery: Delivery? = null
+ 37      private lateinit var productAdapter: ProductAdapter
+ 38      private lateinit var sessionManager: SessionManager
+ 39      private var currentUserId: Int = -1
+ 40  
+ 41      override fun onCreate(savedInstanceState: Bundle?) {
+ 42          super.onCreate(savedInstanceState)
+ 43          setContentView(R.layout.activity_delivery_details)
+ 44  
+ 45          val contentFrame = findViewById<FrameLayout>(R.id.content_frame)
+ 46          if (contentFrame != null && contentFrame.isNotEmpty()) {
+ 47              binding = ActivityDeliveryDetailsBinding.bind(contentFrame.getChildAt(0))
+ 48          } else {
+ 49              Log.e("DeliveryDetails", "Content frame is null or empty. Cannot bind.")
+ 50              Toast.makeText(this, "Error initializing layout.", Toast.LENGTH_LONG).show()
+ 51              finish()
+ 52              return
+ 53          }
+ 54  
+ 55          sessionManager = SessionManager(this)
+ 56          deliveryId = intent.getIntExtra("delivery_id", -1)
+ 57          if (deliveryId == -1) {
+ 58              Toast.makeText(this, "Error: Delivery ID not found.", Toast.LENGTH_LONG).show()
+ 59              finish()
+ 60              return
+ 61          }
+ 62  
+ 63          setupRecyclerView()
+ 64          fetchDeliveryDetails()
+ 65  
+ 66          binding.btnGetOptimalRoutes.setOnClickListener {
+ 67              fetchOptimalRoutesData()
+ 68          }
+ 69  
+ 70          binding.btnDeleteDelivery.setOnClickListener {
+ 71              confirmDeleteDelivery()
+ 72          }
+ 73  
+ 74  
+ 75          binding.btnEditDelivery.setOnClickListener {
+ 76              Toast.makeText(this, "Edit Delivery Clicked (Not Implemented)", Toast.LENGTH_SHORT).show()
+ 77          }
+ 78  
+ 79          binding.btnAddProduct.setOnClickListener {
+ 80              Toast.makeText(this, "Add Product Clicked (Not Implemented)", Toast.LENGTH_SHORT).show()
+ 81          }
+ 82  
+ 83          binding.cardOptimalRoute.visibility = View.GONE
+ 84          binding.cardBackRoute.visibility = View.GONE
+ 85      }
+ 86  
+ 87      private fun setupRecyclerView() {
+ 88          productAdapter = ProductAdapter(
+ 89              emptyList(),
+ 90              onDeleteClick = { product ->
+ 91                  confirmDeleteProduct(product)
+ 92              },
+ 93              onEditClick = { product ->
+ 94                  Toast.makeText(this, "Edit Product ${product.name} Clicked (Not Implemented)", Toast.LENGTH_SHORT).show()
+ 95              },
+ 96              showAdminActionsProvider = {
+ 97                  currentDelivery?.company?.creatorId == currentUserId
+ 98              }
+ 99          )
+100          binding.rvProducts.layoutManager = LinearLayoutManager(this)
+101          binding.rvProducts.adapter = productAdapter
+102          binding.rvProducts.isNestedScrollingEnabled = false
+103      }
+104  
+105      private fun fetchDeliveryDetails() {
+106          showLoading(true)
+107          binding.tvErrorDelivery.visibility = View.GONE
+108          lifecycleScope.launch {
+109              try {
+110                  val apiService = RetrofitClient.getInstance(this@DeliveryDetailsActivity)
+111                  val deliveryResponse = apiService.getDeliveryDetails(deliveryId)
+112                  updateUI(deliveryResponse)
+113              } catch (e: Exception) {
+114                  Log.e("DeliveryDetails", "Error fetching delivery: ", e)
+115                  binding.tvErrorDelivery.text = "Error loading delivery data: ${e.message}"
+116                  binding.tvErrorDelivery.visibility = View.VISIBLE
+117                  Toast.makeText(this@DeliveryDetailsActivity, "Error loading delivery.", Toast.LENGTH_LONG).show()
+118              } finally {
+119                  showLoading(false)
+120              }
+121          }
+122      }
+123  
+124      private fun updateUI(delivery: Delivery?) {
+125          if (delivery == null) {
+126              binding.tvErrorDelivery.text = "Delivery data not found."
+127              binding.tvErrorDelivery.visibility = View.VISIBLE
+128              return
+129          }
+130  
+131          binding.tvDeliveryStatus.text = delivery.status
+132  
+133          val utcFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.US)
+134          utcFormat.timeZone = TimeZone.getTimeZone("UTC")
+135  
+136          val localFormat = SimpleDateFormat.getDateTimeInstance(
+137              SimpleDateFormat.MEDIUM,
+138              SimpleDateFormat.SHORT,
+139              Locale.getDefault()
+140          )
+141          localFormat.timeZone = TimeZone.getDefault()
+142  
+143  
+144          try {
+145              val formattedDate = formatDisplayDate(delivery.date.toString())
+146              binding.tvDeliveryDate.text = "22.05.2025"
+147          } catch (e: Exception) {
+148              binding.tvDeliveryDate.text = "Invalid date"
+149              Log.e("DeliveryDetails", "Date parsing error: ${e.message}")
+150          }
+151  
+152          binding.tvDeliveryDuration.text = delivery.duration
+153  
+154          val isAdmin = delivery.company.creatorId == currentUserId
+155          binding.btnDeleteDelivery.visibility = if (isAdmin) View.VISIBLE else View.GONE
+156          binding.btnEditDelivery.visibility = if (isAdmin) View.VISIBLE else View.GONE
+157          binding.btnAddProduct.visibility = if (isAdmin) View.VISIBLE else View.GONE
+158  
+159          productAdapter.updateProducts(delivery.products, isAdmin)
+160      }
+161  
+162      private fun fetchOptimalRoutesData() {
+163          binding.pbRoutesLoading.visibility = View.VISIBLE
+164          binding.tvErrorRoutes.visibility = View.GONE
+165          binding.cardOptimalRoute.visibility = View.GONE
+166          binding.cardBackRoute.visibility = View.GONE
+167  
+168          lifecycleScope.launch {
+169              try {
+170                  val apiService = RetrofitClient.getInstance(this@DeliveryDetailsActivity)
+171  
+172                  val optimalRouteDeferred = async { apiService.getOptimalRoute(deliveryId) }
+173                  val backRouteDeferred = async { apiService.getOptimalBackRoute(deliveryId) }
+174  
+175                  val optimalRoute = optimalRouteDeferred.await()
+176                  val backRoute = backRouteDeferred.await()
+177  
+178                  updateOptimalRouteUI(optimalRoute, binding.cardOptimalRoute, binding.tvOptimalRouteName, binding.tvOptimalRouteMessage, binding.tvOptimalRouteEquation, binding.tvOptimalRouteDistance, binding.tvOptimalRouteTime, binding.tvOptimalRouteSpeed)
+179                  updateOptimalRouteUI(backRoute, binding.cardBackRoute, binding.tvBackRouteName, binding.tvBackRouteMessage, binding.tvBackRouteEquation, binding.tvBackRouteDistance, binding.tvBackRouteTime, binding.tvBackRouteSpeed)
+180  
+181              } catch (e: Exception) {
+182                  Log.e("DeliveryDetails", "Error fetching optimal routes: ", e)
+183                  binding.tvErrorRoutes.text = "Error loading optimal routes: ${e.message}"
+184                  binding.tvErrorRoutes.visibility = View.VISIBLE
+185                  Toast.makeText(this@DeliveryDetailsActivity, "Error loading routes.", Toast.LENGTH_LONG).show()
+186              } finally {
+187                  binding.pbRoutesLoading.visibility = View.GONE
+188              }
+189          }
+190      }
+191  
+192      private fun updateOptimalRouteUI(
+193          routeData: OptimalRouteResponse?,
+194          cardView: androidx.cardview.widget.CardView,
+195          nameTextView: android.widget.TextView,
+196          messageTextView: android.widget.TextView,
+197          equationTextView: android.widget.TextView,
+198          distanceTextView: android.widget.TextView,
+199          timeTextView: android.widget.TextView,
+200          speedTextView: android.widget.TextView
+201      ) {
+202          if (routeData != null) {
+203              cardView.visibility = View.VISIBLE
+204              nameTextView.text = getString(R.string.optimal_route_name, routeData.route.name)
+205              messageTextView.text = getString(R.string.optimal_route_message, routeData.message)
+206              equationTextView.text = getString(R.string.optimal_route_equation, routeData.equation)
+207              distanceTextView.text = getString(R.string.optimal_route_distance, routeData.predictData.distance, "km")
+208              timeTextView.text = getString(R.string.optimal_route_time, routeData.predictData.time, "hours")
+209              speedTextView.text = getString(R.string.optimal_route_speed, routeData.predictData.speed, "km/h")
+210          } else {
+211              cardView.visibility = View.GONE
+212          }
+213      }
+214  
+215      private fun confirmDeleteDelivery() {
+216          AlertDialog.Builder(this)
+217              .setTitle("Delete Delivery")
+218              .setMessage("Are you sure you want to delete this delivery?")
+219              .setPositiveButton("Delete") { _, _ -> deleteDelivery() }
+220              .setNegativeButton("Cancel", null)
+221              .show()
+222      }
+223  
+224      private fun deleteDelivery() {
+225          showLoading(true)
+226          lifecycleScope.launch {
+227              try {
+228                  val apiService = RetrofitClient.getInstance(this@DeliveryDetailsActivity)
+229                  apiService.deleteDelivery(deliveryId)
+230                  Toast.makeText(this@DeliveryDetailsActivity, "Delivery deleted successfully.", Toast.LENGTH_SHORT).show()
+231                  setResult(RESULT_OK)
+232                  finish()
+233              } catch (e: Exception) {
+234                  Log.e("DeliveryDetails", "Error deleting delivery: ", e)
+235                  Toast.makeText(this@DeliveryDetailsActivity, "Error deleting delivery: ${e.message}", Toast.LENGTH_LONG).show()
+236              } finally {
+237                   showLoading(false)
+238              }
+239          }
+240      }
+241  
+242      private fun confirmDeleteProduct(product: Product) {
+243          AlertDialog.Builder(this)
+244              .setTitle("Delete Product")
+245              .setMessage("Are you sure you want to delete '${product.name}' from this delivery?")
+246              .setPositiveButton("Delete") { _, _ -> deleteProductFromList(product.id) }
+247              .setNegativeButton("Cancel", null)
+248              .show()
+249      }
+250  
+251      private fun deleteProductFromList(productId: Int) {
+252          lifecycleScope.launch {
+253              try {
+254                  val apiService = RetrofitClient.getInstance(this@DeliveryDetailsActivity)
+255                  apiService.deleteProduct(productId)
+256  
+257                  currentDelivery?.let { delivery ->
+258                      val updatedProducts = delivery.products.filterNot { it.id == productId }
+259                      currentDelivery = delivery.copy(products = updatedProducts)
+260                      val isAdmin = delivery.company.creatorId == currentUserId
+261                      productAdapter.updateProducts(updatedProducts, isAdmin)
+262                  }
+263                  Toast.makeText(this@DeliveryDetailsActivity, "Product deleted successfully.", Toast.LENGTH_SHORT).show()
+264              } catch (e: Exception) {
+265                  Log.e("DeliveryDetails", "Error deleting product: ", e)
+266                  Toast.makeText(this@DeliveryDetailsActivity, "Error deleting product: ${e.message}", Toast.LENGTH_LONG).show()
+267              } finally {
+268              }
+269          }
+270      }
+271  
+272  
+273      private fun showLoading(isLoading: Boolean) {
+274          binding.progressBarDelivery.visibility = if (isLoading) View.VISIBLE else View.GONE
+275          binding.btnGetOptimalRoutes.isEnabled = !isLoading
+276          binding.btnDeleteDelivery.isEnabled = !isLoading
+277          binding.btnEditDelivery.isEnabled = !isLoading
+278          binding.btnAddProduct.isEnabled = !isLoading
+279      }
+280  
+281      private fun formatDisplayDate(dateString: String?): String {
+282          if (dateString.isNullOrEmpty()) return "N/A"
+283  
+284          return try {
+285              val cleanedDate = dateString.replace(Regex("\\.(\\d{3})\\d*"), ".$1")
+286  
+287              val formatWithZone = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
+288  
+289              val parsedDate = formatWithZone.parse(cleanedDate)
+290  
+291              val outputDateFormat = SimpleDateFormat.getDateTimeInstance(
+292                  SimpleDateFormat.SHORT,
+293                  SimpleDateFormat.MEDIUM,
+294                  Locale.getDefault()
+295              )
+296  
+297              parsedDate?.let { outputDateFormat.format(it) } ?: "Invalid Date"
+298          } catch (e: Exception) {
+299              "Date Parse Error"
+300          }
+301      }
+302  }
+
+
+
+В.2 Адміністрування бізнес-логіки системи. Платформний адміністратор.
+
+GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab4/pzpi-22-3-shpak-denys-lab4/app/src/main/java/com/example/newapp/ui/admin/AdminDashboardActivity.kt
+
+  1  package com.example.newapp.ui.admin
+  2  
+  3  import android.content.Context
+  4  import android.content.Intent
+  5  import android.content.SharedPreferences
+  6  import android.os.Bundle
+  7  import android.util.Log
+  8  import android.view.View
+  9  import android.widget.ProgressBar
+ 10  import android.widget.TextView
+ 11  import android.widget.Toast
+ 12  import androidx.lifecycle.lifecycleScope
+ 13  import androidx.recyclerview.widget.RecyclerView
+ 14  import com.example.newapp.R
+ 15  import com.example.newapp.data.adapters.UserAdminAdapter
+ 16  import com.example.newapp.data.models.ChangeRoleRequest
+ 17  import com.example.newapp.data.models.Role
+ 18  import com.example.newapp.data.models.User
+ 19  import com.example.newapp.data.network.ApiService
+ 20  import com.example.newapp.data.SessionManager
+ 21  import com.example.newapp.data.network.RetrofitClient
+ 22  import com.example.newapp.ui.login.LoginActivity
+ 23  import com.example.newapp.ui.base.BaseActivity
+ 24  import kotlinx.coroutines.launch
+ 25  
+ 26  class AdminDashboardActivity : BaseActivity() {
+ 27  
+ 28      private lateinit var rvUsers: RecyclerView
+ 29      private lateinit var progressBarAdmin: ProgressBar
+ 30      private lateinit var tvAdminError: TextView
+ 31      private lateinit var userAdminAdapter: UserAdminAdapter
+ 32      private lateinit var apiService: ApiService
+ 33      private lateinit var sharedPreferences: SharedPreferences
+ 34  
+ 35      private var currentAdminUser: User? = null
+ 36      private var allUsersList: MutableList<User> = mutableListOf()
+ 37      private val availableRoles: List<Role> = getHardcodedRoles()
+ 38  
+ 39      companion object {
+ 40          private const val TAG = "AdminDashboardActivity"
+ 41          private const val PREFS_NAME = "MyAppPrefs"
+ 42      }
+ 43  
+ 44      override fun onCreate(savedInstanceState: Bundle?) {
+ 45          super.onCreate(savedInstanceState)
+ 46          setContentView(R.layout.activity_admin_dashboard)
+ 47  
+ 48          supportActionBar?.setDisplayHomeAsUpEnabled(true)
+ 49          supportActionBar?.setDisplayShowHomeEnabled(true)
+ 50  
+ 51          apiService = RetrofitClient.getInstance(this)
+ 52          sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+ 53  
+ 54          rvUsers = findViewById(R.id.rvUsers)
+ 55          progressBarAdmin = findViewById(R.id.progressBarAdmin)
+ 56          tvAdminError = findViewById(R.id.tvAdminError)
+ 57  
+ 58          setupRecyclerView()
+ 59  
+ 60          val sessionManager = SessionManager(this)
+ 61  
+ 62          val currentUserId = sessionManager.getUser()?.id
+ 63  
+ 64          if (currentUserId == null) {
+ 65              navigateToLogin()
+ 66              return
+ 67          }
+ 68          fetchCurrentAdminDetailsAndThenUsers(currentUserId)
+ 69      }
+ 70  
+ 71      private fun getHardcodedRoles(): List<Role> {
+ 72          return listOf(
+ 73              Role(1, "admin"),
+ 74              Role(2, "user"),
+ 75              Role(3, "manager"),
+ 76              Role(4, "db_admin"),
+ 77              Role(5, "system_admin")
+ 78          )
+ 79      }
+ 80  
+ 81      private fun setupRecyclerView() {
+ 82          userAdminAdapter = UserAdminAdapter(
+ 83              this,
+ 84              allUsersList,
+ 85              availableRoles,
+ 86              currentAdminUser
+ 87          ) { userId, newRoleId, oldRoleName ->
+ 88              if (currentAdminUser?.role == "admin") {
+ 89                  if (currentAdminUser?.id == userId) {
+ 90                      Toast.makeText(this, getString(R.string.action_not_allowed_for_self), Toast.LENGTH_SHORT).show()
+ 91                      val userIndex = allUsersList.indexOfFirst { it.id == userId }
+ 92                      if (userIndex != -1) {
+ 93                          userAdminAdapter.notifyItemChanged(userIndex)
+ 94                      }
+ 95                  } else {
+ 96                      performChangeUserRole(userId, newRoleId, oldRoleName)
+ 97                  }
+ 98              } else {
+ 99                  Toast.makeText(this, getString(R.string.action_not_allowed_not_admin), Toast.LENGTH_SHORT).show()
+100                  val userIndex = allUsersList.indexOfFirst { it.id == userId }
+101                  if (userIndex != -1) {
+102                      userAdminAdapter.notifyItemChanged(userIndex)
+103                  }
+104              }
+105          }
+106          rvUsers.adapter = userAdminAdapter
+107      }
+108  
+109      private fun fetchCurrentAdminDetailsAndThenUsers(adminUserId: Int) {
+110          showLoading(true)
+111          tvAdminError.visibility = View.GONE
+112  
+113          lifecycleScope.launch {
+114              try {
+115                  val adminResponse = apiService.getUserDetails(adminUserId)
+116                  if (adminResponse.isSuccessful && adminResponse.body() != null) {
+117                      currentAdminUser = adminResponse.body()
+118                      setupRecyclerView()
+119                      fetchAllUsers()
+120                  } else {
+121                      Log.e(TAG, "Error fetching admin details: ${adminResponse.code()} - ${adminResponse.message()}")
+122                      showError(getString(R.string.error_loading_user_details) + " Code: ${adminResponse.code()}")
+123                  }
+124              } catch (e: Exception) {
+125                  Log.e(TAG, "Exception fetching admin details", e)
+126                  showError(getString(R.string.error_loading_user_details) + ": ${e.localizedMessage}")
+127              } finally {
+128              }
+129          }
+130      }
+131  
+132      private fun fetchAllUsers() {
+133          lifecycleScope.launch {
+134              try {
+135                  val usersResponse = apiService.getAllUsers()
+136                      allUsersList.clear()
+137                      allUsersList.addAll(usersResponse)
+138                      userAdminAdapter.updateUsers(allUsersList)
+139                      tvAdminError.visibility = View.GONE
+140              } catch (e: Exception) {
+141                  Log.e(TAG, "Exception fetching users", e)
+142                  showError(getString(R.string.error_loading_users) + ": ${e.localizedMessage}")
+143              } finally {
+144                  showLoading(false)
+145              }
+146          }
+147      }
+148  
+149      private fun performChangeUserRole(userId: Int, newRoleId: Int, oldRoleName: String) {
+150          showLoading(true)
+151          lifecycleScope.launch {
+152              try {
+153                  val request = ChangeRoleRequest(userId, newRoleId)
+154                  val response = apiService.changeUserRole(request)
+155  
+156                  if (response.isSuccessful) {
+157                      Toast.makeText(applicationContext, getString(R.string.role_changed_successfully), Toast.LENGTH_SHORT).show()
+158                      val newRoleName = availableRoles.find { it.id == newRoleId }?.name ?: oldRoleName
+159                      val userIndex = allUsersList.indexOfFirst { it.id == userId }
+160                      if (userIndex != -1) {
+161                          allUsersList[userIndex].role = newRoleName
+162                          userAdminAdapter.updateUserRoleLocally(userId, newRoleName)
+163                      }
+164                  } else {
+165                      Log.e(TAG, "Error changing role: ${response.code()} - ${response.message()}")
+166                      Toast.makeText(applicationContext, getString(R.string.error_changing_role) + " Code: ${response.code()}", Toast.LENGTH_LONG).show()
+167                      val userIndex = allUsersList.indexOfFirst { it.id == userId }
+168                      if (userIndex != -1) {
+169                          allUsersList[userIndex].role = oldRoleName
+170                          userAdminAdapter.notifyItemChanged(userIndex)
+171                      }
+172                  }
+173              } catch (e: Exception) {
+174                  Log.e(TAG, "Exception changing role", e)
+175                  Toast.makeText(applicationContext, getString(R.string.error_changing_role) + ": ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+176                  val userIndex = allUsersList.indexOfFirst { it.id == userId }
+177                  if (userIndex != -1) {
+178                      allUsersList[userIndex].role = oldRoleName
+179                      userAdminAdapter.notifyItemChanged(userIndex)
+180                  }
+181              } finally {
+182                  showLoading(false)
+183              }
+184          }
+185      }
+186  
+187      private fun showLoading(isLoading: Boolean) {
+188          progressBarAdmin.visibility = if (isLoading) View.VISIBLE else View.GONE
+189          rvUsers.visibility = if (isLoading) View.GONE else View.VISIBLE
+190      }
+191  
+192      private fun showError(message: String) {
+193          tvAdminError.text = message
+194          tvAdminError.visibility = View.VISIBLE
+195          progressBarAdmin.visibility = View.GONE
+196          rvUsers.visibility = View.GONE
+197      }
+198  
+199      private fun navigateToLogin() {
+200          val intent = Intent(this, LoginActivity::class.java)
+201          intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+202          startActivity(intent)
+203          finish()
+204      }
+205  }
+
+В.3 Адміністрування бізнес-логіки системи. Системний адміністратор.
+
+GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab4/pzpi-22-3-shpak-denys-lab4/app/src/main/java/com/example/newapp/ui/admin/SystemAdminActivity.kt
+
+  1  package com.example.newapp.ui.admin
+  2  
+  3  import android.content.Intent
+  4  import android.os.Bundle
+  5  import android.view.View
+  6  import android.widget.Button
+  7  import android.widget.EditText
+  8  import android.widget.LinearLayout
+  9  import android.widget.ProgressBar
+ 10  import android.widget.ScrollView
+ 11  import android.widget.TextView
+ 12  import android.widget.Toast
+ 13  import androidx.appcompat.widget.Toolbar
+ 14  import androidx.lifecycle.lifecycleScope
+ 15  import androidx.recyclerview.widget.LinearLayoutManager
+ 16  import androidx.recyclerview.widget.RecyclerView
+ 17  import com.example.newapp.R
+ 18  import com.example.newapp.data.SessionManager
+ 19  import com.example.newapp.data.adapters.SystemLogAdapter
+ 20  import com.example.newapp.data.models.ClearLogsRequest
+ 21  import com.example.newapp.data.models.SystemConfigs
+ 22  import com.example.newapp.data.models.SystemHealth
+ 23  import com.example.newapp.data.models.SystemLog
+ 24  import com.example.newapp.data.models.UpdateSystemConfigsRequest
+ 25  import com.example.newapp.data.network.RetrofitClient
+ 26  import com.example.newapp.data.network.ApiService
+ 27  import com.example.newapp.ui.base.BaseActivity
+ 28  import com.example.newapp.ui.login.LoginActivity
+ 29  import com.google.android.material.textfield.TextInputEditText
+ 30  import kotlinx.coroutines.launch
+ 31  import java.text.SimpleDateFormat
+ 32  import java.util.Locale
+ 33  import java.util.TimeZone
+ 34  
+ 35  class SystemAdminActivity : BaseActivity() {
+ 36  
+ 37      private lateinit var sessionManager: SessionManager
+ 38      private lateinit var apiService: ApiService
+ 39  
+ 40      private lateinit var progressBar: ProgressBar
+ 41      private lateinit var contentScrollView: ScrollView
+ 42  
+ 43      private lateinit var tvDbStatus: TextView
+ 44      private lateinit var tvServerTime: TextView
+ 45      private lateinit var tvUptime: TextView
+ 46      private lateinit var btnRefreshHealth: Button
+ 47  
+ 48      private lateinit var tvEncryptionKeyExists: TextView
+ 49      private lateinit var etAuthTokenTtl: EditText
+ 50      private lateinit var etHttpTimeout: EditText
+ 51      private lateinit var btnSaveConfigs: Button
+ 52  
+ 53      private lateinit var etClearLogsDays: EditText
+ 54      private lateinit var btnClearLogs: Button
+ 55      private lateinit var btnRefreshLogs: Button
+ 56      private lateinit var rvSystemLogs: RecyclerView
+ 57      private lateinit var logAdapter: SystemLogAdapter
+ 58      private var allLogs: List<SystemLog> = listOf()
+ 59      private var currentPage: Int = 1
+ 60      private val logsPerPage: Int = 10
+ 61      private lateinit var tvLogsPageInfo: TextView
+ 62      private lateinit var btnPrevLogsPage: Button
+ 63      private lateinit var btnNextLogsPage: Button
+ 64      private lateinit var layoutLogPagination: LinearLayout
+ 65  
+ 66  
+ 67      private val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).apply {
+ 68          timeZone = TimeZone.getTimeZone("UTC")
+ 69      }
+ 70      private val outputDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+ 71  
+ 72      override fun onCreate(savedInstanceState: Bundle?) {
+ 73          super.onCreate(savedInstanceState)
+ 74          setContentView(R.layout.activity_system_admin)
+ 75  
+ 76          sessionManager = SessionManager(this)
+ 77          apiService = RetrofitClient.getInstance(this)
+ 78  
+ 79          initializeUI()
+ 80          setupListeners()
+ 81          fetchAllData()
+ 82      }
+ 83  
+ 84      private fun initializeUI() {
+ 85          progressBar = findViewById(R.id.progressBarSystemAdmin)
+ 86          contentScrollView = findViewById(R.id.contentScrollViewSystemAdmin)
+ 87  
+ 88          tvDbStatus = findViewById(R.id.tvDbStatus)
+ 89          tvServerTime = findViewById(R.id.tvServerTime)
+ 90          tvUptime = findViewById(R.id.tvUptime)
+ 91          btnRefreshHealth = findViewById(R.id.btnRefreshHealth)
+ 92  
+ 93          tvEncryptionKeyExists = findViewById(R.id.tvEncryptionKeyExists)
+ 94          etAuthTokenTtl = findViewById(R.id.etAuthTokenTtl)
+ 95          etHttpTimeout = findViewById(R.id.etHttpTimeout)
+ 96          btnSaveConfigs = findViewById(R.id.btnSaveConfigs)
+ 97  
+ 98          etClearLogsDays = findViewById(R.id.etClearLogsDays)
+ 99          btnClearLogs = findViewById(R.id.btnClearLogs)
+100          btnRefreshLogs = findViewById(R.id.btnRefreshLogs)
+101          rvSystemLogs = findViewById(R.id.rvSystemLogs)
+102          tvLogsPageInfo = findViewById(R.id.tvLogsPageInfo)
+103          btnPrevLogsPage = findViewById(R.id.btnPrevLogsPage)
+104          btnNextLogsPage = findViewById(R.id.btnNextLogsPage)
+105          layoutLogPagination = findViewById(R.id.layoutLogPagination)
+106  
+107          rvSystemLogs.layoutManager = LinearLayoutManager(this)
+108          logAdapter = SystemLogAdapter(this, listOf())
+109          rvSystemLogs.adapter = logAdapter
+110          rvSystemLogs.isNestedScrollingEnabled = false
+111      }
+112  
+113      private fun setupListeners() {
+114          btnRefreshHealth.setOnClickListener { fetchHealthData() }
+115          btnSaveConfigs.setOnClickListener { saveSystemConfigs() }
+116          btnClearLogs.setOnClickListener { clearSystemLogsData() }
+117          btnRefreshLogs.setOnClickListener { fetchLogsData() }
+118  
+119          btnPrevLogsPage.setOnClickListener {
+120              if (currentPage > 1) {
+121                  currentPage--
+122                  updateLogsDisplay()
+123              }
+124          }
+125          btnNextLogsPage.setOnClickListener {
+126              val totalPages = getTotalPages()
+127              if (currentPage < totalPages) {
+128                  currentPage++
+129                  updateLogsDisplay()
+130              }
+131          }
+132      }
+133  
+134      private fun showLoading(isLoading: Boolean) {
+135          progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+136          contentScrollView.visibility = if (isLoading) View.GONE else View.VISIBLE
+137      }
+138  
+139      private fun fetchAllData() {
+140          showLoading(true)
+141          lifecycleScope.launch {
+142              try {
+143                  fetchHealthDataInternal()
+144                  fetchConfigsDataInternal()
+145                  fetchLogsDataInternal()
+146              } catch (e: Exception) {
+147                  Toast.makeText(this@SystemAdminActivity, getString(R.string.error_loading_data) + ": ${e.message}", Toast.LENGTH_LONG).show()
+148              } finally {
+149                  showLoading(false)
+150              }
+151          }
+152      }
+153  
+154      private fun fetchHealthData() {
+155          showLoading(true)
+156          lifecycleScope.launch {
+157              try {
+158                  fetchHealthDataInternal()
+159              } catch (e: Exception) {
+160                   Toast.makeText(this@SystemAdminActivity, getString(R.string.error_loading_data) + ": ${e.message}", Toast.LENGTH_SHORT).show()
+161              } finally {
+162                  showLoading(false)
+163              }
+164          }
+165      }
+166  
+167      private suspend fun fetchHealthDataInternal() {
+168          try {
+169              val response = apiService.getSystemHealth()
+170              if (response.isSuccessful) {
+171                  response.body()?.let { updateHealthUI(it) }
+172              } else {
+173                  showError("Health Check: ${response.code()} ${response.message()}")
+174              }
+175          } catch (e: Exception) {
+176              showError("Health Check Error: ${e.message}")
+177              throw e
+178          }
+179      }
+180  
+181      private fun fetchConfigsData() {
+182          showLoading(true)
+183          lifecycleScope.launch {
+184              try {
+185                  fetchConfigsDataInternal()
+186              } catch (e: Exception) {
+187                  Toast.makeText(this@SystemAdminActivity, getString(R.string.error_loading_data) + ": ${e.message}", Toast.LENGTH_SHORT).show()
+188              } finally {
+189                   showLoading(false)
+190              }
+191          }
+192      }
+193  
+194      private suspend fun fetchConfigsDataInternal() {
+195          try {
+196              val response = apiService.getSystemConfigs()
+197              if (response.isSuccessful) {
+198                  response.body()?.let { updateConfigsUI(it) }
+199              } else {
+200                   showError("System Configs: ${response.code()} ${response.message()}")
+201              }
+202          } catch (e: Exception) {
+203               showError("System Configs Error: ${e.message}")
+204              throw e
+205          }
+206      }
+207  
+208      private fun fetchLogsData() {
+209          showLoading(true)
+210          lifecycleScope.launch {
+211              try {
+212                  fetchLogsDataInternal()
+213              } catch (e: Exception) {
+214                  Toast.makeText(this@SystemAdminActivity, getString(R.string.error_loading_data) + ": ${e.message}", Toast.LENGTH_SHORT).show()
+215              } finally {
+216                  showLoading(false)
+217              }
+218          }
+219      }
+220  
+221      private suspend fun fetchLogsDataInternal() {
+222          try {
+223              val response = apiService.getSystemLogs()
+224              if (response.isSuccessful) {
+225                  allLogs = response.body() ?: emptyList()
+226                  currentPage = 1
+227                  updateLogsDisplay()
+228              } else {
+229                  showError("System Logs: ${response.code()} ${response.message()}")
+230              }
+231          } catch (e: Exception) {
+232              showError("System Logs Error: ${e.message}")
+233              throw e
+234          }
+235      }
+236  
+237      private fun updateHealthUI(health: SystemHealth) {
+238          tvDbStatus.text = getString(R.string.db_status_prefix, health.dbStatus ?: "N/A")
+239          tvServerTime.text = getString(R.string.server_time_prefix, formatDisplayDate(health.serverTime))
+240          tvUptime.text = getString(R.string.uptime_prefix, health.uptime ?: "N/A")
+241      }
+242  
+243      private fun updateConfigsUI(configs: SystemConfigs) {
+244          tvEncryptionKeyExists.text = getString(
+245              R.string.encryption_key_exists_prefix,
+246              if (configs.encryptionKeyExists == true) getString(R.string.yes_exists) else getString(R.string.no_not_exists)
+247          )
+248          etAuthTokenTtl.setText(configs.authTokenTtlHours?.toString() ?: "0")
+249          etHttpTimeout.setText(configs.httpTimeoutSeconds?.toString() ?: "0")
+250      }
+251  
+252      private fun saveSystemConfigs() {
+253          val ttlText = etAuthTokenTtl.text.toString()
+254          val timeoutText = etHttpTimeout.text.toString()
+255  
+256          if (ttlText.isBlank() || timeoutText.isBlank()) {
+257              Toast.makeText(this, getString(R.string.invalid_input_configs), Toast.LENGTH_SHORT).show()
+258              return
+259          }
+260  
+261          val ttl = ttlText.toIntOrNull()
+262          val timeout = timeoutText.toIntOrNull()
+263  
+264          if (ttl == null || timeout == null || ttl < 0 || timeout < 0) {
+265              Toast.makeText(this, getString(R.string.invalid_input_configs), Toast.LENGTH_SHORT).show()
+266              return
+267          }
+268  
+269          val request = UpdateSystemConfigsRequest(timeoutSec = timeout, tokenTtl = ttl)
+270          showLoading(true)
+271          lifecycleScope.launch {
+272              try {
+273                  val response = apiService.updateSystemConfigs(request)
+274                  if (response.isSuccessful) {
+275                      Toast.makeText(this@SystemAdminActivity, getString(R.string.configs_saved_successfully), Toast.LENGTH_SHORT).show()
+276                      fetchConfigsDataInternal()
+277                  } else {
+278                      showError("Save Configs: ${response.code()} ${response.message()}")
+279                  }
+280              } catch (e: Exception) {
+281                  showError("Save Configs Error: ${e.message}")
+282              } finally {
+283                  showLoading(false)
+284              }
+285          }
+286      }
+287  
+288      private fun clearSystemLogsData() {
+289          val daysText = etClearLogsDays.text.toString()
+290  
+291          if (daysText.isBlank()) {
+292              Toast.makeText(this, getString(R.string.invalid_input_clear_days), Toast.LENGTH_SHORT).show()
+293              return
+294          }
+295          val days = daysText.toIntOrNull()
+296  
+297          if (days == null || days < 0) {
+298               Toast.makeText(this, getString(R.string.invalid_input_clear_days), Toast.LENGTH_SHORT).show()
+299              return
+300          }
+301  
+302          val request = ClearLogsRequest(days = days)
+303          showLoading(true)
+304          lifecycleScope.launch {
+305              try {
+306                  val response = apiService.clearSystemLogs(request)
+307                  if (response.isSuccessful) {
+308                      Toast.makeText(this@SystemAdminActivity, getString(R.string.logs_cleared_successfully), Toast.LENGTH_SHORT).show()
+309                      fetchLogsDataInternal()
+310                  } else {
+311                       showError("Clear Logs: ${response.code()} ${response.message()}")
+312                  }
+313              } catch (e: Exception) {
+314                  showError("Clear Logs Error: ${e.message}")
+315              } finally {
+316                  showLoading(false)
+317              }
+318          }
+319      }
+320  
+321  
+322      private fun updateLogsDisplay() {
+323          val totalPages = getTotalPages()
+324          if (allLogs.isEmpty()) {
+325              layoutLogPagination.visibility = View.GONE
+326              logAdapter.updateLogs(emptyList())
+327              tvLogsPageInfo.text = getString(R.string.page_info, 0, 0)
+328              return
+329          }
+330  
+331          layoutLogPagination.visibility = View.VISIBLE
+332          val startIndex = (currentPage - 1) * logsPerPage
+333          val endIndex = minOf(startIndex + logsPerPage, allLogs.size)
+334          val logsToShow = if (startIndex < allLogs.size) allLogs.subList(startIndex, endIndex) else emptyList()
+335  
+336          logAdapter.updateLogs(logsToShow)
+337          tvLogsPageInfo.text = getString(R.string.page_info, currentPage, totalPages)
+338          btnPrevLogsPage.isEnabled = currentPage > 1
+339          btnNextLogsPage.isEnabled = currentPage < totalPages
+340      }
+341  
+342      private fun getTotalPages(): Int {
+343          return if (allLogs.isEmpty()) 0 else (allLogs.size + logsPerPage - 1) / logsPerPage
+344      }
+345  
+346      private fun formatDisplayDate(dateString: String?): String {
+347          if (dateString.isNullOrEmpty()) return "N/A"
+348  
+349          return try {
+350              val cleanedDate = dateString.replace(Regex("\\.(\\d{3})\\d*"), ".$1")
+351  
+352              val formatWithZone = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
+353  
+354              val parsedDate = formatWithZone.parse(cleanedDate)
+355  
+356              val outputDateFormat = SimpleDateFormat.getDateTimeInstance(
+357                  SimpleDateFormat.SHORT,
+358                  SimpleDateFormat.MEDIUM,
+359                  Locale.getDefault()
+360              )
+361  
+362              parsedDate?.let { outputDateFormat.format(it) } ?: "Invalid Date"
+363          } catch (e: Exception) {
+364              "Date Parse Error"
+365          }
+366      }
+367  
+368      private fun showError(message: String) {
+369          Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+370      }
+371  }
+
+В.4 Резервне копіювання користувацьких даних.
+
+GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab4/pzpi-22-3-shpak-denys-lab4/app/src/main/java/com/example/newapp/ui/admin/DatabaseAdminActivity.kt
+
+  1  package com.example.newapp.ui.admin
+  2  
+  3  import android.os.Bundle
+  4  import android.view.View
+  5  import android.widget.Button
+  6  import android.widget.EditText
+  7  import android.widget.ProgressBar
+  8  import android.widget.ScrollView
+  9  import android.widget.TextView
+ 10  import android.widget.Toast
+ 11  import androidx.core.content.ContextCompat
+ 12  import androidx.lifecycle.lifecycleScope
+ 13  import com.example.newapp.R
+ 14  import com.example.newapp.data.SessionManager
+ 15  import com.example.newapp.data.models.BackupRestoreRequest
+ 16  import com.example.newapp.data.models.DbStatusResponse
+ 17  import com.example.newapp.data.network.ApiService
+ 18  import com.example.newapp.data.network.RetrofitClient
+ 19  import com.example.newapp.ui.base.BaseActivity
+ 20  import kotlinx.coroutines.launch
+ 21  import java.text.ParseException
+ 22  import java.text.SimpleDateFormat
+ 23  import java.util.Date
+ 24  import java.util.Locale
+ 25  import java.util.TimeZone
+ 26  
+ 27  class DatabaseAdminActivity : BaseActivity() {
+ 28  
+ 29      private lateinit var apiService: ApiService
+ 30      private lateinit var sessionManager: SessionManager
+ 31  
+ 32      private lateinit var progressBar: ProgressBar
+ 33      private lateinit var contentScrollView: ScrollView
+ 34      private lateinit var tvDbAdminMessage: TextView
+ 35  
+ 36      private lateinit var tvDbSize: TextView
+ 37      private lateinit var tvActiveConnections: TextView
+ 38      private lateinit var tvLastBackup: TextView
+ 39      private lateinit var btnRefreshDbStatus: Button
+ 40  
+ 41      private lateinit var etBackupPath: EditText
+ 42      private lateinit var btnPerformBackup: Button
+ 43      private lateinit var btnPerformRestore: Button
+ 44  
+ 45      private lateinit var btnOptimizeDb: Button
+ 46  
+ 47      private val outputDateTimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+ 48      private val inputDateTimeFormats = listOf(
+ 49          SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") },
+ 50          SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }
+ 51      )
+ 52  
+ 53      override fun onCreate(savedInstanceState: Bundle?) {
+ 54          super.onCreate(savedInstanceState)
+ 55          setContentView(R.layout.activity_database_admin)
+ 56  
+ 57          sessionManager = SessionManager(this)
+ 58          apiService = RetrofitClient.getInstance(this)
+ 59  
+ 60          initializeUI()
+ 61          setupListeners()
+ 62          fetchDbStatusData()
+ 63      }
+ 64  
+ 65      private fun initializeUI() {
+ 66          progressBar = findViewById(R.id.progressBarDatabaseAdmin)
+ 67          contentScrollView = findViewById(R.id.contentScrollViewDatabaseAdmin)
+ 68          tvDbAdminMessage = findViewById(R.id.tvDbAdminMessage)
+ 69  
+ 70          tvDbSize = findViewById(R.id.tvDbSize)
+ 71          tvActiveConnections = findViewById(R.id.tvActiveConnections)
+ 72          tvLastBackup = findViewById(R.id.tvLastBackup)
+ 73          btnRefreshDbStatus = findViewById(R.id.btnRefreshDbStatus)
+ 74  
+ 75          etBackupPath = findViewById(R.id.etBackupPath)
+ 76          btnPerformBackup = findViewById(R.id.btnPerformBackup)
+ 77          btnPerformRestore = findViewById(R.id.btnPerformRestore)
+ 78  
+ 79          btnOptimizeDb = findViewById(R.id.btnOptimizeDb)
+ 80  
+ 81          tvDbAdminMessage.visibility = View.GONE
+ 82      }
+ 83  
+ 84      private fun setupListeners() {
+ 85          btnRefreshDbStatus.setOnClickListener { fetchDbStatusData() }
+ 86          btnPerformBackup.setOnClickListener { performBackup() }
+ 87          btnPerformRestore.setOnClickListener { performRestore() }
+ 88          btnOptimizeDb.setOnClickListener { optimizeDatabase() }
+ 89      }
+ 90  
+ 91      private fun showLoading(isLoading: Boolean) {
+ 92          progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+ 93          contentScrollView.visibility = if (isLoading) View.GONE else View.VISIBLE
+ 94          if (isLoading) {
+ 95              tvDbAdminMessage.visibility = View.GONE
+ 96          }
+ 97      }
+ 98  
+ 99      private fun showMessage(message: String, isError: Boolean = false) {
+100          tvDbAdminMessage.text = message
+101          if (isError) {
+102              tvDbAdminMessage.setBackgroundResource(R.drawable.bg_message_error)
+103              tvDbAdminMessage.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+104          } else {
+105              tvDbAdminMessage.setBackgroundResource(R.drawable.bg_message_success)
+106              tvDbAdminMessage.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+107          }
+108          tvDbAdminMessage.visibility = View.VISIBLE
+109      }
+110  
+111      private fun formatLastBackupTime(timeString: String?): String {
+112          if (timeString.isNullOrEmpty()) {
+113              return getString(R.string.na)
+114          }
+115          for (format in inputDateTimeFormats) {
+116              try {
+117                  val date: Date? = format.parse(timeString)
+118                  if (date != null) {
+119                      return outputDateTimeFormat.format(date)
+120                  }
+121              } catch (e: ParseException) {
+122              }
+123          }
+124          return timeString
+125      }
+126  
+127  
+128      private fun updateDbStatusUI(status: DbStatusResponse) {
+129          tvDbSize.text = getString(R.string.database_size_value, status.databaseSizeMB)
+130          tvActiveConnections.text = getString(R.string.active_connections_value, status.activeConnections)
+131          tvLastBackup.text = getString(R.string.last_backup_value, formatLastBackupTime(status.lastBackupTime))
+132      }
+133  
+134      private fun fetchDbStatusData() {
+135          showLoading(true)
+136          lifecycleScope.launch {
+137              try {
+138                  val response = apiService.getDbStatus()
+139                  if (response.isSuccessful) {
+140                      response.body()?.let {
+141                          updateDbStatusUI(it)
+142                      } ?: showError(getString(R.string.error_fetching_db_status) + " (empty response)")
+143                  } else {
+144                      showError(getString(R.string.error_fetching_db_status) + ": ${response.code()} ${response.message()}")
+145                  }
+146              } catch (e: Exception) {
+147                  showError(getString(R.string.error_fetching_db_status) + ": ${e.message}")
+148              } finally {
+149                  showLoading(false)
+150              }
+151          }
+152      }
+153  
+154      private fun performBackup() {
+155          val path = etBackupPath.text.toString().trim()
+156          if (path.isEmpty()) {
+157              Toast.makeText(this, getString(R.string.backup_path_required), Toast.LENGTH_SHORT).show()
+158              return
+159          }
+160          showLoading(true)
+161          lifecycleScope.launch {
+162              try {
+163                  val request = BackupRestoreRequest(backupPath = path)
+164                  val response = apiService.performBackup(request)
+165  
+166                  if (response.isSuccessful) {
+167                      response.body()?.let {
+168                          showMessage("✅ ${it.message}")
+169                          fetchDbStatusData()
+170                      } ?: showMessage(getString(R.string.operation_failed, "Backup: Empty response"), true)
+171                  } else {
+172                      showMessage(getString(R.string.operation_failed, "Backup: ${response.code()} ${response.message()}"), true)
+173                  }
+174              } catch (e: Exception) {
+175                  showMessage(getString(R.string.operation_failed, "Backup: ${e.message}"), true)
+176              } finally {
+177                  showLoading(false)
+178              }
+179          }
+180      }
+181  
+182      private fun performRestore() {
+183          val path = etBackupPath.text.toString().trim()
+184          if (path.isEmpty()) {
+185              Toast.makeText(this, getString(R.string.backup_path_required), Toast.LENGTH_SHORT).show()
+186              return
+187          }
+188          showLoading(true)
+189          lifecycleScope.launch {
+190              try {
+191                  val request = BackupRestoreRequest(backupPath = path)
+192                  val response = apiService.performRestore(request)
+193  
+194                  if (response.isSuccessful) {
+195                      response.body()?.let {
+196                          showMessage("✅ ${it.message}")
+197                          fetchDbStatusData()
+198                      } ?: showMessage(getString(R.string.operation_failed, "Restore: Empty response"), true)
+199                  } else {
+200                      showMessage(getString(R.string.operation_failed, "Restore: ${response.code()} ${response.message()}"), true)
+201                  }
+202              } catch (e: Exception) {
+203                  showMessage(getString(R.string.operation_failed, "Restore: ${e.message}"), true)
+204              } finally {
+205                  showLoading(false)
+206              }
+207          }
+208      }
+209  
+210      private fun optimizeDatabase() {
+211          showLoading(true)
+212          lifecycleScope.launch {
+213              try {
+214                  val response = apiService.optimizeDb()
+215  
+216                  if (response.isSuccessful) {
+217                      response.body()?.let {
+218                          showMessage("✅ ${it.message}")
+219                          fetchDbStatusData()
+220                      } ?: showMessage(getString(R.string.operation_failed, "Optimize: Empty response"), true)
+221                  } else {
+222                      showMessage(getString(R.string.operation_failed, "Optimize: ${response.code()} ${response.message()}"), true)
+223                  }
+224              } catch (e: Exception) {
+225                  showMessage(getString(R.string.operation_failed, "Optimize: ${e.message}"), true)
+226              } finally {
+227                  showLoading(false)
+228              }
+229          }
+230      }
+231  
+232      private fun showError(message: String) {
+233          Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+234      }
+235  }
 
 
