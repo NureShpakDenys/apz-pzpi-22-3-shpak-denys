@@ -53,7 +53,7 @@ func main() {
 		log.Println("Starting server")
 
 		srv := &http.Server{
-			Addr:    "localhost:" + strconv.Itoa(cfg.Http.Port),
+			Addr:    ":" + strconv.Itoa(cfg.Http.Port),
 			Handler: router,
 		}
 

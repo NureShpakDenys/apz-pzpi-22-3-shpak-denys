@@ -1,0 +1,180 @@
+<resources>
+    <string name="app_name" translatable="false">Wayra</string>
+    <string name="name_field">Name</string>
+    <string name="password_field">Password</string>
+    <string name="login_button">Login</string>
+    <string name="title_activity_splash" translatable="false">SplashActivity</string>
+    <string name="delivery_details_title">Delivery Details</string>
+    <string name="get_optimal_routes">Get Optimal Routes</string>
+    <string name="optimal_route_to_destination_title">Optimal Route (To Destination)</string>
+    <string name="optimal_back_route_title">Optimal Route (Back)</string>
+    <string name="products_title">Products</string>
+    <string name="add_product">Add Product</string>
+    <string name="edit_product">Edit Product</string>
+    <string name="delete_product">Delete Product</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="perishable">Perishable:</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="loading">Loading…</string>
+    <string name="label_status">Status:</string>
+    <string name="label_date">Date:</string>
+    <string name="label_duration">Duration:</string>
+    <string name="optimal_route_name">Route: %1$s</string>
+    <string name="optimal_route_message">Message: %1$s</string>
+    <string name="optimal_route_equation">Equation: %1$s</string>
+    <string name="optimal_route_distance">Distance: %.2f %2$s</string>
+    <string name="optimal_route_time">Time: %.2f %2$s</string>
+    <string name="optimal_route_speed">Speed: %.2f %2$s</string>
+    <string name="product_weight_format">Weight: %.1f %s</string>
+    <string name="temperature_range_format">Temp: %.1f - %.1f %s</string>
+    <string name="humidity_range_format">Humidity: %d - %d%s</string>
+
+    <string name="add_user_to_company_title">Add User to Company</string>
+    <string name="select_user_label">Select User:</string>
+    <string name="select_role_label">Select Role:</string>
+    <string name="add_user_button">Add User to Company</string>
+    <string name="adding_user_button_text">Adding…</string>
+
+    <string name="company_id_not_found">Company ID not found. Cannot add user.</string>
+    <string name="authentication_error">Authentication error. Please log in again.</string>
+    <string name="error_fetching_data">Error fetching initial data.</string>
+    <string name="error_fetching_data_exception">Error fetching data: %1$s</string>
+    <string name="no_users_available_to_add">No new users available to add to this company.</string>
+    <string name="please_select_a_user">Please select a user.</string>
+    <string name="user_added_successfully">User added to company successfully!</string>
+    <string name="error_adding_user_to_company_api">Failed to add user: %1$s</string>
+    <string name="error_adding_user_to_company_exception" translatable="false">An error occurred: %1$s</string>
+
+    <string-array name="company_roles_array_display">
+        <item>User</item>
+        <item>Admin</item>
+        <item>Manager</item>
+    </string-array>
+    <string-array name="company_roles_array_values">
+        <item>user</item>
+        <item>admin</item>
+        <item>manager</item>
+    </string-array>
+
+
+    <string name="title_create_route">Create New Route</string>
+    <string name="hint_route_name">Route Name</string>
+    <string name="button_create_route">Create Route</string>
+    <string name="button_creating_route">Creating…</string>
+    <string name="error_route_name_required">Route name is required.</string>
+    <string name="error_company_id_missing_route">Company ID is missing. Cannot create route.</string>
+    <string name="route_created_successfully">Route created successfully!</string>
+    <string name="error_creating_route_api">Failed to create route: %1$s</string>
+    <string name="error_creating_route_exception">An error occurred while creating route: %1$s</string>
+    <string name="error_authentication_route">Authentication error. Please log in again.</string>
+    <string name="route_list_updated_refreshing">Route list updated. Refreshing…</string>
+
+    <string name="title_create_delivery">Create New Delivery</string>
+    <string name="label_delivery_date">Delivery Date:</string>
+    <string name="hint_select_delivery_date">Select a date (YYYY-MM-DD)</string>
+    <string name="button_create_delivery">Create Delivery</string>
+    <string name="button_creating_delivery">Creating Delivery...</string>
+    <string name="error_date_required">Delivery date is required.</string>
+    <string name="error_company_id_missing_delivery">Company ID is missing. Cannot create delivery.</string>
+    <string name="error_creating_delivery_api">Error creating delivery: %s</string>
+    <string name="delivery_created_successfully">Delivery created successfully! ID: %d</string>
+    <string name="dialog_select_date_title">Select Delivery Date</string>
+
+    <string name="admin_dashboard_title">Admin</string>
+    <string name="loading_users">Loading users…</string>
+    <string name="error_loading_users">Error while loading users.</string>
+    <string name="error_loading_user_details">Error while loading your details.</string>
+    <string name="error_changing_role">Error changing user role.</string>
+    <string name="role_changed_successfully">Role changed successfully.</string>
+    <string name="label_user_id_short">ID:</string>
+    <string name="label_role">Role:</string>
+    <string name="action_not_allowed_for_self">You cannot change your own role.</string>
+    <string name="action_not_allowed_not_admin">Only admins can change roles.</string>
+
+    <string name="system_admin_dashboard_title">System Administration</string>
+    <string name="health_check">Health Check</string>
+    <string name="db_status_prefix">DB Status: %s</string>
+    <string name="server_time_prefix">Server Time: %s</string>
+    <string name="uptime_prefix">Uptime: %s</string>
+    <string name="refresh">Refresh</string>
+    <string name="system_configs">System Configurations</string>
+    <string name="encryption_key_exists_prefix">Encryption Key Exists: %s</string>
+    <string name="auth_token_ttl_hours">Auth Token TTL (hours)</string>
+    <string name="http_timeout_seconds">HTTP Timeout (seconds)</string>
+    <string name="save">Save</string>
+    <string name="system_logs">System Logs</string>
+    <string name="clear_logs_older_than_days">Clear logs older than (days)</string>
+    <string name="clear">Clear</string>
+    <string name="refresh_logs">Refresh Logs</string>
+    <string name="log_id_prefix">ID: %s</string>
+    <string name="log_user_id_prefix">User ID: %s</string>
+    <string name="previous_page">Prev</string>
+    <string name="next_page">Next</string>
+    <string name="page_info">Page %1$d of %2$d</string>
+    <string name="loading_data">Loading data…</string>
+    <string name="error_loading_data">Error loading data. Please try again.</string>
+    <string name="configs_saved_successfully">Configurations saved successfully.</string>
+    <string name="error_saving_configs">Error saving configurations.</string>
+    <string name="logs_cleared_successfully">Logs cleared successfully.</string>
+    <string name="error_clearing_logs">Error clearing logs.</string>
+    <string name="token_not_found">Authentication token not found. Please login again.</string>
+    <string name="yes_exists">✔️ Exists</string>
+    <string name="no_not_exists">❌ Not Exists</string>
+    <string name="invalid_input_clear_days">Please enter a valid number of days.</string>
+    <string name="invalid_input_configs">Please enter valid numbers for configurations.</string>
+
+    <string name="database_admin_dashboard">Database Admin Dashboard</string>
+    <string name="database_info">📊 Database Info</string>
+    <string name="database_size">Database Size</string>
+    <string name="active_connection">Active Connections</string>
+    <string name="last_backup">Last Backup</string>
+    <string name="refresh_info">Refresh Info</string>
+    <string name="backup_restore">💾 Backup &amp; Restore</string>
+    <string name="backup_path_label">Backup Path:</string>
+    <string name="backup_path_hint">Enter folder path for backup/restore</string>
+    <string name="create_backup">Create Backup</string>
+    <string name="restore_from_backup">Restore from Backup</string>
+    <string name="optimize_database">🛠️ Optimize Database</string>
+    <string name="run_optimization">Run Optimization</string>
+    <string name="loading_db_status">Loading DB Status...</string>
+    <string name="performing_backup">Performing backup...</string>
+    <string name="performing_restore">Performing restore...</string>
+    <string name="optimizing_database">Optimizing database...</string>
+    <string name="operation_successful">Operation successful</string>
+    <string name="operation_failed">Operation failed: %s</string>
+    <string name="error_fetching_db_status">Error fetching DB status</string>
+    <string name="error_performing_backup">Error performing backup</string>
+    <string name="error_performing_restore">Error performing restore</string>
+    <string name="error_optimizing_db">Error optimizing database</string>
+    <string name="na">N/A</string>
+    <string name="database_size_value">Database Size: %1$.2f MB</string>
+    <string name="active_connections_value">Active Connections: %1$d</string>
+    <string name="last_backup_value">Last Backup: %1$s</string>
+    <string name="backup_path_required">Backup path is required.</string>
+
+    <string name="no_file_selected">No file selected</string>
+    <string name="select_backup_file_for_restore">Select Backup File (for Restore)</string>
+    <string name="creating_backup_file_selection_title">Save backup as…</string>
+    <string name="select_file_to_restore_title">Select backup to restore</string>
+    <string name="error_selecting_file">Error selecting file</string>
+    <string name="file_selection_cancelled">File selection cancelled</string>
+    <string name="backup_path_not_set_for_saf">Backup file/location not set.</string>
+    <string name="companies_title">Companies</string>
+    <string name="add_company">Add company</string>
+    <string name="logout">Log out</string>
+    <string name="routes_title">Routes</string>
+    <string name="add_route">Add route</string>
+    <string name="routes_not_found">Routes not found</string>
+    <string name="deliveries_title">Deliveries</string>
+    <string name="users_title">Users</string>
+
+    <string name="unit_weight">lbs</string>
+    <string name="unit_temperature">°F</string>
+    <string name="unit_humidity">%</string>
+
+    <string name="delivery_datetime_format">Date: %1$s, Time: %2$s</string>
+    <string name="register">Register</string>
+
+</resources>

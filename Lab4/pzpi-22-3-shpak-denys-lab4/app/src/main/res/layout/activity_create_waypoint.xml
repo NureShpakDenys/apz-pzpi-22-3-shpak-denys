@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".ui.waypoint.CreateWaypointActivity">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Waypoint"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Waypoint Name Label -->
+    <TextView
+        android:id="@+id/tvLabelWaypointName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Waypoint Name"
+        android:labelFor="@id/etWaypointName"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etWaypointName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter waypoint name"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@id/tvLabelWaypointName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Device Serial Label -->
+    <TextView
+        android:id="@+id/tvLabelDeviceSerial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Device Serial"
+        android:labelFor="@id/etDeviceSerial"
+        app:layout_constraintTop_toBottomOf="@id/etWaypointName"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etDeviceSerial"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter device serial"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@id/tvLabelDeviceSerial"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Data Sending Frequency Label -->
+    <TextView
+        android:id="@+id/tvLabelSendDataFrequency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Data Sending Frequency"
+        android:labelFor="@id/etSendDataFrequency"
+        app:layout_constraintTop_toBottomOf="@id/etDeviceSerial"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etSendDataFrequency"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter frequency (e.g., 50)"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@id/tvLabelSendDataFrequency"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4dp"/>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/cbGetWeatherAlerts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get Weather Alerts"
+        app:layout_constraintTop_toBottomOf="@id/etSendDataFrequency"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:checked="true"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnCreateWaypoint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Create Waypoint"
+        android:background="@drawable/button_rounded_background"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/cbGetWeatherAlerts"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="16sp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:elevation="2dp"
+        android:stateListAnimator="@null" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

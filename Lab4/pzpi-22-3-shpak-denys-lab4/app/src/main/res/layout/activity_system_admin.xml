@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.admin.SystemAdminActivity">
+
+    <TextView
+        android:id="@+id/deliveryTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="System admin"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"
+        android:gravity="center" />
+
+    <ProgressBar
+        android:id="@+id/progressBarSystemAdmin"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <ScrollView
+        android:id="@+id/contentScrollViewSystemAdmin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="8dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/health_check"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvDbStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="DB Status: OK"/>
+                    <TextView
+                        android:id="@+id/tvServerTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Server Time: 2023-10-27 10:00:00"/>
+                    <TextView
+                        android:id="@+id/tvUptime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Uptime: 120 days"/>
+
+                    <Button
+                        android:id="@+id/btnRefreshHealth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:text="@string/refresh"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="8dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/system_configs"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp"/>
+
+                    <TextView
+                        android:id="@+id/tvEncryptionKeyExists"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Encryption Key Exists: ✔️"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/auth_token_ttl_hours"
+                        android:labelFor="@+id/etAuthTokenTtl" />
+
+                    <EditText
+                        android:id="@+id/etAuthTokenTtl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint="@string/auth_token_ttl_hours"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/http_timeout_seconds"
+                        android:layout_marginTop="8dp"
+                        android:labelFor="@+id/etHttpTimeout" />
+                    <EditText
+                        android:id="@+id/etHttpTimeout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint="@string/http_timeout_seconds"/>
+
+                    <Button
+                        android:id="@+id/btnSaveConfigs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:text="@string/save"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Logs Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/system_logs"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <EditText
+                            android:id="@+id/etClearLogsDays"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:hint="@string/clear_logs_older_than_days"
+                            android:text="3"/>
+
+                        <Button
+                            android:id="@+id/btnClearLogs"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            style="@style/Widget.AppCompat.Button.Colored"
+                            android:text="@string/clear"/>
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btnRefreshLogs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:text="@string/refresh_logs"
+                        android:layout_marginBottom="8dp"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvSystemLogs"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/item_system_log"
+                        android:nestedScrollingEnabled="false"/>
+
+                    <!-- Пагинация (упрощенная) -->
+                    <LinearLayout
+                        android:id="@+id/layoutLogPagination"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="8dp">
+
+                        <Button
+                            android:id="@+id/btnPrevLogsPage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/Widget.AppCompat.Button.Colored"
+                            android:text="@string/previous_page"/>
+
+                        <TextView
+                            android:id="@+id/tvLogsPageInfo"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textSize="16sp"
+                            tools:text="Page 1 of 5"/>
+
+                        <Button
+                            android:id="@+id/btnNextLogsPage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/Widget.AppCompat.Button.Colored"
+                            android:text="@string/next_page"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
