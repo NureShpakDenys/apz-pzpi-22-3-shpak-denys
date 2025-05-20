@@ -19,7 +19,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="24dp"/>
 
-    <!-- Waypoint Name Label -->
     <TextView
         android:id="@+id/tvLabelWaypointName"
         android:layout_width="wrap_content"
@@ -41,7 +40,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="4dp"/>
 
-    <!-- Device Serial Label -->
     <TextView
         android:id="@+id/tvLabelDeviceSerial"
         android:layout_width="wrap_content"
@@ -63,7 +61,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="4dp"/>
 
-    <!-- Data Sending Frequency Label -->
     <TextView
         android:id="@+id/tvLabelSendDataFrequency"
         android:layout_width="wrap_content"

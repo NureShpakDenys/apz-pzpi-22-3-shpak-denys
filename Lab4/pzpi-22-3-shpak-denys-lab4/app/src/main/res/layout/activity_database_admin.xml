@@ -38,7 +38,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Message Area -->
             <TextView
                 android:id="@+id/tvDbAdminMessage"
                 android:layout_width="match_parent"
@@ -51,7 +50,6 @@
                 tools:text="✅ Operation successful!"
                 android:layout_marginBottom="16dp"/>
 
-            <!-- Database Info Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -99,7 +97,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Backup & Restore Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -161,7 +158,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Optimize Database Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

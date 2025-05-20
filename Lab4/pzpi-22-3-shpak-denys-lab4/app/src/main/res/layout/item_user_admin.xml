@@ -63,7 +63,6 @@
                 android:textStyle="bold"
                 android:text="@string/label_role" />
 
-            <!-- Этот TextView будет виден, если текущий админ НЕ "admin" или это его собственная запись -->
             <TextView
                 android:id="@+id/tvUserRoleStatic"
                 android:layout_width="wrap_content"

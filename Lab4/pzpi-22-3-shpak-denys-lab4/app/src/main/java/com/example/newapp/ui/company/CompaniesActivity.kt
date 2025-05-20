@@ -53,12 +53,7 @@ class CompaniesActivity : BaseActivity() {
 
     private fun navigateToCompanyDetails(company: Company) {
         val intent = Intent(this, CompanyDetailsActivity::class.java).apply {
-            // Передаем ID компании, который нужен для загрузки данных в CompanyDetailsActivity
-            putExtra("company_id", company.id)
-
-            // Если нужно, можно передать дополнительные данные компании
-            // putExtra("company_name", company.name)
-            // и т.д.
+            putExtra("company_id", company.id)          
         }
         startActivity(intent)
     }

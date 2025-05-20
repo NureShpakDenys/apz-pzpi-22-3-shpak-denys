@@ -1,4 +1,4 @@
-package com.example.newapp.ui.route // Или ваш пакет
+package com.example.newapp.ui.route 
 
 import android.app.Activity
 import android.content.Intent
@@ -9,12 +9,12 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.newapp.R
-import com.example.newapp.data.SessionManager // Убедитесь, что SessionManager доступен
+import com.example.newapp.data.SessionManager 
 import com.example.newapp.data.models.CreateRouteRequest
 import com.example.newapp.data.models.CreateRouteResponse
-import com.example.newapp.data.models.RouteResponse // Импортируем модель ответа
+import com.example.newapp.data.models.RouteResponse 
 import com.example.newapp.data.network.RetrofitClient
-import com.example.newapp.databinding.ActivityCreateRouteBinding // Используем ViewBinding
+import com.example.newapp.databinding.ActivityCreateRouteBinding 
 import com.example.newapp.databinding.ActivityRouteDetailsBinding
 import com.example.newapp.ui.base.BaseActivity
 import kotlinx.coroutines.launch

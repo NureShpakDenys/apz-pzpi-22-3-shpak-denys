@@ -19,6 +19,11 @@ data class CompanyUser(
     val user: CompanyUsersUser
 )
 
+data class CreateCompanyRequest(
+    val name: String,
+    val address: String
+)
+
 data class CompanyUsersUser(
     val name: String
 )
@@ -39,4 +44,9 @@ data class CompanyDelivery(
     val date: Date,
     val duration: String,
     val routeId: Int
+)
+
+data class UpdateCompanyRequest(
+    val name: String,
+    val address: String
 )

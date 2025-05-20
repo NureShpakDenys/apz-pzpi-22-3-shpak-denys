@@ -8,10 +8,10 @@ import android.widget.Toast
 import com.example.newapp.R
 import androidx.appcompat.app.AlertDialog
 import com.example.newapp.data.models.UpdateWaypointRequest
-import com.example.newapp.data.models.Waypoint // Your Waypoint data class
+import com.example.newapp.data.models.Waypoint 
 import com.example.newapp.data.network.RetrofitClient
 import com.example.newapp.databinding.ActivityEditWaypointBinding
-import com.example.newapp.ui.base.BaseActivity // Assuming you have a BaseActivity
+import com.example.newapp.ui.base.BaseActivity 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

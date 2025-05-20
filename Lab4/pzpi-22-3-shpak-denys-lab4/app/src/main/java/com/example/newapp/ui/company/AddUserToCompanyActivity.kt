@@ -109,11 +109,11 @@ class AddUserToCompanyActivity : BaseActivity() {
 
     private fun updateUserSpinner() {
         if (availableUsersForCompany.isEmpty()) {
-            binding.spinnerUser.adapter = null // Clear adapter if no users available
+            binding.spinnerUser.adapter = null
             binding.spinnerUser.isEnabled = false
             binding.spinnerUser.prompt = getString(R.string.no_users_available_to_add)
-            selectedUserId = -1 // Reset selected user
-            binding.btnAddUser.isEnabled = false // Disable button if no user can be selected
+            selectedUserId = -1
+            binding.btnAddUser.isEnabled = false
             return
         }
 

@@ -177,4 +177,11 @@
     <string name="delivery_datetime_format">Date: %1$s, Time: %2$s</string>
     <string name="register">Register</string>
 
+    <string-array name="product_types">
+        <item>Fruits</item>
+        <item>Vegetables</item>
+        <item>Frozen Foods</item>
+        <item>Dairy Products</item>
+        <item>Meat</item>
+    </string-array>
 </resources>

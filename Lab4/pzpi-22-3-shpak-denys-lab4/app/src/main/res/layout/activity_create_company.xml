@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".ui.waypoint.EditWaypointActivity">
+    tools:context=".ui.company.CreateCompanyActivity">
 
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Edit Waypoint"
+        android:text="Create Company"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
@@ -20,85 +20,55 @@
         android:layout_marginBottom="24dp"/>
 
     <TextView
-        android:id="@+id/tvLabelWaypointName"
+        android:id="@+id/tvLabelCompanyName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Waypoint Name"
-        android:labelFor="@id/etWaypointName"
+        android:text="Company Name"
+        android:labelFor="@id/etCompanyName"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="16dp"/>
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/etWaypointName"
+        android:id="@+id/etCompanyName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Enter waypoint name"
+        android:hint="Enter company name"
         android:inputType="text"
-        app:layout_constraintTop_toBottomOf="@id/tvLabelWaypointName"
+        app:layout_constraintTop_toBottomOf="@id/tvLabelCompanyName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="4dp"/>
 
     <TextView
-        android:id="@+id/tvLabelDeviceSerial"
+        android:id="@+id/tvLabelCompanyAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Device Serial"
-        android:labelFor="@id/etDeviceSerial"
-        app:layout_constraintTop_toBottomOf="@id/etWaypointName"
+        android:text="Company Address"
+        android:labelFor="@id/etCompanyAddress"
+        app:layout_constraintTop_toBottomOf="@id/etCompanyName"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="16dp"/>
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/etDeviceSerial"
+        android:id="@+id/etCompanyAddress"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Enter device serial"
+        android:hint="Enter company address"
         android:inputType="text"
-        app:layout_constraintTop_toBottomOf="@id/tvLabelDeviceSerial"
+        app:layout_constraintTop_toBottomOf="@id/tvLabelCompanyAddress"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="4dp"/>
 
-    <TextView
-        android:id="@+id/tvLabelSendDataFrequency"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Data Sending Frequency"
-        android:labelFor="@id/etSendDataFrequency"
-        app:layout_constraintTop_toBottomOf="@id/etDeviceSerial"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp"/>
-
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/etSendDataFrequency"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnCreateCompany"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Enter frequency (e.g., 50)"
-        android:inputType="number"
-        app:layout_constraintTop_toBottomOf="@id/tvLabelSendDataFrequency"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="4dp"/>
-
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/cbGetWeatherAlerts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Get Weather Alerts"
-        app:layout_constraintTop_toBottomOf="@id/etSendDataFrequency"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp"/>
-
-   <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnSaveWaypoint"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Save Changes"
+        android:text="Create Company"
         android:background="@drawable/button_rounded_background"
         android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/cbGetWeatherAlerts"
+        app:layout_constraintTop_toBottomOf="@id/etCompanyAddress"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:textSize="16sp"

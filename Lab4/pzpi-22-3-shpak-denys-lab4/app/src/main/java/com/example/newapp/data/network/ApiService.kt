@@ -12,6 +12,9 @@ interface ApiService {
     @POST("auth/register/")
     fun register(@Body request: RegisterRequest): Call<Void>
 
+    @POST("company/")
+    fun createCompany(@Body request: CreateCompanyRequest): Call<Void>
+
     @GET("user/{userId}")
     suspend fun getUserDetails(
         @Path("userId") userId: Int
@@ -26,6 +29,12 @@ interface ApiService {
     @GET("company/{id}/users")
     suspend fun getCompanyUsers(@Path("id") id: Int): List<CompanyUser>
 
+    @PUT("company/{id}")
+    suspend fun updateCompany(
+        @Path("id") id: Int,
+        @Body update: UpdateCompanyRequest
+    )
+
     @PUT("company/{id}/update-user")
     suspend fun updateUserRole(@Path("id") id: Int, @Body body: UpdateUserRequest): Response<Unit>
 
@@ -33,7 +42,7 @@ interface ApiService {
     suspend fun removeUser(@Path("id") id: Int, @Body body: RemoveUserRequest): Response<Unit>
 
     @GET("delivery/{id}")
-    suspend fun getDelivery(@Path("id") id: Int, @Header("Authorization") token: String): CompanyDelivery
+    suspend fun getDelivery(@Path("id") id: Int): CompanyDelivery
 
     @PUT("delivery/{id}")
     suspend fun updateDeliveryRoute(
@@ -159,4 +168,30 @@ interface ApiService {
 
     @POST("/admin/optimize")
     suspend fun optimizeDb(): Response<AdminActionResponse>
+
+    @POST("products/")
+    suspend fun createProduct(@Body request: CreateProductRequest): Response<Void>
+
+    @GET("products/{id}")
+    suspend fun getProductById(
+        @Path("id") productId: Int
+    ): Product
+
+    @PUT("products/{id}")
+    suspend fun updateProduct(
+        @Path("id") productId: Int,
+        @Body request: Map<String, Any>
+    )
+
+    @PUT("delivery/{id}")
+    suspend fun updateDelivery(
+        @Path("id") deliveryId: Int,
+        @Body update: Map<String, Any>
+    )
+
+    @PUT("routes/{id}")
+    suspend fun updateRoute(
+        @Path("id") routeId: Int,
+        @Body update: Map<String, String>
+    )
 }

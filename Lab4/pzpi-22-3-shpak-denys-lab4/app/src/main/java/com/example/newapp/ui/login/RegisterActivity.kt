@@ -30,7 +30,7 @@ class RegisterActivity : BaseActivity() {
             val bio = etBio.text.toString().trim()
 
             if (name.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Заповніть всі поля", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Fill all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -45,18 +45,18 @@ class RegisterActivity : BaseActivity() {
         apiService.register(request).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(this@RegisterActivity, "Зареєстровано!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@RegisterActivity, "Registered!", Toast.LENGTH_LONG).show()
 
                     val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
                     startActivity(intent)
                     finish()
                 } else {
-                    Toast.makeText(this@RegisterActivity, "Помилка реєстрації", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@RegisterActivity, "Register error", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
-                Toast.makeText(this@RegisterActivity, "Помилка мережі: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@RegisterActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }

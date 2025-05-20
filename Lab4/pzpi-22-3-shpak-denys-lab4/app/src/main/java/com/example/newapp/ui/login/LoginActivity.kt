@@ -67,22 +67,22 @@ class LoginActivity : BaseActivity() {
                             name = loginResponse.user.name,
                             role = loginResponse.user.role
                         ))
-                        Toast.makeText(this@LoginActivity, "Вітаємо, ${loginResponse.user.name}!", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@LoginActivity, "Hi, ${loginResponse.user.name}!", Toast.LENGTH_LONG).show()
 
                         val intent = Intent(this@LoginActivity, CompaniesActivity::class.java)
                         startActivity(intent)
                         finish()
                     }
                     else {
-                        Toast.makeText(this@LoginActivity, "Помилка авторизації: порожня відповідь", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@LoginActivity, "Error, the body is empty", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(this@LoginActivity, "Помилка авторизації", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity, "Auth error", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                Toast.makeText(this@LoginActivity, "Помилка мережі: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@LoginActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }

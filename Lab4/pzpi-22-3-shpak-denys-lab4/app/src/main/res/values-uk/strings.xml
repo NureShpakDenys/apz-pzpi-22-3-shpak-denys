@@ -155,4 +155,11 @@
     <string name="delivery_datetime_format">Дата: %1$s, Час: %2$s</string>
     <string name="register">Зареєструватися</string>
 
+    <string-array name="product_types">
+        <item>Фрукти</item>
+        <item>Овочі</item>
+        <item>Заморожені продукти</item>
+        <item>Молочні продукти</item>
+        <item>М'ясо</item>
+    </string-array>
 </resources>

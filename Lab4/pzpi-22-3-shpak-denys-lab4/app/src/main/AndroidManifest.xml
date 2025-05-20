@@ -30,6 +30,8 @@
         <activity android:name=".ui.login.RegisterActivity" android:exported="true" />
         <activity android:name=".ui.company.CompaniesActivity" android:exported="true" />
         <activity android:name=".ui.company.CompanyDetailsActivity" android:exported="true" />
+        <activity android:name=".ui.company.CreateCompanyActivity" android:exported="true" />
+        <activity android:name=".ui.company.EditCompanyActivity" android:exported="true" />
         <activity android:name=".ui.route.RouteDetailsActivity" android:exported="true" />
         <activity android:name=".ui.waypoint.CreateWaypointActivity" android:exported="true" />
         <activity android:name=".ui.waypoint.EditWaypointActivity" android:exported="true" />

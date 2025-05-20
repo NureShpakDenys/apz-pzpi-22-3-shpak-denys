@@ -148,7 +148,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Logs Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -210,7 +209,6 @@
                         tools:listitem="@layout/item_system_log"
                         android:nestedScrollingEnabled="false"/>
 
-                    <!-- Пагинация (упрощенная) -->
                     <LinearLayout
                         android:id="@+id/layoutLogPagination"
                         android:layout_width="match_parent"
