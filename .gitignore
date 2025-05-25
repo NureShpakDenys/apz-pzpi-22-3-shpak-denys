@@ -7,3 +7,6 @@ Lab2/pzpi-22-3-shpak-denys-lab2/Taskfile.yaml
 *.mp4
 *.pdf
 .idea
+*.json
+*.apk
+*.zip
