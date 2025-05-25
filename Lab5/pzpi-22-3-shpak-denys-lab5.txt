@@ -33,6 +33,7 @@
 
 №	Дата	Версія звіту	Опис змін та виправлень
 1	23.05.2025	0.1	Створено структуру звіту. Визначено завдання на дану лабораторну роботу.
+2	25.05.2025	0.1	Описано хід роботи. Наповнено додатки.
 
 2 ЗАВДАННЯ
 
@@ -41,6 +42,10 @@
 3 ОПИС ВИКОНАНОЇ РОБОТИ
 
 До виконаної роботи було створено відеозвіт, посилання на який наведено у додатку А.
+Було втілено розгортання системи, через верифікацію користувача в глобальній системі. Після чого користувач отримуватиме виконуючий файл інсталятора.
+Було втілено функціонал відновленя з резервних копій. В цьому ж функціоналі встановлюються залежності. Там же створюється файл запуску вебклієнта та серверної частини системи.
+На глобальній системі було розміщено qr-код, відсканувавши який, можна отримати apk файл для встановлення мобільного клієнта системи.
+Наприкінець було продемонстровано працездатність системи.
 Усі графічні матеріали наведені у додатку Б.
 Деякий код застосунку наведено у додатку В.
 ВИСНОВКИ
@@ -50,11 +55,16 @@
 ДОДАТОК А
 Відеозапис
 
-Відеозапис презентації результатів лабораторної роботи: https://youtu.be/q_J-aF2eTDg
+Відеозапис презентації результатів лабораторної роботи: https://youtu.be/IhmdNe28y9A
 
 Хронологічний опис відеозапису:
-00:00 Вітання. Мовець вітається та визначає тему відеозвіту.
-12:00 Висновки. Підбиваються підсумки доповіді.
+00:00 Вітання. Мовець вітається та розповідає мету відеозвіту.
+00:17 Розгортання системи. Демонструється розгортання системи на пристрої за допомогою інсталятора.
+01:32 Перевірка IoT. Демонструється працездатність IoT пристрою.
+01:45 Перевірка вебклієнта. Демонструється працездатність вебклієнта.
+02:08 Перевірка серверної частини. Демонструється працездатність серверної частини системи.
+02:51 Перевірка мобільного клієнта. Демонструється працездатність мобільного клієнта.
+04:33 Висновки. Підбиваються підсумки доповіді.
 ДОДАТОК Б
 Графічні матеріали
 
@@ -72,15 +82,606 @@
 
 В.1 Математична обробка прикладних даних.
 
-GitHub репозиторій: 
+GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab2/pzpi-22-3-shpak-denys-lab2/internal/core/domain/utils/math/math.go
+
+  1  // Package math provides mathematical functions for the domain layer.
+  2  // This package is used to perform mathematical operations on data.
+  3  package math // import "wayra/internal/core/domain/utils/math"
+  4  
+  5  import "math"
+  6  
+  7  // Transpose returns the transpose of a matrix.
+  8  // matrix: a 2D slice of float64.
+  9  // returns: a 2D slice of float64.
+ 10  func Transpose(matrix [][]float64) [][]float64 {
+ 11  	rows := len(matrix)
+ 12  	cols := len(matrix[0])
+ 13  	result := make([][]float64, cols)
+ 14  	for i := range result {
+ 15  		result[i] = make([]float64, rows)
+ 16  	}
+ 17  	for i := 0; i < rows; i++ {
+ 18  		for j := 0; j < cols; j++ {
+ 19  			result[j][i] = matrix[i][j]
+ 20  		}
+ 21  	}
+ 22  	return result
+ 23  }
+ 24  
+ 25  // MultiplyMatrices returns the product of two matrices.
+ 26  // a: a 2D slice of float64.
+ 27  // b: a 2D slice of float64.
+ 28  // returns: a 2D slice of float64.
+ 29  func MultiplyMatrices(a, b [][]float64) [][]float64 {
+ 30  	rowsA := len(a)
+ 31  	colsA := len(a[0])
+ 32  	colsB := len(b[0])
+ 33  	result := make([][]float64, rowsA)
+ 34  	for i := range result {
+ 35  		result[i] = make([]float64, colsB)
+ 36  	}
+ 37  	for i := 0; i < rowsA; i++ {
+ 38  		for j := 0; j < colsB; j++ {
+ 39  			for k := 0; k < colsA; k++ {
+ 40  				result[i][j] += a[i][k] * b[k][j]
+ 41  			}
+ 42  		}
+ 43  	}
+ 44  	return result
+ 45  }
+ 46  
+ 47  // Inverse returns the inverse of a matrix.
+ 48  // matrix: a 2D slice of float64.
+ 49  // returns: a 2D slice of float64.
+ 50  func Inverse(matrix [][]float64) [][]float64 {
+ 51  
+ 52  	n := len(matrix)
+ 53  	augmented := make([][]float64, n)
+ 54  	for i := range augmented {
+ 55  		augmented[i] = make([]float64, 2*n)
+ 56  		copy(augmented[i], matrix[i])
+ 57  		augmented[i][n+i] = 1
+ 58  	}
+ 59  
+ 60  	for i := 0; i < n; i++ {
+ 61  
+ 62  		maxRow := i
+ 63  		for j := i + 1; j < n; j++ {
+ 64  			if math.Abs(augmented[j][i]) > math.Abs(augmented[maxRow][i]) {
+ 65  				maxRow = j
+ 66  			}
+ 67  		}
+ 68  
+ 69  		augmented[i], augmented[maxRow] = augmented[maxRow], augmented[i]
+ 70  
+ 71  		pivot := augmented[i][i]
+ 72  		for j := 0; j < 2*n; j++ {
+ 73  			augmented[i][j] /= pivot
+ 74  		}
+ 75  
+ 76  		for j := i + 1; j < n; j++ {
+ 77  			factor := augmented[j][i]
+ 78  			for k := 0; k < 2*n; k++ {
+ 79  				augmented[j][k] -= factor * augmented[i][k]
+ 80  			}
+ 81  		}
+ 82  	}
+ 83  
+ 84  	for i := n - 1; i >= 0; i-- {
+ 85  		for j := i - 1; j >= 0; j-- {
+ 86  			factor := augmented[j][i]
+ 87  			for k := 0; k < 2*n; k++ {
+ 88  				augmented[j][k] -= factor * augmented[i][k]
+ 89  			}
+ 90  		}
+ 91  	}
+ 92  
+ 93  	inverse := make([][]float64, n)
+ 94  	for i := range inverse {
+ 95  		inverse[i] = make([]float64, n)
+ 96  		copy(inverse[i], augmented[i][n:])
+ 97  	}
+ 98  
+ 99  	return inverse
+100  }
+101  
+102  // HaversineDistance returns the distance between two points on the Earth's surface.
+103  // lat1: latitude of the first point.
+104  // lon1: longitude of the first point.
+105  // lat2: latitude of the second point.
+106  // lon2: longitude of the second point.
+107  // returns: a float64 - the distance between the two points.
+108  func HaversineDistance(lat1, lon1, lat2, lon2 float64) float64 {
+109  	const R = 6371
+110  	lat1Rad := lat1 * math.Pi / 180
+111  	lon1Rad := lon1 * math.Pi / 180
+112  	lat2Rad := lat2 * math.Pi / 180
+113  	lon2Rad := lon2 * math.Pi / 180
+114  	dLat := lat2Rad - lat1Rad
+115  	dLon := lon2Rad - lon1Rad
+116  
+117  	a := math.Sin(dLat/2)*math.Sin(dLat/2) + math.Cos(lat1Rad)*math.Cos(lat2Rad)*math.Sin(dLon/2)*math.Sin(dLon/2)
+118  	c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
+119  
+120  	return R * c
+121  }
+122  
+123  // Mean returns the mean of a slice of float64.
+124  // data: a slice of float64.
+125  // returns: a float64 - the mean of the data.
+126  func Mean(data []float64) float64 {
+127  	sum := 0.0
+128  	for _, value := range data {
+129  		sum += value
+130  	}
+131  	return sum / float64(len(data))
+132  }
+133  
+134  // StdDev returns the standard deviation of a slice of float64.
+135  // data: a slice of float64.
+136  // returns: a float64 - the standard deviation of the data.
+137  func StdDev(data []float64) float64 {
+138  	mean := Mean(data)
+139  	sumSquares := 0.0
+140  	for _, value := range data {
+141  		diff := value - mean
+142  		sumSquares += diff * diff
+143  	}
+144  	variance := sumSquares / float64(len(data))
+145  	return math.Sqrt(variance)
+146  }
+147  
+148  // Square returns the square of each element in a slice of float64.
+149  // data: a slice of float64.
+150  // returns: a slice of float64.
+151  func Square(data []float64) []float64 {
+152  	result := make([]float64, len(data))
+153  	for i, value := range data {
+154  		result[i] = value * value
+155  	}
+156  	return result
+157  }
+158  
+159  // Multiply returns the element-wise product of two slices of float64.
+160  // a: a slice of float64.
+161  // b: a slice of float64.
+162  // returns: a slice of float64.
+163  func Multiply(a, b []float64) []float64 {
+164  	result := make([]float64, len(a))
+165  	for i := range result {
+166  		result[i] = a[i] * b[i]
+167  	}
+168  	return result
+169  }
+170  
+171  // Sum returns the sum of a slice of float64.
+172  // data: a slice of float64.
+173  // returns: a float64 - the sum of the data.
+174  func Sum(data []float64) float64 {
+175  	sum := 0.0
+176  	for _, value := range data {
+177  		sum += value
+178  	}
+179  	return sum
+180  }
 
 В.2 Адміністрування бізнес-логіки системи.
 
-GitHub репозиторій: 
+GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab2/pzpi-22-3-shpak-denys-lab2/internal/adapter/httpserver/handlers/admin/db_admin.go
+
+  1  package admin
+  2  
+  3  import (
+  4  	"context"
+  5  	"net/http"
+  6  	"wayra/internal/adapter/httpserver/handlers"
+  7  
+  8  	"github.com/gin-gonic/gin"
+  9  )
+ 10  
+ 11  // BackupDatabaseRequest is the request for the BackupDatabase endpoint
+ 12  type BackupDatabaseRequest struct {
+ 13  	// Backup path is the path where the backup will be stored
+ 14  	BackupPath string `json:"backup_path"`
+ 15  }
+ 16  
+ 17  // BackupDatabase godoc
+ 18  // @Summary Backup the database
+ 19  // @Description Backup the database in CSV format per table
+ 20  // @Tags admin
+ 21  // @Accept json
+ 22  // @Produce json
+ 23  // @Param BackupDatabaseRequest body BackupDatabaseRequest true "Backup directory path"
+ 24  // @Security     BearerAuth
+ 25  // @Router /admin/backup [post]
+ 26  func (ah *AdminHandler) BackupDatabase(c *gin.Context) {
+ 27  	var req BackupDatabaseRequest
+ 28  	if err := c.ShouldBindJSON(&req); err != nil {
+ 29  		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+ 30  		return
+ 31  	}
+ 32  
+ 33  	userID, err := handlers.GetUserIDFromToken(c)
+ 34  	if err != nil {
+ 35  		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+ 36  		return
+ 37  	}
+ 38  
+ 39  	user, err := ah.userService.GetByID(context.Background(), *userID)
+ 40  	if err != nil {
+ 41  		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+ 42  		return
+ 43  	}
+ 44  
+ 45  	if user.Role.Name != "db_admin" {
+ 46  		c.JSON(http.StatusForbidden, gin.H{"error": "Access denied"})
+ 47  		return
+ 48  	}
+ 49  
+ 50  	if err := ah.AdminService.BackupDatabase(c.Request.Context(), *userID, req.BackupPath); err != nil {
+ 51  		c.JSON(http.StatusInternalServerError, gin.H{"error": "Backup failed: " + err.Error()})
+ 52  		return
+ 53  	}
+ 54  
+ 55  	c.JSON(http.StatusOK, gin.H{"message": "Backup created successfully"})
+ 56  }
+ 57  
+ 58  // RestoreDatabaseRequest is the request for the RestoreDatabase endpoint
+ 59  type RestoreDatabaseRequest struct {
+ 60  	// Backup path is the path where the backup is stored
+ 61  	BackupPath string `json:"backup_path"`
+ 62  }
+ 63  
+ 64  // RestoreDatabase godoc
+ 65  // @Summary Restore the database from backup
+ 66  // @Description Restore the database from encrypted backup files
+ 67  // @Tags admin
+ 68  // @Accept json
+ 69  // @Produce json
+ 70  // @Param RestoreDatabaseRequest body RestoreDatabaseRequest true "Backup directory path"
+ 71  // @Security     BearerAuth
+ 72  // @Success 200 {string} string "Database restored"
+ 73  // @Router /admin/restore [post]
+ 74  func (ah *AdminHandler) RestoreDatabase(c *gin.Context) {
+ 75  	var req RestoreDatabaseRequest
+ 76  	if err := c.ShouldBindJSON(&req); err != nil {
+ 77  		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+ 78  		return
+ 79  	}
+ 80  
+ 81  	userID, err := handlers.GetUserIDFromToken(c)
+ 82  	if err != nil {
+ 83  		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+ 84  		return
+ 85  	}
+ 86  
+ 87  	user, err := ah.userService.GetByID(context.Background(), *userID)
+ 88  	if err != nil {
+ 89  		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+ 90  		return
+ 91  	}
+ 92  
+ 93  	if user.Role.Name != "db_admin" {
+ 94  		c.JSON(http.StatusForbidden, gin.H{"error": "Access denied"})
+ 95  		return
+ 96  	}
+ 97  
+ 98  	if err := ah.AdminService.RestoreDatabase(c.Request.Context(), *userID, req.BackupPath); err != nil {
+ 99  		c.JSON(http.StatusInternalServerError, gin.H{"error": "Restore failed: " + err.Error()})
+100  		return
+101  	}
+102  
+103  	c.JSON(http.StatusOK, gin.H{"message": "Database restored successfully"})
+104  }
+105  
+106  // GetDBStatus godoc
+107  // @Summary Get database status
+108  // @Description Get database status
+109  // @Tags admin
+110  // @Accept json
+111  // @Produce json
+112  // @Security     BearerAuth
+113  // @Router /admin/db-status [get]
+114  func (ah *AdminHandler) GetDBStatus(c *gin.Context) {
+115  	userID, err := handlers.GetUserIDFromToken(c)
+116  	if err != nil {
+117  		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+118  		return
+119  	}
+120  
+121  	currentUser, err := ah.userService.GetByID(context.Background(), *userID)
+122  	if err != nil || currentUser.Role.Name != "db_admin" {
+123  		c.JSON(http.StatusForbidden, gin.H{"error": "Access denied"})
+124  		return
+125  	}
+126  
+127  	dbStatus, _ := ah.AdminService.GetDBStatus(context.Background())
+128  
+129  	c.JSON(http.StatusOK, dbStatus)
+130  }
+131  
+132  // OptimizeDatabase godoc
+133  // @Summary Optimize database
+134  // @Description Optimize database
+135  // @Tags admin
+136  // @Accept json
+137  // @Produce json
+138  // @Security     BearerAuth
+139  // @Router /admin/optimize [post]
+140  func (ah *AdminHandler) OptimizeDatabase(c *gin.Context) {
+141  	userID, err := handlers.GetUserIDFromToken(c)
+142  	if err != nil {
+143  		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+144  		return
+145  	}
+146  
+147  	currentUser, err := ah.userService.GetByID(context.Background(), *userID)
+148  	if err != nil || currentUser.Role.Name != "db_admin" {
+149  		c.JSON(http.StatusForbidden, gin.H{"error": "Access denied"})
+150  		return
+151  	}
+152  
+153  	if err := ah.AdminService.OptimizeDatabase(context.Background()); err != nil {
+154  		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to optimize database"})
+155  		return
+156  	}
+157  
+158  	c.JSON(http.StatusOK, gin.H{"message": "Database optimized successfully"})
+159  }
 
 В.3 Резервне копіювання користувацьких даних.
 
-GitHub репозиторій: 
+GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab2/pzpi-22-3-shpak-denys-lab2/internal/core/service/admin_service.go
+
+  1  // internal/port/services/admin_service.go
+  2  package service
+  3  
+  4  import (
+  5  	"context"
+  6  	"crypto/aes"
+  7  	"crypto/cipher"
+  8  	"crypto/rand"
+  9  	"errors"
+ 10  	"fmt"
+ 11  	"io"
+ 12  	"io/ioutil"
+ 13  	"os"
+ 14  	"os/exec"
+ 15  	"time"
+ 16  
+ 17  	"wayra/internal/adapter/config"
+ 18  	"wayra/internal/core/port/services"
+ 19  
+ 20  	"gorm.io/gorm"
+ 21  )
+ 22  
+ 23  type AdminService struct {
+ 24  	cfg           *config.Config
+ 25  	db            *gorm.DB
+ 26  	EncryptionKey []byte
+ 27  }
+ 28  
+ 29  func NewAdminService(cfg *config.Config, db *gorm.DB, encKey []byte) services.AdminService {
+ 30  	return &AdminService{cfg: cfg, db: db, EncryptionKey: encKey}
+ 31  }
+ 32  
+ 33  var backupTables = []string{
+ 34  	"roles",
+ 35  	"users",
+ 36  	"companies",
+ 37  	"routes",
+ 38  	"deliveries",
+ 39  	"product_categories",
+ 40  	"products",
+ 41  	"waypoints",
+ 42  	"sensor_data",
+ 43  	"user_companies",
+ 44  }
+ 45  
+ 46  func (s *AdminService) BackupDatabase(ctx context.Context, userID uint, backupPath string) error {
+ 47  	if err := os.MkdirAll(backupPath, 0755); err != nil {
+ 48  		return fmt.Errorf("failed to create backup directory: %w", err)
+ 49  	}
+ 50  
+ 51  	for _, table := range backupTables {
+ 52  		filePath := fmt.Sprintf("%s/%s.csv", backupPath, table)
+ 53  
+ 54  		if err := s.exportTable(table, filePath); err != nil {
+ 55  			return fmt.Errorf("error exporting table %s: %w", table, err)
+ 56  		}
+ 57  
+ 58  		if err := encryptFile(filePath, s.EncryptionKey); err != nil {
+ 59  			return fmt.Errorf("error encrypting file %s: %w", filePath, err)
+ 60  		}
+ 61  	}
+ 62  
+ 63  	s.db.Exec("INSERT INTO backup_logs (backup_time) VALUES (now())")
+ 64  	return nil
+ 65  }
+ 66  
+ 67  func (s *AdminService) RestoreDatabase(ctx context.Context, userID uint, backupPath string) error {
+ 68  	tempPath := fmt.Sprintf("%s/temp", backupPath)
+ 69  	if err := os.MkdirAll(tempPath, 0755); err != nil {
+ 70  		return fmt.Errorf("failed to create temp directory: %w", err)
+ 71  	}
+ 72  	defer os.RemoveAll(tempPath)
+ 73  
+ 74  	for _, table := range backupTables {
+ 75  		encPath := fmt.Sprintf("%s/%s.csv", backupPath, table)
+ 76  		tmpPath := fmt.Sprintf("%s/%s.csv", tempPath, table)
+ 77  
+ 78  		if err := decryptFileTo(encPath, tmpPath, s.EncryptionKey); err != nil {
+ 79  			return fmt.Errorf("error decrypting file %s: %w", encPath, err)
+ 80  		}
+ 81  
+ 82  		if err := s.truncateTable(table); err != nil {
+ 83  			return fmt.Errorf("error truncating table %s: %w", table, err)
+ 84  		}
+ 85  
+ 86  		if err := s.importTable(table, tmpPath); err != nil {
+ 87  			return fmt.Errorf("error importing table %s: %w", table, err)
+ 88  		}
+ 89  	}
+ 90  
+ 91  	return nil
+ 92  }
+ 93  
+ 94  func (s *AdminService) GetSystemConfig() map[string]interface{} {
+ 95  	return map[string]interface{}{
+ 96  		"http_timeout_seconds":  int(s.cfg.Http.Timeout.Seconds()),
+ 97  		"auth_token_ttl_hours":  int(s.cfg.AuthConfig.TokenExpiry.Hours()),
+ 98  		"encryption_key_exists": s.cfg.EncryptionKey != "",
+ 99  	}
+100  }
+101  
+102  func (s *AdminService) UpdateSystemConfig(timeoutSeconds int, tokenTTLHrs int) error {
+103  	if timeoutSeconds <= 0 || tokenTTLHrs <= 0 {
+104  		return errors.New("invalid timeout or TTL")
+105  	}
+106  
+107  	s.cfg.Http.Timeout = time.Duration(timeoutSeconds) * time.Second
+108  	s.cfg.AuthConfig.TokenExpiry = time.Duration(tokenTTLHrs) * time.Hour
+109  	return nil
+110  }
+111  
+112  func (s *AdminService) GetDBStatus(ctx context.Context) (*services.DBStatus, error) {
+113  	var size float64
+114  	err := s.db.Raw(`
+115  		SELECT pg_database_size(current_database()) / 1024 / 1024 AS size_mb
+116  	`).Scan(&size).Error
+117  	if err != nil {
+118  		return nil, err
+119  	}
+120  
+121  	var activeConnections int
+122  	err = s.db.Raw(`
+123  		SELECT count(*) FROM pg_stat_activity
+124  	`).Scan(&activeConnections).Error
+125  	if err != nil {
+126  		return nil, err
+127  	}
+128  
+129  	var lastBackup time.Time
+130  	err = s.db.Raw(`
+131  		 SELECT backup_time FROM backup_logs ORDER BY backup_time DESC LIMIT 1
+132  	`).Scan(&lastBackup).Error
+133  	if err != nil || lastBackup.IsZero() {
+134  		lastBackup = time.Time{}
+135  	}
+136  	return &services.DBStatus{
+137  		DatabaseSizeMB:    size,
+138  		ActiveConnections: activeConnections,
+139  		LastBackupTime:    lastBackup,
+140  	}, nil
+141  }
+142  
+143  func (s *AdminService) OptimizeDatabase(ctx context.Context) error {
+144  	return s.db.Exec("VACUUM FULL").Error
+145  }
+146  
+147  func (s *AdminService) ClearOldLogs(ctx context.Context, olderThanDays int) error {
+148  	if olderThanDays <= 0 {
+149  		return errors.New("invalid number of days")
+150  	}
+151  	cutoff := time.Now().AddDate(0, 0, -olderThanDays)
+152  	return s.db.Exec("DELETE FROM logs WHERE created_at < ?", cutoff).Error
+153  }
+154  
+155  func encryptFile(filename string, key []byte) error {
+156  	plaintext, err := ioutil.ReadFile(filename)
+157  	if err != nil {
+158  		return err
+159  	}
+160  
+161  	block, err := aes.NewCipher(key)
+162  	if err != nil {
+163  		return err
+164  	}
+165  
+166  	aesGCM, err := cipher.NewGCM(block)
+167  	if err != nil {
+168  		return err
+169  	}
+170  
+171  	nonce := make([]byte, aesGCM.NonceSize())
+172  	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
+173  		return err
+174  	}
+175  
+176  	ciphertext := aesGCM.Seal(nonce, nonce, plaintext, nil)
+177  	return ioutil.WriteFile(filename, ciphertext, 0644)
+178  }
+179  
+180  func decryptFileTo(encryptedPath, decryptedPath string, key []byte) error {
+181  	ciphertext, err := ioutil.ReadFile(encryptedPath)
+182  	if err != nil {
+183  		return err
+184  	}
+185  
+186  	block, err := aes.NewCipher(key)
+187  	if err != nil {
+188  		return err
+189  	}
+190  
+191  	aesGCM, err := cipher.NewGCM(block)
+192  	if err != nil {
+193  		return err
+194  	}
+195  
+196  	nonceSize := aesGCM.NonceSize()
+197  	if len(ciphertext) < nonceSize {
+198  		return fmt.Errorf("ciphertext too short")
+199  	}
+200  
+201  	nonce, ciphertext := ciphertext[:nonceSize], ciphertext[nonceSize:]
+202  	plaintext, err := aesGCM.Open(nil, nonce, ciphertext, nil)
+203  	if err != nil {
+204  		return err
+205  	}
+206  
+207  	return ioutil.WriteFile(decryptedPath, plaintext, 0644)
+208  }
+209  
+210  func (s *AdminService) exportTable(table, filePath string) error {
+211  	cmd := exec.Command(
+212  		"psql",
+213  		"-U", "postgres",
+214  		"-d", "Wayra",
+215  		"-h", "localhost",
+216  		"-p", "5432",
+217  		"-c", fmt.Sprintf(`\COPY %s TO '%s' WITH CSV HEADER`, table, filePath),
+218  	)
+219  	cmd.Env = append(os.Environ(), "PGPASSWORD="+s.cfg.DBPassword)
+220  	return cmd.Run()
+221  }
+222  
+223  func (s *AdminService) truncateTable(table string) error {
+224  	cmd := exec.Command(
+225  		"psql",
+226  		"-U", "postgres",
+227  		"-d", "Wayra",
+228  		"-h", "localhost",
+229  		"-p", "5432",
+230  		"-c", fmt.Sprintf(`TRUNCATE TABLE %s RESTART IDENTITY CASCADE;`, table),
+231  	)
+232  	cmd.Env = append(os.Environ(), "PGPASSWORD="+s.cfg.DBPassword)
+233  	_, err := cmd.CombinedOutput()
+234  	return err
+235  }
+236  
+237  func (s *AdminService) importTable(table, filePath string) error {
+238  	cmd := exec.Command(
+239  		"psql",
+240  		"-U", "postgres",
+241  		"-d", "Wayra",
+242  		"-h", "localhost",
+243  		"-p", "5432",
+244  		"-c", fmt.Sprintf(`\COPY %s FROM '%s' WITH CSV HEADER`, table, filePath),
+245  	)
+246  	cmd.Env = append(os.Environ(), "PGPASSWORD="+s.cfg.DBPassword)
+247  	_, err := cmd.CombinedOutput()
+248  	return err
+249  } 
 
 
 

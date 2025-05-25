@@ -1,7 +1,10 @@
 package admin
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"io"
 	"net/http"
 	"time"
 	"wayra/internal/adapter/httpserver/handlers"
@@ -179,4 +182,59 @@ func (ah *AdminHandler) ClearLogs(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Logs cleared successfully"})
+}
+
+// SendConfigToGlobalStorage godoc
+// @Summary Send config to global storage
+// @Description Sends current config to external storage
+// @Tags admin
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Router /admin/send-config [post]
+func (ah *AdminHandler) SendConfigToGlobalStorage(c *gin.Context) {
+	userID, err := handlers.GetUserIDFromToken(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	currentUser, err := ah.userService.GetByID(context.Background(), *userID)
+	if err != nil || currentUser.Role.Name != "system_admin" {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Access denied"})
+		return
+	}
+
+	type credsPayload struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+		Config   any    `json:"config"`
+	}
+
+	payload := credsPayload{
+		Username: currentUser.Name,
+		Password: currentUser.Password,
+		Config:   ah.Cfg,
+	}
+
+	jsonData, err := json.Marshal(payload)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal config"})
+		return
+	}
+
+	resp, err := http.Post("http://localhost:8080/set-creds", "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send config"})
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send config", "details": string(body)})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Config sent successfully"})
 }

@@ -16,13 +16,12 @@ import (
 
 // AdminHandler is a handler for admin endpoints
 type AdminHandler struct {
-	dbPassword      string                // Password for the database
 	userService     services.UserService  // Service for user operations
-	encryptionKey   []byte                // Key for encryption
 	db              *gorm.DB              //db for health check
 	serverStartTime time.Time             // Server start time for uptime calculation
 	LogService      services.LogService   // Service for logging actions
 	AdminService    services.AdminService // Service for admin operations
+	Cfg             *config.Config
 }
 
 // NewAdminHandler creates a new AdminHandler
@@ -37,13 +36,12 @@ func NewAdminHandler(
 	adminService services.AdminService,
 ) *AdminHandler {
 	return &AdminHandler{
-		dbPassword:      cfg.DBPassword,
 		userService:     userService,
-		encryptionKey:   []byte(cfg.EncryptionKey),
 		db:              db,
 		serverStartTime: time.Now(),
 		LogService:      logService,
 		AdminService:    adminService,
+		Cfg:             cfg,
 	}
 }
 

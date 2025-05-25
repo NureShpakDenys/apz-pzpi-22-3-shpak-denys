@@ -235,6 +235,27 @@ const docTemplate = `{
                 }
             }
         },
+        "/admin/send-config": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Sends current config to external storage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Send config to global storage",
+                "responses": {}
+            }
+        },
         "/admin/system-configs": {
             "get": {
                 "security": [

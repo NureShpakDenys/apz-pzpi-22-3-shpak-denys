@@ -782,6 +782,19 @@ paths:
       summary: Restore the database from backup
       tags:
       - admin
+  /admin/send-config:
+    post:
+      consumes:
+      - application/json
+      description: Sends current config to external storage
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Send config to global storage
+      tags:
+      - admin
   /admin/system-configs:
     get:
       consumes:
