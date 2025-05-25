@@ -128,5 +128,8 @@
   "system_role.system_admin": "Системний адміністратор",
   "system_role.manager": "Менеджер",
   "prev": "Попередній",
-  "clear": "Очистити"
+  "clear": "Очистити",
+  "send_config": "Підготувати до перенесення на інший пристрій",
+  "config_sent_successfully": "Налаштування надіслані!",
+  "config_send_failed": "Помилки при підготовці"
 }

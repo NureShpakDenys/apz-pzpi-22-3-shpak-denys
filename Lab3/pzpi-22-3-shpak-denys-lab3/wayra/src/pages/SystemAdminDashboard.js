@@ -74,6 +74,17 @@ const SystemAdminDashboard = ({ t, i18n }) => {
       fetchAll();
    }, []);
 
+   const sendConfigToGlobalStorage = async () => {
+      try {
+         await axios.post(`${API_BASE}/send-config`, {}, authHeader);
+         alert(t("config_sent_successfully"));
+      } catch (error) {
+         console.error("Failed to send config:", error);
+         alert(t("config_send_failed"));
+      }
+   };
+
+
    if (loading) {
       return <div className="p-4 text-center text-lg">{t("loading")}</div>;
    }
@@ -135,6 +146,12 @@ const SystemAdminDashboard = ({ t, i18n }) => {
                   className="px-4 py-1 border rounded hover:bg-gray-100"
                >
                   {t("save")}
+               </button>
+               <button
+                  onClick={sendConfigToGlobalStorage}
+                  className="mt-2 px-4 py-1 border rounded hover:bg-gray-100"
+               >
+                  {t("send_config")}
                </button>
             </div>
          </div>

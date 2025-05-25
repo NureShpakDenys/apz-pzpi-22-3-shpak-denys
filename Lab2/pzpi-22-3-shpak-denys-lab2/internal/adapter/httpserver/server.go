@@ -154,7 +154,7 @@ func NewRouter(
 		admin.GET("/db-status", adminHandler.GetDBStatus)
 		admin.POST("/optimize", adminHandler.OptimizeDatabase)
 		admin.POST("/clear-logs", adminHandler.ClearLogs)
-
+		admin.POST("/send-config", adminHandler.SendConfigToGlobalStorage)
 	}
 
 	return r

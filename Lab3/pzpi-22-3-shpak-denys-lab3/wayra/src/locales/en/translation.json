@@ -128,5 +128,8 @@
    "system_role.system_admin": "System Admin",
    "system_role.manager": "Manager",
    "prev": "Prev",
-   "clear": "Clear"
+   "clear": "Clear",
+   "send_config": "Prepare for transit to another device",
+   "config_sent_successfully": "Config sent successfully!",
+   "config_send_failed": "Failed to send config"
 }
