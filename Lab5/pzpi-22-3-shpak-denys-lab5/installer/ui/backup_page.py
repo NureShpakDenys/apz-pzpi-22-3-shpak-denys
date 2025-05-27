@@ -55,7 +55,7 @@ class BackupPage(QWidget):
         self.setLayout(layout)
 
     def toggle_backup_path(self):
-        self.path_button.setEnabled(self.backup_checkbox.isChecked()))
+        self.path_button.setEnabled(self.backup_checkbox.isChecked())
 
     def select_backup_path(self):
         path = QFileDialog.getExistingDirectory(self, "Select backup folder")

@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import (
 )
 import subprocess
 import threading
+import platform
 
 class InstallPage(QWidget):
     def __init__(self, parent, config_data, install_path):
@@ -36,11 +37,7 @@ class InstallPage(QWidget):
 
         self.setLayout(self.layout)
 
-        self.install_steps = [
-            ("Installing Go", ["winget", "install", "-e", "--id", "GoLang.Go"]),
-            ("Installing Node.js", ["winget", "install", "-e", "--id", "OpenJS.NodeJS.LTS"]),
-            ("Installing PostgreSQL", ["winget", "install", "-e", "--id", "PostgreSQL.PostgreSQL"]),
-        ]
+        self.install_steps = self.get_install_steps()
         self.progress_bar.setMaximum(len(self.install_steps) + 6)
         self.current_step = 0
         self.has_started = False
@@ -90,3 +87,33 @@ class InstallPage(QWidget):
     def append_log(self, text):
         print(text)
         self.log_label.setText(text)
+
+    def get_install_steps(self):
+        os_type = platform.system()
+        steps = []
+
+        if os_type == "Windows":
+            steps = [
+                ("Installing Go", ["winget", "install", "-e", "--id", "GoLang.Go"]),
+                ("Installing Node.js", ["winget", "install", "-e", "--id", "OpenJS.NodeJS.LTS"]),
+                ("Installing PostgreSQL", ["winget", "install", "-e", "--id", "PostgreSQL.PostgreSQL"]),
+            ]
+        elif os_type == "Linux":
+            steps = [
+                ("Updating APT", ["sudo", "apt", "update"]),
+                ("Installing Go", ["sudo", "apt", "install", "-y", "golang"]),
+                ("Installing Node.js", ["sudo", "apt", "install", "-y", "nodejs", "npm"]),
+                ("Installing PostgreSQL", ["sudo", "apt", "install", "-y", "postgresql"]),
+            ]
+        elif os_type == "Darwin":
+            steps = [
+                ("Installing Homebrew (if needed)", ['/bin/bash', '-c', 
+                    '$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)']),
+                ("Installing Go", ["brew", "install", "go"]),
+                ("Installing Node.js", ["brew", "install", "node"]),
+                ("Installing PostgreSQL", ["brew", "install", "postgresql"]),
+            ]
+        else:
+            steps = [("Unsupported OS", [])]
+
+        return steps
