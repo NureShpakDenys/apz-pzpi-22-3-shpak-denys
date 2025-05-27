@@ -80,7 +80,7 @@
 ДОДАТОК В
 Програмний код
 
-В.1 Математична обробка прикладних даних.
+В.1 Математична обробка прикладних даних. Дії над матрицями для другої лабораторної роботи.
 
 GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab2/pzpi-22-3-shpak-denys-lab2/internal/core/domain/utils/math/math.go
 
@@ -265,423 +265,181 @@ GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-s
 179  	return sum
 180  }
 
-В.2 Адміністрування бізнес-логіки системи.
+В.2 Адміністрування бізнес-логіки системи. Панель завантаження інсталятору для системного адміністратора.
 
-GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab2/pzpi-22-3-shpak-denys-lab2/internal/adapter/httpserver/handlers/admin/db_admin.go
+GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab5/pzpi-22-3-shpak-denys-lab5/global-app/wayra-company/src/InstallerPanel.js
 
-  1  package admin
-  2  
-  3  import (
-  4  	"context"
-  5  	"net/http"
-  6  	"wayra/internal/adapter/httpserver/handlers"
-  7  
-  8  	"github.com/gin-gonic/gin"
-  9  )
- 10  
- 11  // BackupDatabaseRequest is the request for the BackupDatabase endpoint
- 12  type BackupDatabaseRequest struct {
- 13  	// Backup path is the path where the backup will be stored
- 14  	BackupPath string `json:"backup_path"`
- 15  }
- 16  
- 17  // BackupDatabase godoc
- 18  // @Summary Backup the database
- 19  // @Description Backup the database in CSV format per table
- 20  // @Tags admin
- 21  // @Accept json
- 22  // @Produce json
- 23  // @Param BackupDatabaseRequest body BackupDatabaseRequest true "Backup directory path"
- 24  // @Security     BearerAuth
- 25  // @Router /admin/backup [post]
- 26  func (ah *AdminHandler) BackupDatabase(c *gin.Context) {
- 27  	var req BackupDatabaseRequest
- 28  	if err := c.ShouldBindJSON(&req); err != nil {
- 29  		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
- 30  		return
- 31  	}
- 32  
- 33  	userID, err := handlers.GetUserIDFromToken(c)
- 34  	if err != nil {
- 35  		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
- 36  		return
- 37  	}
- 38  
- 39  	user, err := ah.userService.GetByID(context.Background(), *userID)
- 40  	if err != nil {
- 41  		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
- 42  		return
- 43  	}
- 44  
- 45  	if user.Role.Name != "db_admin" {
- 46  		c.JSON(http.StatusForbidden, gin.H{"error": "Access denied"})
- 47  		return
- 48  	}
- 49  
- 50  	if err := ah.AdminService.BackupDatabase(c.Request.Context(), *userID, req.BackupPath); err != nil {
- 51  		c.JSON(http.StatusInternalServerError, gin.H{"error": "Backup failed: " + err.Error()})
- 52  		return
- 53  	}
- 54  
- 55  	c.JSON(http.StatusOK, gin.H{"message": "Backup created successfully"})
- 56  }
- 57  
- 58  // RestoreDatabaseRequest is the request for the RestoreDatabase endpoint
- 59  type RestoreDatabaseRequest struct {
- 60  	// Backup path is the path where the backup is stored
- 61  	BackupPath string `json:"backup_path"`
- 62  }
- 63  
- 64  // RestoreDatabase godoc
- 65  // @Summary Restore the database from backup
- 66  // @Description Restore the database from encrypted backup files
- 67  // @Tags admin
- 68  // @Accept json
- 69  // @Produce json
- 70  // @Param RestoreDatabaseRequest body RestoreDatabaseRequest true "Backup directory path"
- 71  // @Security     BearerAuth
- 72  // @Success 200 {string} string "Database restored"
- 73  // @Router /admin/restore [post]
- 74  func (ah *AdminHandler) RestoreDatabase(c *gin.Context) {
- 75  	var req RestoreDatabaseRequest
- 76  	if err := c.ShouldBindJSON(&req); err != nil {
- 77  		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
- 78  		return
- 79  	}
- 80  
- 81  	userID, err := handlers.GetUserIDFromToken(c)
- 82  	if err != nil {
- 83  		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
- 84  		return
- 85  	}
- 86  
- 87  	user, err := ah.userService.GetByID(context.Background(), *userID)
- 88  	if err != nil {
- 89  		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
- 90  		return
- 91  	}
- 92  
- 93  	if user.Role.Name != "db_admin" {
- 94  		c.JSON(http.StatusForbidden, gin.H{"error": "Access denied"})
- 95  		return
- 96  	}
- 97  
- 98  	if err := ah.AdminService.RestoreDatabase(c.Request.Context(), *userID, req.BackupPath); err != nil {
- 99  		c.JSON(http.StatusInternalServerError, gin.H{"error": "Restore failed: " + err.Error()})
-100  		return
-101  	}
-102  
-103  	c.JSON(http.StatusOK, gin.H{"message": "Database restored successfully"})
-104  }
-105  
-106  // GetDBStatus godoc
-107  // @Summary Get database status
-108  // @Description Get database status
-109  // @Tags admin
-110  // @Accept json
-111  // @Produce json
-112  // @Security     BearerAuth
-113  // @Router /admin/db-status [get]
-114  func (ah *AdminHandler) GetDBStatus(c *gin.Context) {
-115  	userID, err := handlers.GetUserIDFromToken(c)
-116  	if err != nil {
-117  		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-118  		return
-119  	}
-120  
-121  	currentUser, err := ah.userService.GetByID(context.Background(), *userID)
-122  	if err != nil || currentUser.Role.Name != "db_admin" {
-123  		c.JSON(http.StatusForbidden, gin.H{"error": "Access denied"})
-124  		return
-125  	}
-126  
-127  	dbStatus, _ := ah.AdminService.GetDBStatus(context.Background())
-128  
-129  	c.JSON(http.StatusOK, dbStatus)
-130  }
-131  
-132  // OptimizeDatabase godoc
-133  // @Summary Optimize database
-134  // @Description Optimize database
-135  // @Tags admin
-136  // @Accept json
-137  // @Produce json
-138  // @Security     BearerAuth
-139  // @Router /admin/optimize [post]
-140  func (ah *AdminHandler) OptimizeDatabase(c *gin.Context) {
-141  	userID, err := handlers.GetUserIDFromToken(c)
-142  	if err != nil {
-143  		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-144  		return
-145  	}
-146  
-147  	currentUser, err := ah.userService.GetByID(context.Background(), *userID)
-148  	if err != nil || currentUser.Role.Name != "db_admin" {
-149  		c.JSON(http.StatusForbidden, gin.H{"error": "Access denied"})
-150  		return
-151  	}
-152  
-153  	if err := ah.AdminService.OptimizeDatabase(context.Background()); err != nil {
-154  		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to optimize database"})
-155  		return
-156  	}
-157  
-158  	c.JSON(http.StatusOK, gin.H{"message": "Database optimized successfully"})
-159  }
+  1  import React, { useState } from "react";
+  2  import QRCode from "react-qr-code";
+  3  
+  4  export default function InstallerPanel() {
+  5    const [tab, setTab] = useState("exe");
+  6    const [username, setUsername] = useState("");
+  7    const [password, setPassword] = useState("");
+  8    const [error, setError] = useState("");
+  9  
+ 10    const handleDownloadExe = async () => {
+ 11      setError("");
+ 12  
+ 13      if (!username || !password) {
+ 14        setError("Please enter both username and password.");
+ 15        return;
+ 16      }
+ 17  
+ 18      try {
+ 19        const response = await fetch("http://localhost:8080/get-creds", {
+ 20          method: "POST",
+ 21          headers: {
+ 22            "Content-Type": "application/json"
+ 23          },
+ 24          body: JSON.stringify({ username, password })
+ 25        });
+ 26  
+ 27        if (response.ok) {
+ 28          const link = document.createElement("a");
+ 29          link.href = "/main.exe";
+ 30          link.download = "main.exe";
+ 31          document.body.appendChild(link);
+ 32          link.click();
+ 33          document.body.removeChild(link);
+ 34        } else {
+ 35          setError("Invalid credentials. Access denied.");
+ 36        }
+ 37      } catch (err) {
+ 38        setError("Server error. Please try again later.");
+ 39      }
+ 40    };
+ 41  
+ 42    return (
+ 43      <div className="min-h-screen bg-gray-50">
+ 44        <header className="bg-white shadow">
+ 45          <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+ 46            <h1 className="text-2xl font-bold text-blue-700">Wayra company</h1>
+ 47            <nav className="space-x-4">
+ 48              <button
+ 49                className={`py-2 px-4 rounded-md font-medium ${
+ 50                  tab === "exe"
+ 51                    ? "bg-blue-600 text-white"
+ 52                    : "text-blue-600 hover:bg-blue-100"
+ 53                }`}
+ 54                onClick={() => setTab("exe")}
+ 55              >
+ 56                EXE Installer
+ 57              </button>
+ 58              <button
+ 59                className={`py-2 px-4 rounded-md font-medium ${
+ 60                  tab === "apk"
+ 61                    ? "bg-blue-600 text-white"
+ 62                    : "text-blue-600 hover:bg-blue-100"
+ 63                }`}
+ 64                onClick={() => setTab("apk")}
+ 65              >
+ 66                APK Installer
+ 67              </button>
+ 68            </nav>
+ 69          </div>
+ 70        </header>
+ 71  
+ 72        <div className="max-w-md mx-auto mt-10 bg-white shadow-md rounded-xl p-7">
+ 73          {tab === "exe" && (
+ 74            <>
+ 75              <h2 className="text-xl font-semibold mb-4 text-center">
+ 76                Windows Installer Access
+ 77              </h2>
+ 78              <div className="space-y-4">
+ 79                <input
+ 80                  type="text"
+ 81                  placeholder="Username"
+ 82                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+ 83                  value={username}
+ 84                  onChange={(e) => setUsername(e.target.value)}
+ 85                />
+ 86                <input
+ 87                  type="password"
+ 88                  placeholder="Password"
+ 89                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+ 90                  value={password}
+ 91                  onChange={(e) => setPassword(e.target.value)}
+ 92                />
+ 93                {error && <p className="text-red-500 text-sm">{error}</p>}
+ 94                <button
+ 95                  onClick={handleDownloadExe}
+ 96                  className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+ 97                >
+ 98                  Download Installer (.exe)
+ 99                </button>
+100              </div>
+101            </>
+102          )}
+103  
+104          {tab === "apk" && (
+105            <div className="flex flex-col items-center">
+106              <h2 className="text-xl font-semibold mb-4 text-center">
+107                Mobile APK Installer
+108              </h2>
+109              <QRCode value="http://192.168.1.102:8080/get-apk" />
+110              <p className="mt-4 text-sm text-gray-600">
+111                Scan to download APK file for Android
+112              </p>
+113            </div>
+114          )}
+115        </div>
+116      </div>
+117    );
+118  }
 
 В.3 Резервне копіювання користувацьких даних.
 
-GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab2/pzpi-22-3-shpak-denys-lab2/internal/core/service/admin_service.go
+GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab5/pzpi-22-3-shpak-denys-lab5/installer/core/backup.py
 
-  1  // internal/port/services/admin_service.go
-  2  package service
-  3  
-  4  import (
-  5  	"context"
-  6  	"crypto/aes"
-  7  	"crypto/cipher"
-  8  	"crypto/rand"
-  9  	"errors"
- 10  	"fmt"
- 11  	"io"
- 12  	"io/ioutil"
- 13  	"os"
- 14  	"os/exec"
- 15  	"time"
- 16  
- 17  	"wayra/internal/adapter/config"
- 18  	"wayra/internal/core/port/services"
- 19  
- 20  	"gorm.io/gorm"
- 21  )
- 22  
- 23  type AdminService struct {
- 24  	cfg           *config.Config
- 25  	db            *gorm.DB
- 26  	EncryptionKey []byte
- 27  }
- 28  
- 29  func NewAdminService(cfg *config.Config, db *gorm.DB, encKey []byte) services.AdminService {
- 30  	return &AdminService{cfg: cfg, db: db, EncryptionKey: encKey}
- 31  }
- 32  
- 33  var backupTables = []string{
- 34  	"roles",
- 35  	"users",
- 36  	"companies",
- 37  	"routes",
- 38  	"deliveries",
- 39  	"product_categories",
- 40  	"products",
- 41  	"waypoints",
- 42  	"sensor_data",
- 43  	"user_companies",
- 44  }
- 45  
- 46  func (s *AdminService) BackupDatabase(ctx context.Context, userID uint, backupPath string) error {
- 47  	if err := os.MkdirAll(backupPath, 0755); err != nil {
- 48  		return fmt.Errorf("failed to create backup directory: %w", err)
- 49  	}
- 50  
- 51  	for _, table := range backupTables {
- 52  		filePath := fmt.Sprintf("%s/%s.csv", backupPath, table)
- 53  
- 54  		if err := s.exportTable(table, filePath); err != nil {
- 55  			return fmt.Errorf("error exporting table %s: %w", table, err)
- 56  		}
- 57  
- 58  		if err := encryptFile(filePath, s.EncryptionKey); err != nil {
- 59  			return fmt.Errorf("error encrypting file %s: %w", filePath, err)
- 60  		}
- 61  	}
- 62  
- 63  	s.db.Exec("INSERT INTO backup_logs (backup_time) VALUES (now())")
- 64  	return nil
- 65  }
- 66  
- 67  func (s *AdminService) RestoreDatabase(ctx context.Context, userID uint, backupPath string) error {
- 68  	tempPath := fmt.Sprintf("%s/temp", backupPath)
- 69  	if err := os.MkdirAll(tempPath, 0755); err != nil {
- 70  		return fmt.Errorf("failed to create temp directory: %w", err)
- 71  	}
- 72  	defer os.RemoveAll(tempPath)
- 73  
- 74  	for _, table := range backupTables {
- 75  		encPath := fmt.Sprintf("%s/%s.csv", backupPath, table)
- 76  		tmpPath := fmt.Sprintf("%s/%s.csv", tempPath, table)
- 77  
- 78  		if err := decryptFileTo(encPath, tmpPath, s.EncryptionKey); err != nil {
- 79  			return fmt.Errorf("error decrypting file %s: %w", encPath, err)
- 80  		}
- 81  
- 82  		if err := s.truncateTable(table); err != nil {
- 83  			return fmt.Errorf("error truncating table %s: %w", table, err)
- 84  		}
- 85  
- 86  		if err := s.importTable(table, tmpPath); err != nil {
- 87  			return fmt.Errorf("error importing table %s: %w", table, err)
- 88  		}
- 89  	}
- 90  
- 91  	return nil
- 92  }
- 93  
- 94  func (s *AdminService) GetSystemConfig() map[string]interface{} {
- 95  	return map[string]interface{}{
- 96  		"http_timeout_seconds":  int(s.cfg.Http.Timeout.Seconds()),
- 97  		"auth_token_ttl_hours":  int(s.cfg.AuthConfig.TokenExpiry.Hours()),
- 98  		"encryption_key_exists": s.cfg.EncryptionKey != "",
- 99  	}
-100  }
-101  
-102  func (s *AdminService) UpdateSystemConfig(timeoutSeconds int, tokenTTLHrs int) error {
-103  	if timeoutSeconds <= 0 || tokenTTLHrs <= 0 {
-104  		return errors.New("invalid timeout or TTL")
-105  	}
-106  
-107  	s.cfg.Http.Timeout = time.Duration(timeoutSeconds) * time.Second
-108  	s.cfg.AuthConfig.TokenExpiry = time.Duration(tokenTTLHrs) * time.Hour
-109  	return nil
-110  }
-111  
-112  func (s *AdminService) GetDBStatus(ctx context.Context) (*services.DBStatus, error) {
-113  	var size float64
-114  	err := s.db.Raw(`
-115  		SELECT pg_database_size(current_database()) / 1024 / 1024 AS size_mb
-116  	`).Scan(&size).Error
-117  	if err != nil {
-118  		return nil, err
-119  	}
-120  
-121  	var activeConnections int
-122  	err = s.db.Raw(`
-123  		SELECT count(*) FROM pg_stat_activity
-124  	`).Scan(&activeConnections).Error
-125  	if err != nil {
-126  		return nil, err
-127  	}
-128  
-129  	var lastBackup time.Time
-130  	err = s.db.Raw(`
-131  		 SELECT backup_time FROM backup_logs ORDER BY backup_time DESC LIMIT 1
-132  	`).Scan(&lastBackup).Error
-133  	if err != nil || lastBackup.IsZero() {
-134  		lastBackup = time.Time{}
-135  	}
-136  	return &services.DBStatus{
-137  		DatabaseSizeMB:    size,
-138  		ActiveConnections: activeConnections,
-139  		LastBackupTime:    lastBackup,
-140  	}, nil
-141  }
-142  
-143  func (s *AdminService) OptimizeDatabase(ctx context.Context) error {
-144  	return s.db.Exec("VACUUM FULL").Error
-145  }
-146  
-147  func (s *AdminService) ClearOldLogs(ctx context.Context, olderThanDays int) error {
-148  	if olderThanDays <= 0 {
-149  		return errors.New("invalid number of days")
-150  	}
-151  	cutoff := time.Now().AddDate(0, 0, -olderThanDays)
-152  	return s.db.Exec("DELETE FROM logs WHERE created_at < ?", cutoff).Error
-153  }
-154  
-155  func encryptFile(filename string, key []byte) error {
-156  	plaintext, err := ioutil.ReadFile(filename)
-157  	if err != nil {
-158  		return err
-159  	}
-160  
-161  	block, err := aes.NewCipher(key)
-162  	if err != nil {
-163  		return err
-164  	}
-165  
-166  	aesGCM, err := cipher.NewGCM(block)
-167  	if err != nil {
-168  		return err
-169  	}
-170  
-171  	nonce := make([]byte, aesGCM.NonceSize())
-172  	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
-173  		return err
-174  	}
-175  
-176  	ciphertext := aesGCM.Seal(nonce, nonce, plaintext, nil)
-177  	return ioutil.WriteFile(filename, ciphertext, 0644)
-178  }
-179  
-180  func decryptFileTo(encryptedPath, decryptedPath string, key []byte) error {
-181  	ciphertext, err := ioutil.ReadFile(encryptedPath)
-182  	if err != nil {
-183  		return err
-184  	}
-185  
-186  	block, err := aes.NewCipher(key)
-187  	if err != nil {
-188  		return err
-189  	}
-190  
-191  	aesGCM, err := cipher.NewGCM(block)
-192  	if err != nil {
-193  		return err
-194  	}
-195  
-196  	nonceSize := aesGCM.NonceSize()
-197  	if len(ciphertext) < nonceSize {
-198  		return fmt.Errorf("ciphertext too short")
-199  	}
-200  
-201  	nonce, ciphertext := ciphertext[:nonceSize], ciphertext[nonceSize:]
-202  	plaintext, err := aesGCM.Open(nil, nonce, ciphertext, nil)
-203  	if err != nil {
-204  		return err
-205  	}
-206  
-207  	return ioutil.WriteFile(decryptedPath, plaintext, 0644)
-208  }
-209  
-210  func (s *AdminService) exportTable(table, filePath string) error {
-211  	cmd := exec.Command(
-212  		"psql",
-213  		"-U", "postgres",
-214  		"-d", "Wayra",
-215  		"-h", "localhost",
-216  		"-p", "5432",
-217  		"-c", fmt.Sprintf(`\COPY %s TO '%s' WITH CSV HEADER`, table, filePath),
-218  	)
-219  	cmd.Env = append(os.Environ(), "PGPASSWORD="+s.cfg.DBPassword)
-220  	return cmd.Run()
-221  }
-222  
-223  func (s *AdminService) truncateTable(table string) error {
-224  	cmd := exec.Command(
-225  		"psql",
-226  		"-U", "postgres",
-227  		"-d", "Wayra",
-228  		"-h", "localhost",
-229  		"-p", "5432",
-230  		"-c", fmt.Sprintf(`TRUNCATE TABLE %s RESTART IDENTITY CASCADE;`, table),
-231  	)
-232  	cmd.Env = append(os.Environ(), "PGPASSWORD="+s.cfg.DBPassword)
-233  	_, err := cmd.CombinedOutput()
-234  	return err
-235  }
-236  
-237  func (s *AdminService) importTable(table, filePath string) error {
-238  	cmd := exec.Command(
-239  		"psql",
-240  		"-U", "postgres",
-241  		"-d", "Wayra",
-242  		"-h", "localhost",
-243  		"-p", "5432",
-244  		"-c", fmt.Sprintf(`\COPY %s FROM '%s' WITH CSV HEADER`, table, filePath),
-245  	)
-246  	cmd.Env = append(os.Environ(), "PGPASSWORD="+s.cfg.DBPassword)
-247  	_, err := cmd.CombinedOutput()
-248  	return err
-249  } 
-
-
+ 1  import os
+ 2  import shutil
+ 3  import subprocess
+ 4  import tempfile
+ 5  from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+ 6  from pathlib import Path
+ 7  
+ 8  backup_tables = [
+ 9      "roles", "users", "companies", "routes", "deliveries",
+10      "product_categories", "products", "waypoints", "sensor_data", "user_companies"
+11  ]
+12  
+13  def decrypt_file_to(source_path, dest_path, key: bytes):
+14      with open(source_path, "rb") as f:
+15          data = f.read()
+16  
+17      nonce_size = 12
+18      nonce = data[:nonce_size]
+19      ciphertext = data[nonce_size:]
+20  
+21      aesgcm = AESGCM(key)
+22      plaintext = aesgcm.decrypt(nonce, ciphertext, None)
+23  
+24      with open(dest_path, "wb") as f:
+25          f.write(plaintext)
+26  
+27  def restore_database(backup_dir: str, db_user: str, db_name: str, db_password: str, encryption_key: str):
+28      temp_dir = tempfile.mkdtemp()
+29      os.environ["PGPASSWORD"] = db_password
+30  
+31      try:
+32          for table in backup_tables:
+33              encrypted = os.path.join(backup_dir, f"{table}.csv")
+34              decrypted = os.path.join(temp_dir, f"{table}.csv")
+35  
+36              decrypt_file_to(encrypted, decrypted, bytes(encryption_key, encoding="utf-8"))
+37  
+38              truncate_cmd = [
+39                  "psql", "-U", db_user, "-d", db_name, "-h", "localhost", "-p", "5432",
+40                  "-c", f'TRUNCATE TABLE {table} RESTART IDENTITY CASCADE;'
+41              ]
+42              subprocess.run(truncate_cmd, check=True)
+43              import_cmd = [
+44                  "psql", "-U", db_user, "-d", db_name, "-h", "localhost", "-p", "5432",
+45                  "-c", f"\\COPY {table} FROM '{decrypted}' WITH CSV HEADER"
+46              ]
+47              subprocess.run(import_cmd, check=True)
+48      finally:
+49          shutil.rmtree(temp_dir)
+50          del os.environ["PGPASSWORD"]
 
