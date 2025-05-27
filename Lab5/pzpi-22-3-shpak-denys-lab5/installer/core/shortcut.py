@@ -1,6 +1,5 @@
 import pythoncom
 from win32com.client import Dispatch
-from win32com.shell import shell, shellcon
 import os
 
 def create_shortcut(target, arguments, shortcut_path, working_dir):
