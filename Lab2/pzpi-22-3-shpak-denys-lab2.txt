@@ -71,16 +71,12 @@
 Графічні матеріали
 
  
-Рисунок Б.1 – UML діаграма прецедентів
+Рисунок Б.1 – ER-діаграма даних
 
- 
-Рисунок Б.2 – ER-діаграма даних
+Рисунок Б.2 — Структура бази даних
 
- 
-Рисунок Б.3 – UML діаграма розгортання
+Рисунок Б.3 — UML-діаграма прецедентів
 
- 
-Рисунок Б.4 – Діаграма діяльності для функціоналу отримання оптимального маршруту
 
 ДОДАТОК В
 Програмний код
@@ -456,7 +452,7 @@ GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-s
 
 
 
-В.3 Функції адміністратора баз даних. Резервне копіювання даних, стан бази даних, оптимізація бази даних. 
+В.3 Адміністрування бізнес-логіки системи. Резервне копіювання даних, стан бази даних, оптимізація бази даних. 
 
 GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab2/pzpi-22-3-shpak-denys-lab2/internal/adapter/httpserver/handlers/admin/db_admin.go
 
@@ -620,7 +616,7 @@ GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-s
 158  	c.JSON(http.StatusOK, gin.H{"message": "Database optimized successfully"})
 159  }
 
-В.4 Функції системного адміністратора. Стан системи, управління її конфігураціями, читання та управління журналом логів.
+В.4 Адміністрування бізнес-логіки системи. Стан системи, управління її конфігураціями, читання та управління журналом логів.
 
 GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab2/pzpi-22-3-shpak-denys-lab2/internal/adapter/httpserver/handlers/admin/system_admin.go
   
@@ -807,7 +803,7 @@ GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-s
 181  	c.JSON(http.StatusOK, gin.H{"message": "Logs cleared successfully"})
 182  }
 
-В.5 Функції платформенного адміністратора. Зміна ролей користувачів.
+В.5 Адміністрування бізнес-логіки системи. Зміна ролей користувачів.
 
 GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab2/pzpi-22-3-shpak-denys-lab2/internal/adapter/httpserver/handlers/admin/admin_handler.go
 
@@ -906,7 +902,7 @@ GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-s
 93  	c.JSON(http.StatusOK, gin.H{"message": "User role updated"})
 94  }
 
-В.6 Функції платформенного адміністратора. Управління статусом користувачів у компанії.
+В.6 Адміністрування бізнес-логіки системи. Управління статусом користувачів у компанії.
 
 GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab2/pzpi-22-3-shpak-denys-lab2/internal/adapter/httpserver/handlers/company/company_user_management.go
 
@@ -1151,7 +1147,7 @@ GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-s
 239  	h.LogService.LogAction(userID, actionType, description, success)
 240  }
 
-В.7 Функції адміністратора. Сервісний слой.
+В.7 Резервне копіювання користувацьких даних
 
 GitHub репозиторій: https://github.com/NureShpakDenys/apz-pzpi-22-3-shpak-denys/blob/main/Lab2/pzpi-22-3-shpak-denys-lab2/internal/core/service/admin_service.go
 
